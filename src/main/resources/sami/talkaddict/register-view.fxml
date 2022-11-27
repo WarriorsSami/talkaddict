@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.RegisterController">
+   <fx:include source="appbar-view.fxml" />
+   <Label layoutX="224.0" layoutY="172.0" prefHeight="57.0" prefWidth="152.0" text="Register Screen"/>
+</AnchorPane>
