@@ -1,4 +1,4 @@
-package sami.talkaddict.domain;
+package sami.talkaddict.domain.entities;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -11,11 +11,11 @@ import java.util.Objects;
 public class User implements BaseEntity {
         @DatabaseField(generatedId = true, allowGeneratedIdInsert = true)
         private Integer id;
-        @DatabaseField(columnName = "name", canBeNull = false)
+        @DatabaseField(columnName = "name", canBeNull = false, unique = true)
         private String username;
         @DatabaseField(columnName = "pass", canBeNull = false)
         private String password;
-        @DatabaseField(canBeNull = false)
+        @DatabaseField(canBeNull = false, unique = true)
         private String email;
         @DatabaseField(dataType = DataType.LONG_STRING)
         private String description;
@@ -25,6 +25,15 @@ public class User implements BaseEntity {
         public User() {}
 
         public User(String username, String password, String email, String description, byte[] avatar) {
+                this.username = username;
+                this.password = password;
+                this.email = email;
+                this.description = description;
+                this.avatar = avatar;
+        }
+
+        public User(Integer id, String username, String password, String email, String description, byte[] avatar) {
+                this.id = id;
                 this.username = username;
                 this.password = password;
                 this.email = email;
