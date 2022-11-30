@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="460.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
+    <Label layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </Label>
+</AnchorPane>
