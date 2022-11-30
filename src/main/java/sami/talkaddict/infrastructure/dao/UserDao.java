@@ -1,35 +1,43 @@
-package sami.talkaddict.infrastructure;
+package sami.talkaddict.infrastructure.dao;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.logger.Logger;
-import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.spring.DaoFactory;
-import com.j256.ormlite.support.ConnectionSource;
-import sami.talkaddict.domain.ApplicationException;
-import sami.talkaddict.domain.GenericDao;
-import sami.talkaddict.domain.User;
+import com.j256.ormlite.stmt.QueryBuilder;
+import sami.talkaddict.domain.exceptions.ApplicationException;
+import sami.talkaddict.domain.interfaces.GenericDao;
+import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.infrastructure.utils.managers.DbManager;
 
 import java.sql.SQLException;
 
 public class UserDao implements GenericDao<User> {
-    private static final Logger _logger = LoggerFactory.getLogger(UserDao.class);
-    private final ConnectionSource _conn;
+    private final Logger _logger;
+    private final DbManager _dbManager;
     private final Dao<User, Integer> _dao;
 
-    public UserDao() throws SQLException {
-        _conn = DbManager.getConnectionSource();
-        _dao = DaoFactory.createDao(_conn, User.class);
+    public UserDao(Logger logger, DbManager dbManager) throws ApplicationException, SQLException {
+        if (logger == null) {
+            throw new ApplicationException("Logger is null");
+        }
+        _logger = logger;
+        if (dbManager == null) {
+            throw new ApplicationException("DbManager is null");
+        }
+        _dbManager = dbManager;
+        _dao = DaoFactory.createDao(_dbManager.getConnectionSource(), User.class);
     }
 
     @Override
     public void createOrUpdate(User entity) throws ApplicationException {
         try {
             _dao.createOrUpdate(entity);
+            _logger.info("User created or updated with email: " + entity.getEmail());
         } catch (SQLException ex) {
             _logger.error(ex, "Error creating or updating user: " + ex.getMessage());
             throw new ApplicationException("Error creating or updating user: " + ex.getMessage());
         } finally {
-            closeConnectionSource();
+            _dbManager.closeConnectionSource();
         }
     }
 
@@ -37,11 +45,12 @@ public class UserDao implements GenericDao<User> {
     public void delete(User entity) throws ApplicationException {
         try {
             _dao.delete(entity);
+            _logger.info("User deleted with email: " + entity.getEmail());
         } catch (SQLException ex) {
             _logger.error(ex, "Error deleting user: " + ex.getMessage());
             throw new ApplicationException("Error deleting user: " + ex.getMessage());
         } finally {
-            closeConnectionSource();
+            _dbManager.closeConnectionSource();
         }
     }
 
@@ -49,44 +58,56 @@ public class UserDao implements GenericDao<User> {
     public void deleteById(int id) throws ApplicationException{
         try {
             _dao.deleteById(id);
+            _logger.info("User deleted with id: " + id);
         } catch (SQLException ex) {
             _logger.error(ex, "Error deleting user by id: " + ex.getMessage());
             throw new ApplicationException("Error deleting user by id: " + ex.getMessage());
         } finally {
-            closeConnectionSource();
+            _dbManager.closeConnectionSource();
         }
     }
 
     @Override
     public User findById(Integer id) throws ApplicationException {
         try {
+            _logger.info("Finding user by id: " + id);
             return _dao.queryForId(id);
         } catch (SQLException ex) {
             _logger.error(ex, "Error finding user by id: " + ex.getMessage());
             throw new ApplicationException("Error finding user by id: " + ex.getMessage());
         } finally {
-            closeConnectionSource();
+            _dbManager.closeConnectionSource();
         }
     }
 
     @Override
     public Iterable<User> findAll() throws ApplicationException {
         try {
+            _logger.info("Finding all users");
             return _dao.queryForAll();
         } catch (SQLException ex) {
             _logger.error(ex, "Error finding all users: " + ex.getMessage());
             throw new ApplicationException("Error finding all users: " + ex.getMessage());
         } finally {
-            closeConnectionSource();
+            _dbManager.closeConnectionSource();
         }
     }
 
-    private void closeConnectionSource() throws ApplicationException {
+    @Override
+    public Iterable<User> findByFilter(QueryBuilder<User, Integer> filter) throws ApplicationException {
         try {
-            _conn.close();
+            _logger.info("Finding users by filter");
+            return _dao.query(filter.prepare());
         } catch (SQLException ex) {
-            _logger.error(ex, "Error closing connection source: " + ex.getMessage());
-            throw new ApplicationException("Error closing connection source: " + ex.getMessage());
+            _logger.error(ex, "Error finding users by filter: " + ex.getMessage());
+            throw new ApplicationException("Error finding users by filter: " + ex.getMessage());
+        } finally {
+            _dbManager.closeConnectionSource();
         }
+    }
+
+    @Override
+    public QueryBuilder<User, Integer> queryBuilder() {
+        return _dao.queryBuilder();
     }
 }

@@ -1,35 +1,46 @@
-package sami.talkaddict.infrastructure;
+package sami.talkaddict.infrastructure.utils.managers;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.logger.Logger;
-import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import sami.talkaddict.domain.User;
+import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.infrastructure.utils.Config;
 
 import java.sql.SQLException;
 
 public class DbManager {
-    private static final Logger _logger = LoggerFactory.getLogger(DbManager.class);
-    private static final String JDBC_URL = "jdbc:sqlite:/media/sami/Dev Space4/JavaStuff/talkaddict/talkaddict.sqlite";
+    private final Logger _logger;
+    private final String JDBC_URL;
+    private ConnectionSource _conn;
 
-    private static ConnectionSource _conn;
+    public DbManager(Logger logger, String jdbcUrl) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger is null");
+        }
+        _logger = logger;
+        if (jdbcUrl == null) {
+            throw new IllegalArgumentException("JDBC URL is null");
+        }
+        JDBC_URL = jdbcUrl;
 
-    public static void initDatabase() {
+        _logger.info("Initializing database...");
         createConnectionSource();
-//        dropTables();
-        createTables();
+        if (DotenvManager.get(Config.APPLY_DB_MIGRATIONS).equals("true")) {
+            dropTables();
+            createTables();
+        }
         closeConnectionSource();
     }
 
-    public static ConnectionSource getConnectionSource() {
+    public ConnectionSource getConnectionSource() {
         if (_conn == null) {
             createConnectionSource();
         }
         return _conn;
     }
 
-    public static void closeConnectionSource() {
+    public void closeConnectionSource() {
         if (_conn != null) {
             try {
                 _conn.close();
@@ -39,7 +50,7 @@ public class DbManager {
         }
     }
 
-    private static void createConnectionSource() {
+    private void createConnectionSource() {
         try {
             _conn = new JdbcConnectionSource(JDBC_URL);
         } catch (SQLException ex) {
@@ -47,7 +58,7 @@ public class DbManager {
         }
     }
 
-    private static void createTables() {
+    private void createTables() {
         try {
             TableUtils.createTableIfNotExists(_conn, User.class);
         } catch (SQLException ex) {
@@ -55,7 +66,7 @@ public class DbManager {
         }
     }
 
-    private static void dropTables() {
+    private void dropTables() {
         try {
             TableUtils.dropTable(_conn, User.class, true);
         } catch (SQLException ex) {
