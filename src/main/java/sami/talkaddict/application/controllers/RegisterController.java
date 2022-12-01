@@ -1,6 +1,7 @@
 package sami.talkaddict.application.controllers;
 
 import com.j256.ormlite.logger.Logger;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import net.synedra.validatorfx.Validator;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
@@ -27,6 +29,10 @@ public class RegisterController implements Initializable {
     @FXML
     private PasswordField _passwordField;
     @FXML
+    private TextField _passwordTextField;
+    @FXML
+    private FontAwesomeIconView _passwordToggler;
+    @FXML
     private Button _registerButton;
 
     private Logger _logger;
@@ -40,6 +46,7 @@ public class RegisterController implements Initializable {
         _validator = new Validator();
         bindViewModelToFields();
         bindValidatorToFields();
+        _passwordTextField.setVisible(false);
     }
 
     private void bindValidatorToFields() {
@@ -70,12 +77,19 @@ public class RegisterController implements Initializable {
                 .withMethod(_userViewModel::isPasswordValid)
                 .decorates(_passwordField)
                 .immediate();
+
+        _validator.createCheck()
+                .dependsOn(Config.AuthTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordTextField.textProperty())
+                .withMethod(_userViewModel::isPasswordValid)
+                .decorates(_passwordTextField)
+                .immediate();
     }
 
     private void bindViewModelToFields() {
         _userViewModel.usernameProperty().bind(_usernameField.textProperty());
         _userViewModel.emailProperty().bind(_emailField.textProperty());
         _userViewModel.passwordProperty().bind(_passwordField.textProperty());
+        _userViewModel.passwordProperty().bind(_passwordTextField.textProperty());
     }
 
     @FXML
@@ -85,9 +99,11 @@ public class RegisterController implements Initializable {
                 AuthenticationManager.register(_userViewModel);
                 SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _registerButton);
             } else {
+                _logger.warn("Validation failed");
+                var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());
                 SceneFxManager.showAlertDialog(
                         "Invalid data",
-                        Bindings.concat("Cannot register:\n", _validator.createStringBinding()).getValue(),
+                        Bindings.concat("Cannot register:\n", errors).getValue(),
                         Alert.AlertType.WARNING
                 );
             }
@@ -99,5 +115,10 @@ public class RegisterController implements Initializable {
             );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
+    }
+
+    @FXML
+    private void togglePassword(MouseEvent mouseEvent) {
+        SceneFxManager.togglePasswordField(_passwordField, _passwordTextField, _passwordToggler);
     }
 }

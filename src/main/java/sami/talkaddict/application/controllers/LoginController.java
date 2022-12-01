@@ -1,6 +1,7 @@
 package sami.talkaddict.application.controllers;
 
 import com.j256.ormlite.logger.Logger;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.exceptions.ApplicationException;
@@ -24,6 +26,10 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField _passwordField;
     @FXML
+    private TextField _passwordTextField;
+    @FXML
+    private FontAwesomeIconView _passwordToggler;
+    @FXML
     private Button _loginButton;
 
     private Logger _logger;
@@ -34,11 +40,13 @@ public class LoginController implements Initializable {
         _logger = ProviderService.provideLogger(LoginController.class);
         _userViewModel = new UserViewModel();
         bindViewModelToFields();
+        _passwordTextField.setVisible(false);
     }
 
     private void bindViewModelToFields() {
         _userViewModel.emailProperty().bind(_emailField.textProperty());
         _userViewModel.passwordProperty().bind(_passwordField.textProperty());
+        _userViewModel.passwordProperty().bind(_passwordTextField.textProperty());
     }
 
     @FXML
@@ -61,4 +69,10 @@ public class LoginController implements Initializable {
             );
             _logger.error(ex.toString(), ex.getStackTrace());
         }
-    }}
+    }
+
+    @FXML
+    private void togglePassword(MouseEvent mouseEvent) {
+        SceneFxManager.togglePasswordField(_passwordField, _passwordTextField, _passwordToggler);
+    }
+}

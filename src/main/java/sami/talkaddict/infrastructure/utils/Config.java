@@ -20,7 +20,7 @@ public class Config {
         public static final String HOME_VIEW = "layouts/home-view.fxml";
     }
 
-    public static class Settings {
+    public static class AppSettings {
         public static final String APP_TITLE = "Talkaddict";
     }
 
@@ -38,5 +38,10 @@ public class Config {
 
         public static final String USERNAME_FIELD_LOGIN_KEY = "usernameFieldLogin";
         public static final String PASSWORD_FIELD_LOGIN_KEY = "passwordFieldLogin";
+    }
+
+    public static class FxmlSettings {
+        public static final String EYE_GLYPH = "EYE";
+        public static final String EYE_SLASH_GLYPH = "EYE_SLASH";
     }
 }

@@ -23,7 +23,7 @@ public class TalkaddictApplication extends Application {
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
-        stage.setTitle(Config.Settings.APP_TITLE);
+        stage.setTitle(Config.AppSettings.APP_TITLE);
         stage.show();
     }
 
