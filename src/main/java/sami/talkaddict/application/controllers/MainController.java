@@ -41,7 +41,7 @@ public class MainController implements Initializable {
                         ));
                 _vbox.getChildren().removeAll();
                 _vbox.getChildren().setAll(_fxml);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
                         "Failed to initialize main view",
@@ -65,7 +65,7 @@ public class MainController implements Initializable {
                         ));
                 _vbox.getChildren().removeAll();
                 _vbox.getChildren().setAll(_fxml);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
                         "Failed to initialize login view",
@@ -89,7 +89,7 @@ public class MainController implements Initializable {
                         ));
                 _vbox.getChildren().removeAll();
                 _vbox.getChildren().setAll(_fxml);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
                         "Failed to initialize register view",

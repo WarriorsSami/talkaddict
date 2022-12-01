@@ -26,13 +26,12 @@ public class RegisterController implements Initializable {
     private TextField _emailField;
     @FXML
     private PasswordField _passwordField;
+    @FXML
+    private Button _registerButton;
 
     private Logger _logger;
     private UserViewModel _userViewModel;
     private Validator _validator;
-
-    @FXML
-    private Button _registerButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,7 +92,11 @@ public class RegisterController implements Initializable {
                 );
             }
         } catch (Exception ex) {
-            SceneFxManager.showAlertDialog("Register Error", ex.getMessage(), Alert.AlertType.ERROR);
+            SceneFxManager.showAlertDialog(
+                    "Register Error",
+                    "Something went wrong!",
+                    Alert.AlertType.ERROR
+            );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
     }

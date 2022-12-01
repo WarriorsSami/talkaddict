@@ -11,7 +11,6 @@ import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,11 +24,11 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         _logger = ProviderService.provideLogger(HomeController.class);
         try {
-            System.out.println("Current logged in user name: " + AuthenticationManager.getLoggedInUser().getUsername());
+            _logger.info("Current logged in user name: " + AuthenticationManager.getLoggedInUser().getUsername());
         } catch (Exception ex) {
             SceneFxManager.showAlertDialog(
-                    "Logged in user error",
-                    "Failed to get logged in user!",
+                    "Error getting logged in user",
+                    "Something went wrong!",
                     Alert.AlertType.ERROR
             );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
@@ -37,8 +36,18 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    private void openMainViewAndLogout(ActionEvent actionEvent) throws IOException {
-        AuthenticationManager.logout();
-        SceneFxManager.redirectTo(Config.Views.MAIN_VIEW, _logoutUserButton);
+    private void openMainViewAndLogout(ActionEvent actionEvent) {
+        try {
+            AuthenticationManager.logout();
+            _logger.info("User logged out");
+            SceneFxManager.redirectTo(Config.Views.MAIN_VIEW, _logoutUserButton);
+        } catch (Exception ex) {
+            SceneFxManager.showAlertDialog(
+                    "Error logging out",
+                    "Something went wrong!",
+                    Alert.AlertType.ERROR
+            );
+            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+        }
     }
 }

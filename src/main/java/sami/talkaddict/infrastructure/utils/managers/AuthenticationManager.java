@@ -1,6 +1,5 @@
 package sami.talkaddict.infrastructure.utils.managers;
 
-import sami.talkaddict.application.models.user.LoginDto;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
@@ -9,44 +8,46 @@ import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.infrastructure.utils.Config;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class AuthenticationManager {
     private static final GenericDao<User> _userDao = ProviderService.provideDao(User.class);
 
-    public static void register(UserViewModel userModel) throws ApplicationException, SQLException {
-        if (userModel == null) {
+    public static void register(UserViewModel dto) throws ApplicationException, SQLException {
+        if (dto == null) {
             throw new ApplicationException("Invalid register data provided!");
         }
 
-        var rawPassword = userModel.passwordProperty().get();
+        var rawPassword = dto.passwordProperty().get();
         var encodedPassword = PasswordManager.encode(rawPassword);
         // TODO: remove this workaround
         var newUserViewModel = new UserViewModel();
-        newUserViewModel.emailProperty().set(userModel.emailProperty().get());
-        newUserViewModel.usernameProperty().set(userModel.usernameProperty().get());
+        newUserViewModel.emailProperty().set(dto.emailProperty().get());
+        newUserViewModel.usernameProperty().set(dto.usernameProperty().get());
         newUserViewModel.passwordProperty().set(encodedPassword);
         newUserViewModel.saveOrUpdateUser();
 
         var findUserByEmail = _userDao.queryBuilder();
-        findUserByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, userModel.emailProperty().get());
+        findUserByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, dto.emailProperty().get());
         var registeredUser = _userDao.findByFilter(findUserByEmail).iterator().next();
         PreferencesManager.setKey(Config.Preferences.LOGGED_IN_USER_ID_KEY, registeredUser.getId().toString());
     }
 
-    public static void login(LoginDto dto) throws ApplicationException, SQLException {
+    public static void login(UserViewModel dto) throws ApplicationException, SQLException {
         if (dto == null) {
             throw new ApplicationException("Invalid login credentials!");
         }
 
         var filterByEmail = _userDao.queryBuilder();
-        filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, dto.Email);
-        var user = _userDao.findByFilter(filterByEmail).iterator().next();
+        filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, dto.emailProperty().get());
+        List<User> users = (List<User>) _userDao.findByFilter(filterByEmail);
 
-        if (user == null) {
+        if (users.size() != 1) {
             throw new ApplicationException("Invalid login credentials!");
         }
 
-        if (!PasswordManager.verify(dto.Password, user.getPassword())) {
+        var user = users.iterator().next();
+        if (!PasswordManager.verify(dto.passwordProperty().get(), user.getPassword())) {
             throw new ApplicationException("Invalid login credentials!");
         }
 
