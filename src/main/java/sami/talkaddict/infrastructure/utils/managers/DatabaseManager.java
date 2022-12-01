@@ -45,7 +45,7 @@ public class DatabaseManager {
             try {
                 _conn.close();
             } catch (SQLException ex) {
-                _logger.error(ex, "Error closing connection source: " + ex.getMessage());
+                _logger.error(ex, "Error closing connection source: " + ex.getMessage(), ex.getStackTrace());
             }
         }
     }
@@ -54,7 +54,7 @@ public class DatabaseManager {
         try {
             _conn = new JdbcConnectionSource(JDBC_URL);
         } catch (SQLException ex) {
-            _logger.error(ex, "Error creating connection source: " + ex.getMessage());
+            _logger.error(ex, "Error creating connection source: " + ex.getMessage(), ex.getStackTrace());
         }
     }
 
@@ -62,7 +62,7 @@ public class DatabaseManager {
         try {
             TableUtils.createTableIfNotExists(_conn, User.class);
         } catch (SQLException ex) {
-            _logger.error(ex, "Error creating tables: " + ex.getMessage());
+            _logger.error(ex, "Error creating tables: " + ex.getMessage(), ex.getStackTrace());
         }
     }
 
@@ -70,7 +70,7 @@ public class DatabaseManager {
         try {
             TableUtils.dropTable(_conn, User.class, true);
         } catch (SQLException ex) {
-            _logger.error(ex, "Error dropping tables: " + ex.getMessage());
+            _logger.error(ex, "Error dropping tables: " + ex.getMessage(), ex.getStackTrace());
         }
     }
 }

@@ -1,5 +1,6 @@
 package sami.talkaddict.application.controllers;
 
+import com.j256.ormlite.logger.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import net.synedra.validatorfx.Validator;
 import sami.talkaddict.application.models.user.UserViewModel;
+import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
@@ -25,6 +27,7 @@ public class RegisterController implements Initializable {
     @FXML
     private PasswordField _passwordField;
 
+    private Logger _logger;
     private UserViewModel _userViewModel;
     private Validator _validator;
 
@@ -33,6 +36,7 @@ public class RegisterController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        _logger = ProviderService.provideLogger(RegisterController.class);
         _userViewModel = new UserViewModel();
         _validator = new Validator();
         bindViewModelToFields();
@@ -45,6 +49,11 @@ public class RegisterController implements Initializable {
                 .withMethod(_userViewModel::isUsernameValid)
                 .decorates(_usernameField)
                 .immediate();
+
+        _validator.createCheck()
+                .dependsOn(Config.AuthTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
+                .withMethod(_userViewModel::isUsernameUnique)
+                .decorates(_usernameField);
 
         _validator.createCheck()
                 .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
@@ -85,6 +94,7 @@ public class RegisterController implements Initializable {
             }
         } catch (Exception ex) {
             SceneFxManager.showAlertDialog("Register Error", ex.getMessage(), Alert.AlertType.ERROR);
+            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
     }
 }

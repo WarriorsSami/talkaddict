@@ -34,7 +34,7 @@ public class UserDao implements GenericDao<User> {
             _dao.createOrUpdate(entity);
             _logger.info("User created or updated with email: " + entity.getEmail());
         } catch (SQLException ex) {
-            _logger.error(ex, "Error creating or updating user: " + ex.getMessage());
+            _logger.error(ex, "Error creating or updating user: " + ex.getMessage(), ex.getStackTrace());
             throw new ApplicationException("Error creating or updating user: " + ex.getMessage());
         } finally {
             _databaseManager.closeConnectionSource();
@@ -47,7 +47,7 @@ public class UserDao implements GenericDao<User> {
             _dao.delete(entity);
             _logger.info("User deleted with email: " + entity.getEmail());
         } catch (SQLException ex) {
-            _logger.error(ex, "Error deleting user: " + ex.getMessage());
+            _logger.error(ex, "Error deleting user: " + ex.getMessage(), ex.getStackTrace());
             throw new ApplicationException("Error deleting user: " + ex.getMessage());
         } finally {
             _databaseManager.closeConnectionSource();
@@ -60,7 +60,7 @@ public class UserDao implements GenericDao<User> {
             _dao.deleteById(id);
             _logger.info("User deleted with id: " + id);
         } catch (SQLException ex) {
-            _logger.error(ex, "Error deleting user by id: " + ex.getMessage());
+            _logger.error(ex, "Error deleting user by id: " + ex.getMessage(), ex.getStackTrace());
             throw new ApplicationException("Error deleting user by id: " + ex.getMessage());
         } finally {
             _databaseManager.closeConnectionSource();
@@ -73,7 +73,7 @@ public class UserDao implements GenericDao<User> {
             _logger.info("Finding user by id: " + id);
             return _dao.queryForId(id);
         } catch (SQLException ex) {
-            _logger.error(ex, "Error finding user by id: " + ex.getMessage());
+            _logger.error(ex, "Error finding user by id: " + ex.getMessage(), ex.getStackTrace());
             throw new ApplicationException("Error finding user by id: " + ex.getMessage());
         } finally {
             _databaseManager.closeConnectionSource();
@@ -86,7 +86,7 @@ public class UserDao implements GenericDao<User> {
             _logger.info("Finding all users");
             return _dao.queryForAll();
         } catch (SQLException ex) {
-            _logger.error(ex, "Error finding all users: " + ex.getMessage());
+            _logger.error(ex, "Error finding all users: " + ex.getMessage(), ex.getStackTrace());
             throw new ApplicationException("Error finding all users: " + ex.getMessage());
         } finally {
             _databaseManager.closeConnectionSource();
@@ -99,7 +99,7 @@ public class UserDao implements GenericDao<User> {
             _logger.info("Finding users by filter");
             return _dao.query(filter.prepare());
         } catch (SQLException ex) {
-            _logger.error(ex, "Error finding users by filter: " + ex.getMessage());
+            _logger.error(ex, "Error finding users by filter: " + ex.getMessage(), ex.getStackTrace());
             throw new ApplicationException("Error finding users by filter: " + ex.getMessage());
         } finally {
             _databaseManager.closeConnectionSource();

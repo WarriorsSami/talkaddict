@@ -4,6 +4,9 @@ public class Config {
     public static class Database {
         public static final String JDBC_URL = "JDBC_URL";
         public static final String APPLY_DB_MIGRATIONS = "APPLY_DB_MIGRATIONS";
+
+        public static final String USERNAME_COLUMN_NAME = "name";
+        public static final String EMAIL_COLUMN_NAME = "email";
     }
 
     public static class Preferences {

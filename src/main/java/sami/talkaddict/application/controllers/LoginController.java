@@ -22,6 +22,6 @@ public class LoginController {
     private Parent _fxml;
 
     @FXML
-    public void openHomeView(ActionEvent actionEvent) throws IOException {
+    private void openHomeView(ActionEvent actionEvent) throws IOException {
         SceneFxManager.showAlertDialog("Login Error", "Login failed", Alert.AlertType.ERROR);
     }}

@@ -1,11 +1,12 @@
 package sami.talkaddict.application.models.user;
 
+import com.j256.ormlite.logger.Logger;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import net.synedra.validatorfx.Check;
-import sami.talkaddict.di.InjectorModule;
+import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
@@ -18,10 +19,12 @@ import java.util.List;
 public class UserViewModel {
     private final ObjectProperty<UserFx> userFxObject = new SimpleObjectProperty<>(new UserFx());
 
+    private final Logger _logger;
     private final GenericDao<User> userDao;
 
     public UserViewModel() {
-        userDao = InjectorModule.getDao(User.class);
+        _logger = ProviderService.provideLogger(UserViewModel.class);
+        userDao = ProviderService.provideDao(User.class);
     }
 
     public void saveOrUpdateUser() throws ApplicationException {
@@ -31,7 +34,7 @@ public class UserViewModel {
 
     public void getUserByEmail(String email) throws ApplicationException, SQLException {
         var filterByEmail = userDao.queryBuilder();
-        filterByEmail.where().eq("email", email);
+        filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, email);
 
         var user = userDao.findByFilter(filterByEmail).iterator().next();
         userFxObject.set(UserConverter.toUserFx(user));
@@ -79,6 +82,21 @@ public class UserViewModel {
         }
     }
 
+    public void isUsernameUnique(Check.Context ctx) {
+        try {
+            var filterByUsername = userDao.queryBuilder();
+            filterByUsername.where().eq(Config.Database.USERNAME_COLUMN_NAME, usernameProperty().get());
+
+            List<User> users = (List<User>) userDao.findByFilter(filterByUsername);
+            if (!users.isEmpty()) {
+                ctx.error("Username is already taken!");
+            }
+        } catch (ApplicationException | SQLException ex) {
+            ctx.error("Something went wrong!");
+            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+        }
+    }
+
     public void isEmailValid(Check.Context ctx) {
         if (emailProperty().get() == null || emailProperty().get().isEmpty()) {
             ctx.error("Email is required!");
@@ -92,13 +110,14 @@ public class UserViewModel {
     public void isEmailUnique(Check.Context ctx) {
         try {
             var filterByEmail = userDao.queryBuilder();
-            filterByEmail.where().eq("email", emailProperty().get());
+            filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, emailProperty().get());
             List<User> users = (List<User>) userDao.findByFilter(filterByEmail);
             if (!users.isEmpty()) {
                 ctx.error("Email is already taken!");
             }
-        } catch (SQLException | ApplicationException e) {
+        } catch (SQLException | ApplicationException ex) {
             ctx.error("Something went wrong!");
+            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
     }
 

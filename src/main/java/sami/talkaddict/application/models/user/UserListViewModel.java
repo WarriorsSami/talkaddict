@@ -2,10 +2,11 @@ package sami.talkaddict.application.models.user;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sami.talkaddict.di.InjectorModule;
+import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
+import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.converters.UserConverter;
 
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class UserListViewModel {
     private final GenericDao<User> userDao;
 
     public UserListViewModel() throws ApplicationException {
-        userDao = InjectorModule.getDao(User.class);
+        userDao = ProviderService.provideDao(User.class);
         getAllUsers();
     }
 
@@ -32,7 +33,7 @@ public class UserListViewModel {
 
     public void getUsersByName(String name) throws ApplicationException, SQLException {
         var filterByName = userDao.queryBuilder();
-        filterByName.where().like("name", "%" + name + "%");
+        filterByName.where().like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%");
 
         var users = userDao.findByFilter(filterByName);
         userFxObservableList.clear();
