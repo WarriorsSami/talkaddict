@@ -20,22 +20,22 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     @FXML
-    private VBox vbox;
-    private Parent fxml;
+    private VBox _vbox;
+    private Parent _fxml;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
-        t.setToX(vbox.getLayoutX() * 20);
+        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
+        t.setToX(_vbox.getLayoutX() * 20);
         t.play();
         t.setOnFinished((e) -> {
             try {
-                fxml = FXMLLoader.load(
+                _fxml = FXMLLoader.load(
                         Objects.requireNonNull(TalkaddictApplication.class
                         .getResource(Config.Views.LOGIN_VIEW)
                         ));
-                vbox.getChildren().removeAll();
-                vbox.getChildren().setAll(fxml);
+                _vbox.getChildren().removeAll();
+                _vbox.getChildren().setAll(_fxml);
             } catch (IOException ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
@@ -48,17 +48,17 @@ public class MainController implements Initializable {
 
     @FXML
     private void openLoginView(ActionEvent event) {
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
-        t.setToX(vbox.getLayoutX() * 20);
+        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
+        t.setToX(_vbox.getLayoutX() * 20);
         t.play();
         t.setOnFinished((e) -> {
             try {
-                fxml = FXMLLoader.load(
+                _fxml = FXMLLoader.load(
                         Objects.requireNonNull(TalkaddictApplication.class
                         .getResource(Config.Views.LOGIN_VIEW)
                         ));
-                vbox.getChildren().removeAll();
-                vbox.getChildren().setAll(fxml);
+                _vbox.getChildren().removeAll();
+                _vbox.getChildren().setAll(_fxml);
             } catch (IOException ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
@@ -71,17 +71,17 @@ public class MainController implements Initializable {
 
     @FXML
     private void openRegisterView(ActionEvent event) {
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
+        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
         t.setToX(0);
         t.play();
         t.setOnFinished((e) -> {
             try {
-                fxml = FXMLLoader.load(
+                _fxml = FXMLLoader.load(
                         Objects.requireNonNull(TalkaddictApplication.class
                         .getResource(Config.Views.REGISTER_VIEW)
                         ));
-                vbox.getChildren().removeAll();
-                vbox.getChildren().setAll(fxml);
+                _vbox.getChildren().removeAll();
+                _vbox.getChildren().setAll(_fxml);
             } catch (IOException ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",

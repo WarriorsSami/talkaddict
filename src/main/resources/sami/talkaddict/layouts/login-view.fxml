@@ -27,17 +27,17 @@
         <VBox.margin>
             <Insets left="15.0" right="15.0" top="15.0" />
         </VBox.margin>
-        <FontAwesomeIconView fill="WHITE" glyphName="USER" size="1.3em" />
-        <TextField fx:id="userEmailField" promptText="Email" styleClass="tf_box" HBox.hgrow="ALWAYS" />
+        <FontAwesomeIconView fill="WHITE" glyphName="ENVELOPE" size="1.3em" />
+        <TextField fx:id="_userEmailField" promptText="Email" styleClass="tf_box" HBox.hgrow="ALWAYS" />
     </HBox>
     <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
         <VBox.margin>
             <Insets left="15.0" right="15.0" top="20.0" />
         </VBox.margin>
         <FontAwesomeIconView fill="WHITE" glyphName="LOCK" size="1.3em" />
-        <PasswordField fx:id="userPasswordField" promptText="Password" styleClass="tf_box" HBox.hgrow="ALWAYS" />
+        <PasswordField fx:id="_userPasswordField" promptText="Password" styleClass="tf_box" HBox.hgrow="ALWAYS" />
     </HBox>
-    <Button fx:id="loginUserButton" onAction="#openHomeView" mnemonicParsing="false" prefHeight="38.0" prefWidth="490.0" styleClass="blue-btn" text="Login" textFill="WHITE">
+    <Button fx:id="_loginUserButton" onAction="#openHomeView" mnemonicParsing="false" prefHeight="38.0" prefWidth="490.0" styleClass="blue-btn" text="Login" textFill="WHITE">
         <font>
             <Font size="17.0" />
         </font>

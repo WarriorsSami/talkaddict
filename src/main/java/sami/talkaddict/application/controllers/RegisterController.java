@@ -1,5 +1,6 @@
 package sami.talkaddict.application.controllers;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import net.synedra.validatorfx.Validator;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
@@ -17,40 +19,70 @@ import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
     @FXML
-    private TextField usernameField;
+    private TextField _usernameField;
     @FXML
-    private TextField emailField;
+    private TextField _emailField;
     @FXML
-    private PasswordField passwordField;
+    private PasswordField _passwordField;
 
-    private UserViewModel userViewModel;
+    private UserViewModel _userViewModel;
+    private Validator _validator;
 
     @FXML
-    private Button registerButton;
+    private Button _registerButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        userViewModel = new UserViewModel();
+        _userViewModel = new UserViewModel();
+        _validator = new Validator();
         bindViewModelToFields();
+        bindValidatorToFields();
+    }
+
+    private void bindValidatorToFields() {
+        _validator.createCheck()
+                .dependsOn(Config.AuthTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
+                .withMethod(_userViewModel::isUsernameValid)
+                .decorates(_usernameField)
+                .immediate();
+
+        _validator.createCheck()
+                .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
+                .withMethod(_userViewModel::isEmailValid)
+                .decorates(_emailField)
+                .immediate();
+
+        _validator.createCheck()
+                .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
+                .withMethod(_userViewModel::isEmailUnique)
+                .decorates(_emailField);
+
+        _validator.createCheck()
+                .dependsOn(Config.AuthTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordField.textProperty())
+                .withMethod(_userViewModel::isPasswordValid)
+                .decorates(_passwordField)
+                .immediate();
     }
 
     private void bindViewModelToFields() {
-        userViewModel.usernameProperty().bind(usernameField.textProperty());
-        userViewModel.emailProperty().bind(emailField.textProperty());
-        userViewModel.passwordProperty().bind(passwordField.textProperty());
-
-        // TODO: add proper validation rules
-        var validationRule = userViewModel.usernameProperty().isEmpty()
-                .or(userViewModel.emailProperty().isEmpty())
-                .or(userViewModel.passwordProperty().isEmpty());
-        registerButton.disableProperty().bind(validationRule);
+        _userViewModel.usernameProperty().bind(_usernameField.textProperty());
+        _userViewModel.emailProperty().bind(_emailField.textProperty());
+        _userViewModel.passwordProperty().bind(_passwordField.textProperty());
     }
 
     @FXML
     private void onRegisterUser(ActionEvent actionEvent) {
         try {
-            AuthenticationManager.register(userViewModel);
-            SceneFxManager.redirectTo(Config.Views.HOME_VIEW, registerButton);
+            if (_validator.validate()) {
+                AuthenticationManager.register(_userViewModel);
+                SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _registerButton);
+            } else {
+                SceneFxManager.showAlertDialog(
+                        "Invalid data",
+                        Bindings.concat("Cannot register:\n", _validator.createStringBinding()).getValue(),
+                        Alert.AlertType.WARNING
+                );
+            }
         } catch (Exception ex) {
             SceneFxManager.showAlertDialog("Register Error", ex.getMessage(), Alert.AlertType.ERROR);
         }

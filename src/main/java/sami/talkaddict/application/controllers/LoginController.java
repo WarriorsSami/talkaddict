@@ -13,13 +13,13 @@ import java.io.IOException;
 
 public class LoginController {
     @FXML
-    private TextField userEmailField;
+    private TextField _userEmailField;
     @FXML
-    private PasswordField userPasswordField;
+    private PasswordField _userPasswordField;
     @FXML
-    private Button loginUserButton;
+    private Button _loginUserButton;
 
-    private Parent fxml;
+    private Parent _fxml;
 
     @FXML
     public void openHomeView(ActionEvent actionEvent) throws IOException {

@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import sami.talkaddict.di.InjectorModule;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.infrastructure.utils.Config;
-import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
+import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,7 +29,7 @@ public class TalkaddictApplication extends Application {
 
     @Override
     public void stop() {
-        PreferencesManager.removeKey(Config.Preferences.LOGGED_IN_USER_ID_KEY);
+        AuthenticationManager.logout();
     }
 
     public static void main(String[] args) {

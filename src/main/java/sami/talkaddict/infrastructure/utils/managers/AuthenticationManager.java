@@ -63,4 +63,8 @@ public class AuthenticationManager {
         filterById.where().eq("id", id);
         return _userDao.findByFilter(filterById).iterator().next();
     }
+
+    public static void logout() {
+        PreferencesManager.removeKey(Config.Preferences.LOGGED_IN_USER_ID_KEY);
+    }
 }

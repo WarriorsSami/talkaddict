@@ -21,6 +21,7 @@ public class SceneFxManager {
     public static void showAlertDialog(String title, String message, Alert.AlertType type) {
         var alert = new Alert(type, message);
         alert.setTitle(title);
+        alert.setResizable(true);
         alert.show();
     }
 }

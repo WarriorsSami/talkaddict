@@ -1,7 +1,9 @@
 package sami.talkaddict.application.controllers;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
+import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,7 +14,11 @@ public class HomeController implements Initializable {
         try {
             System.out.println("Current logged in user name: " + AuthenticationManager.getLoggedInUser().getUsername());
         } catch (Exception ex) {
-            System.out.println("Failed to get logged in user");
+            SceneFxManager.showAlertDialog(
+                    "Logged in user error",
+                    "Failed to get logged in user!",
+                    Alert.AlertType.ERROR
+            );
         }
     }
 }

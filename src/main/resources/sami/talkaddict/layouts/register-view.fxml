@@ -28,23 +28,23 @@
             <Insets left="15.0" right="15.0" top="20.0" />
         </VBox.margin>
         <FontAwesomeIconView fill="WHITE" glyphName="USER" size="1.3em"/>
-        <TextField fx:id="usernameField" promptText="Username" styleClass="tf_box" HBox.hgrow="ALWAYS" />
+        <TextField fx:id="_usernameField" promptText="Username" styleClass="tf_box" HBox.hgrow="ALWAYS" />
     </HBox>
     <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
         <VBox.margin>
             <Insets left="15.0" right="15.0" top="15.0" />
         </VBox.margin>
-        <FontAwesomeIconView fill="WHITE" glyphName="USER" size="1.3em"/>
-        <TextField fx:id="emailField" promptText="Email" styleClass="tf_box" HBox.hgrow="ALWAYS" />
+        <FontAwesomeIconView fill="WHITE" glyphName="ENVELOPE" size="1.3em"/>
+        <TextField fx:id="_emailField" promptText="Email" styleClass="tf_box" HBox.hgrow="ALWAYS" />
     </HBox>
     <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
         <VBox.margin>
             <Insets left="15.0" right="15.0" top="20.0" />
         </VBox.margin>
         <FontAwesomeIconView fill="WHITE" glyphName="LOCK" size="1.3em"/>
-        <PasswordField fx:id="passwordField" promptText="Password" styleClass="tf_box" HBox.hgrow="ALWAYS" />
+        <PasswordField fx:id="_passwordField" promptText="Password" styleClass="tf_box" HBox.hgrow="ALWAYS" />
     </HBox>
-    <Button fx:id="registerButton" onAction="#onRegisterUser" mnemonicParsing="false" prefHeight="38.0" prefWidth="488.0" styleClass="blue-btn" text="Register" textFill="WHITE">
+    <Button fx:id="_registerButton" onAction="#onRegisterUser" mnemonicParsing="false" prefHeight="38.0" prefWidth="488.0" styleClass="blue-btn" text="Register" textFill="WHITE">
         <font>
             <Font size="17.0" />
         </font>
