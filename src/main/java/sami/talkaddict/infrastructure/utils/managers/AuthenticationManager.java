@@ -14,6 +14,10 @@ public class AuthenticationManager {
     private static final GenericDao<User> _userDao = InjectorModule.getDao(User.class);
 
     public static void register(UserViewModel userModel) throws ApplicationException, SQLException {
+        if (userModel == null) {
+            throw new ApplicationException("Invalid register data provided!");
+        }
+
         var rawPassword = userModel.passwordProperty().get();
         var encodedPassword = PasswordManager.encode(rawPassword);
         // TODO: remove this workaround
@@ -26,7 +30,7 @@ public class AuthenticationManager {
         var findUserByEmail = _userDao.queryBuilder();
         findUserByEmail.where().eq("email", userModel.emailProperty().get());
         var registeredUser = _userDao.findByFilter(findUserByEmail).iterator().next();
-        PreferencesManager.setKey(Config.LOGGED_IN_USER_ID_KEY, registeredUser.getId().toString());
+        PreferencesManager.setKey(Config.Preferences.LOGGED_IN_USER_ID_KEY, registeredUser.getId().toString());
     }
 
     public static void login(LoginDto dto) throws ApplicationException, SQLException {
@@ -46,13 +50,13 @@ public class AuthenticationManager {
             throw new ApplicationException("Invalid login credentials!");
         }
 
-        PreferencesManager.setKey(Config.LOGGED_IN_USER_ID_KEY, user.getId().toString());
+        PreferencesManager.setKey(Config.Preferences.LOGGED_IN_USER_ID_KEY, user.getId().toString());
     }
 
     public static User getLoggedInUser() throws ApplicationException, SQLException {
-        var id = PreferencesManager.getKey(Config.LOGGED_IN_USER_ID_KEY);
+        var id = PreferencesManager.getKey(Config.Preferences.LOGGED_IN_USER_ID_KEY);
         if (id == null) {
-            throw new ApplicationException("No user is logged in");
+            throw new ApplicationException("No user is logged in!");
         }
 
         var filterById = _userDao.queryBuilder();

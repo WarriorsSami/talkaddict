@@ -7,25 +7,25 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.domain.entities.User;
-import sami.talkaddict.infrastructure.utils.managers.DbManager;
+import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 
 import java.sql.SQLException;
 
 public class UserDao implements GenericDao<User> {
     private final Logger _logger;
-    private final DbManager _dbManager;
+    private final DatabaseManager _databaseManager;
     private final Dao<User, Integer> _dao;
 
-    public UserDao(Logger logger, DbManager dbManager) throws ApplicationException, SQLException {
+    public UserDao(Logger logger, DatabaseManager databaseManager) throws ApplicationException, SQLException {
         if (logger == null) {
             throw new ApplicationException("Logger is null");
         }
         _logger = logger;
-        if (dbManager == null) {
+        if (databaseManager == null) {
             throw new ApplicationException("DbManager is null");
         }
-        _dbManager = dbManager;
-        _dao = DaoFactory.createDao(_dbManager.getConnectionSource(), User.class);
+        _databaseManager = databaseManager;
+        _dao = DaoFactory.createDao(_databaseManager.getConnectionSource(), User.class);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class UserDao implements GenericDao<User> {
             _logger.error(ex, "Error creating or updating user: " + ex.getMessage());
             throw new ApplicationException("Error creating or updating user: " + ex.getMessage());
         } finally {
-            _dbManager.closeConnectionSource();
+            _databaseManager.closeConnectionSource();
         }
     }
 
@@ -50,7 +50,7 @@ public class UserDao implements GenericDao<User> {
             _logger.error(ex, "Error deleting user: " + ex.getMessage());
             throw new ApplicationException("Error deleting user: " + ex.getMessage());
         } finally {
-            _dbManager.closeConnectionSource();
+            _databaseManager.closeConnectionSource();
         }
     }
 
@@ -63,7 +63,7 @@ public class UserDao implements GenericDao<User> {
             _logger.error(ex, "Error deleting user by id: " + ex.getMessage());
             throw new ApplicationException("Error deleting user by id: " + ex.getMessage());
         } finally {
-            _dbManager.closeConnectionSource();
+            _databaseManager.closeConnectionSource();
         }
     }
 
@@ -76,7 +76,7 @@ public class UserDao implements GenericDao<User> {
             _logger.error(ex, "Error finding user by id: " + ex.getMessage());
             throw new ApplicationException("Error finding user by id: " + ex.getMessage());
         } finally {
-            _dbManager.closeConnectionSource();
+            _databaseManager.closeConnectionSource();
         }
     }
 
@@ -89,7 +89,7 @@ public class UserDao implements GenericDao<User> {
             _logger.error(ex, "Error finding all users: " + ex.getMessage());
             throw new ApplicationException("Error finding all users: " + ex.getMessage());
         } finally {
-            _dbManager.closeConnectionSource();
+            _databaseManager.closeConnectionSource();
         }
     }
 
@@ -102,7 +102,7 @@ public class UserDao implements GenericDao<User> {
             _logger.error(ex, "Error finding users by filter: " + ex.getMessage());
             throw new ApplicationException("Error finding users by filter: " + ex.getMessage());
         } finally {
-            _dbManager.closeConnectionSource();
+            _databaseManager.closeConnectionSource();
         }
     }
 

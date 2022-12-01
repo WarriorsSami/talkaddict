@@ -6,10 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import sami.talkaddict.TalkaddictApplication;
 import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,12 +30,18 @@ public class MainController implements Initializable {
         t.play();
         t.setOnFinished((e) -> {
             try {
-                fxml = FXMLLoader.load(Objects.requireNonNull(TalkaddictApplication.class
-                        .getResource(Config.LOGIN_VIEW)));
+                fxml = FXMLLoader.load(
+                        Objects.requireNonNull(TalkaddictApplication.class
+                        .getResource(Config.Views.LOGIN_VIEW)
+                        ));
                 vbox.getChildren().removeAll();
                 vbox.getChildren().setAll(fxml);
             } catch (IOException ex) {
-                System.out.println("Failed to initialize main view");
+                SceneFxManager.showAlertDialog(
+                        "Initialization error",
+                        "Failed to initialize main view",
+                        Alert.AlertType.ERROR
+                );
             }
         });
     }
@@ -45,12 +53,18 @@ public class MainController implements Initializable {
         t.play();
         t.setOnFinished((e) -> {
             try {
-                fxml = FXMLLoader.load(Objects.requireNonNull(TalkaddictApplication.class
-                        .getResource(Config.LOGIN_VIEW)));
+                fxml = FXMLLoader.load(
+                        Objects.requireNonNull(TalkaddictApplication.class
+                        .getResource(Config.Views.LOGIN_VIEW)
+                        ));
                 vbox.getChildren().removeAll();
                 vbox.getChildren().setAll(fxml);
             } catch (IOException ex) {
-                System.out.println("Failed to load login view");
+                SceneFxManager.showAlertDialog(
+                        "Initialization error",
+                        "Failed to initialize login view",
+                        Alert.AlertType.ERROR
+                );
             }
         });
     }
@@ -62,12 +76,18 @@ public class MainController implements Initializable {
         t.play();
         t.setOnFinished((e) -> {
             try {
-                fxml = FXMLLoader.load(Objects.requireNonNull(TalkaddictApplication.class
-                        .getResource(Config.REGISTER_VIEW)));
+                fxml = FXMLLoader.load(
+                        Objects.requireNonNull(TalkaddictApplication.class
+                        .getResource(Config.Views.REGISTER_VIEW)
+                        ));
                 vbox.getChildren().removeAll();
                 vbox.getChildren().setAll(fxml);
             } catch (IOException ex) {
-                System.out.println("Failed to load register view");
+                SceneFxManager.showAlertDialog(
+                        "Initialization error",
+                        "Failed to initialize register view",
+                        Alert.AlertType.ERROR
+                );
             }
         });
     }

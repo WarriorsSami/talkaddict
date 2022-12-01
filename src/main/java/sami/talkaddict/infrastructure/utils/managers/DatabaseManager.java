@@ -9,12 +9,12 @@ import sami.talkaddict.infrastructure.utils.Config;
 
 import java.sql.SQLException;
 
-public class DbManager {
+public class DatabaseManager {
     private final Logger _logger;
     private final String JDBC_URL;
     private ConnectionSource _conn;
 
-    public DbManager(Logger logger, String jdbcUrl) {
+    public DatabaseManager(Logger logger, String jdbcUrl) {
         if (logger == null) {
             throw new IllegalArgumentException("Logger is null");
         }
@@ -26,7 +26,7 @@ public class DbManager {
 
         _logger.info("Initializing database...");
         createConnectionSource();
-        if (DotenvManager.get(Config.APPLY_DB_MIGRATIONS).equals("true")) {
+        if (DotenvManager.get(Config.Database.APPLY_DB_MIGRATIONS).equals("true")) {
             dropTables();
             createTables();
         }

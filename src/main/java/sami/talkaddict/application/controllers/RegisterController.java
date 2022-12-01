@@ -3,18 +3,16 @@ package sami.talkaddict.application.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
-import sami.talkaddict.infrastructure.utils.managers.SceneRedirectManagerFx;
+import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
-import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
@@ -49,8 +47,12 @@ public class RegisterController implements Initializable {
     }
 
     @FXML
-    private void onRegisterUser(ActionEvent actionEvent) throws ApplicationException, SQLException, IOException {
-        AuthenticationManager.register(userViewModel);
-        SceneRedirectManagerFx.redirectTo(Config.HOME_VIEW, registerButton);
+    private void onRegisterUser(ActionEvent actionEvent) {
+        try {
+            AuthenticationManager.register(userViewModel);
+            SceneFxManager.redirectTo(Config.Views.HOME_VIEW, registerButton);
+        } catch (Exception ex) {
+            SceneFxManager.showAlertDialog("Register Error", ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

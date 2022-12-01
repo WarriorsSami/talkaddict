@@ -19,17 +19,17 @@ public class TalkaddictApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, ApplicationException, SQLException {
         InjectorModule.init();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Config.MAIN_VIEW)));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Config.Views.MAIN_VIEW)));
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
-        stage.setTitle(Config.APP_TITLE);
+        stage.setTitle(Config.Settings.APP_TITLE);
         stage.show();
     }
 
     @Override
     public void stop() {
-        PreferencesManager.removeKey(Config.LOGGED_IN_USER_ID_KEY);
+        PreferencesManager.removeKey(Config.Preferences.LOGGED_IN_USER_ID_KEY);
     }
 
     public static void main(String[] args) {
