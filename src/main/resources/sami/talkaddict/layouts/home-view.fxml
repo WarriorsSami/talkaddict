@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="460.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
-    <Label layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
-        <font>
-            <Font size="24.0" />
-        </font>
-    </Label>
+<AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
+    <VBox alignment="CENTER" prefHeight="460.0" prefWidth="980.0">
+        <Label layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <Button fx:id="_logoutUserButton" mnemonicParsing="false" onAction="#openMainViewAndLogout"
+                prefHeight="38.0" prefWidth="316.0" styleClass="blue-btn" text="Logout" textFill="WHITE">
+            <font>
+                <Font size="17.0" />
+            </font>
+            <VBox.margin>
+                <Insets left="15.0" right="15.0" top="20.0" />
+            </VBox.margin>
+        </Button>
+    </VBox>
 </AnchorPane>

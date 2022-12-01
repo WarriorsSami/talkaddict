@@ -2,7 +2,7 @@ package sami.talkaddict.infrastructure.utils.managers;
 
 import sami.talkaddict.application.models.user.LoginDto;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.di.InjectorModule;
+import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
@@ -11,7 +11,7 @@ import sami.talkaddict.infrastructure.utils.Config;
 import java.sql.SQLException;
 
 public class AuthenticationManager {
-    private static final GenericDao<User> _userDao = InjectorModule.getDao(User.class);
+    private static final GenericDao<User> _userDao = ProviderService.provideDao(User.class);
 
     public static void register(UserViewModel userModel) throws ApplicationException, SQLException {
         if (userModel == null) {
@@ -28,7 +28,7 @@ public class AuthenticationManager {
         newUserViewModel.saveOrUpdateUser();
 
         var findUserByEmail = _userDao.queryBuilder();
-        findUserByEmail.where().eq("email", userModel.emailProperty().get());
+        findUserByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, userModel.emailProperty().get());
         var registeredUser = _userDao.findByFilter(findUserByEmail).iterator().next();
         PreferencesManager.setKey(Config.Preferences.LOGGED_IN_USER_ID_KEY, registeredUser.getId().toString());
     }
@@ -39,7 +39,7 @@ public class AuthenticationManager {
         }
 
         var filterByEmail = _userDao.queryBuilder();
-        filterByEmail.where().eq("email", dto.Email);
+        filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, dto.Email);
         var user = _userDao.findByFilter(filterByEmail).iterator().next();
 
         if (user == null) {

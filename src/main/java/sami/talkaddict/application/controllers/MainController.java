@@ -1,5 +1,6 @@
 package sami.talkaddict.application.controllers;
 
+import com.j256.ormlite.logger.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import sami.talkaddict.TalkaddictApplication;
+import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
@@ -23,8 +25,11 @@ public class MainController implements Initializable {
     private VBox _vbox;
     private Parent _fxml;
 
+    private Logger _logger;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        _logger = ProviderService.provideLogger(MainController.class);
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
         t.setToX(_vbox.getLayoutX() * 20);
         t.play();
@@ -42,6 +47,7 @@ public class MainController implements Initializable {
                         "Failed to initialize main view",
                         Alert.AlertType.ERROR
                 );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
             }
         });
     }
@@ -65,6 +71,7 @@ public class MainController implements Initializable {
                         "Failed to initialize login view",
                         Alert.AlertType.ERROR
                 );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
             }
         });
     }
@@ -88,6 +95,7 @@ public class MainController implements Initializable {
                         "Failed to initialize register view",
                         Alert.AlertType.ERROR
                 );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
             }
         });
     }
