@@ -10,11 +10,9 @@ import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
+import sami.talkaddict.infrastructure.dao.UserDao;
 import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.converters.UserConverter;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class UserViewModel {
     private final ObjectProperty<UserFx> userFxObject = new SimpleObjectProperty<>(new UserFx());
@@ -32,11 +30,8 @@ public class UserViewModel {
         userDao.createOrUpdate(user);
     }
 
-    public void getUserByEmail(String email) throws ApplicationException, SQLException {
-        var filterByEmail = userDao.queryBuilder();
-        filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, email);
-
-        var user = userDao.findByFilter(filterByEmail).iterator().next();
+    public void initUserByEmail(String email) throws ApplicationException {
+        var user = ((UserDao) userDao).findByEmail(email);
         userFxObject.set(UserConverter.toUserFx(user));
     }
 
@@ -84,14 +79,11 @@ public class UserViewModel {
 
     public void isUsernameUnique(Check.Context ctx) {
         try {
-            var filterByUsername = userDao.queryBuilder();
-            filterByUsername.where().eq(Config.Database.USERNAME_COLUMN_NAME, usernameProperty().get());
-
-            List<User> users = (List<User>) userDao.findByFilter(filterByUsername);
-            if (!users.isEmpty()) {
+            var user = ((UserDao) userDao).findByName(usernameProperty().get());
+            if (user != null) {
                 ctx.error("Username is already taken!");
             }
-        } catch (ApplicationException | SQLException ex) {
+        } catch (ApplicationException ex) {
             ctx.error("Something went wrong!");
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
@@ -109,13 +101,11 @@ public class UserViewModel {
 
     public void isEmailUnique(Check.Context ctx) {
         try {
-            var filterByEmail = userDao.queryBuilder();
-            filterByEmail.where().eq(Config.Database.EMAIL_COLUMN_NAME, emailProperty().get());
-            List<User> users = (List<User>) userDao.findByFilter(filterByEmail);
-            if (!users.isEmpty()) {
+            var user = ((UserDao) userDao).findByEmail(emailProperty().get());
+            if (user != null) {
                 ctx.error("Email is already taken!");
             }
-        } catch (SQLException | ApplicationException ex) {
+        } catch (ApplicationException ex) {
             ctx.error("Something went wrong!");
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }

@@ -22,6 +22,7 @@ public class Config {
 
     public static class AppSettings {
         public static final String APP_TITLE = "Talkaddict";
+        public static final Boolean RESIZABLE = false;
     }
 
     public static class AuthTweaks {

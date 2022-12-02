@@ -7,6 +7,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 
 import java.sql.SQLException;
@@ -109,5 +110,33 @@ public class UserDao implements GenericDao<User> {
     @Override
     public QueryBuilder<User, Integer> queryBuilder() {
         return _dao.queryBuilder();
+    }
+
+    public User findByName(String name) throws ApplicationException {
+        try {
+            _logger.info("Finding user by name: " + name);
+            QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
+            queryBuilder.where().eq(Config.Database.USERNAME_COLUMN_NAME, name);
+            return _dao.queryForFirst(queryBuilder.prepare());
+        } catch (SQLException ex) {
+            _logger.error(ex, "Error finding user by name: " + ex.getMessage(), ex.getStackTrace());
+            throw new ApplicationException("Error finding user by name: " + ex.getMessage());
+        } finally {
+            _databaseManager.closeConnectionSource();
+        }
+    }
+
+    public User findByEmail(String email) throws ApplicationException {
+        try {
+            _logger.info("Finding user by email: " + email);
+            QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
+            queryBuilder.where().eq(Config.Database.EMAIL_COLUMN_NAME, email);
+            return _dao.queryForFirst(queryBuilder.prepare());
+        } catch (SQLException ex) {
+            _logger.error(ex, "Error finding users by email: " + ex.getMessage(), ex.getStackTrace());
+            throw new ApplicationException("Error finding users by email: " + ex.getMessage());
+        } finally {
+            _databaseManager.closeConnectionSource();
+        }
     }
 }

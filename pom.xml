@@ -105,6 +105,16 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sizovs</groupId>
+            <artifactId>pipelinr</artifactId>
+            <version>0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.kylesilver</groupId>
+            <artifactId>result-type-jvm</artifactId>
+            <version>0.1.2</version>
+        </dependency>
     </dependencies>
 
     <build>

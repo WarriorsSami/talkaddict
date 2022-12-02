@@ -1,5 +1,6 @@
 package sami.talkaddict.application.controllers;
 
+import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
@@ -10,11 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import sami.talkaddict.application.cqrs.commands.auth.LoginUser;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.infrastructure.utils.Config;
-import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -33,11 +34,13 @@ public class LoginController implements Initializable {
     private Button _loginButton;
 
     private Logger _logger;
+    private Pipeline _mediator;
     private UserViewModel _userViewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         _logger = ProviderService.provideLogger(LoginController.class);
+        _mediator = ProviderService.provideMediator();
         _userViewModel = new UserViewModel();
         bindViewModelToFields();
         _passwordTextField.setVisible(false);
@@ -52,8 +55,14 @@ public class LoginController implements Initializable {
     @FXML
     private void onLoginUser(ActionEvent actionEvent) {
         try {
-            AuthenticationManager.login(_userViewModel);
-            SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _loginButton);
+            var response = _mediator.send(new LoginUser.Command(_userViewModel));
+                if (response.isOk()) {
+                    _logger.info("User logged in successfully");
+                    SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _loginButton);
+                } else {
+                    _logger.error("User login failed");
+                    throw response.err().orElseThrow();
+                }
         } catch (ApplicationException ex) {
             SceneFxManager.showAlertDialog(
                     "Invalid credentials",

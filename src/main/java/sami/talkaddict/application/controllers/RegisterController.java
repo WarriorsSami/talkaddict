@@ -1,5 +1,6 @@
 package sami.talkaddict.application.controllers;
 
+import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
@@ -12,10 +13,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import net.synedra.validatorfx.Validator;
+import sami.talkaddict.application.cqrs.commands.auth.RegisterUser;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.Config;
-import sami.talkaddict.infrastructure.utils.managers.AuthenticationManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -36,12 +37,14 @@ public class RegisterController implements Initializable {
     private Button _registerButton;
 
     private Logger _logger;
+    private Pipeline _mediator;
     private UserViewModel _userViewModel;
     private Validator _validator;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         _logger = ProviderService.provideLogger(RegisterController.class);
+        _mediator = ProviderService.provideMediator();
         _userViewModel = new UserViewModel();
         _validator = new Validator();
         bindViewModelToFields();
@@ -96,8 +99,14 @@ public class RegisterController implements Initializable {
     private void onRegisterUser(ActionEvent actionEvent) {
         try {
             if (_validator.validate()) {
-                AuthenticationManager.register(_userViewModel);
-                SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _registerButton);
+                var response = _mediator.send(new RegisterUser.Command(_userViewModel));
+                if (response.isOk()) {
+                    _logger.info("User registered successfully");
+                    SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _registerButton);
+                } else {
+                    _logger.error("User registration failed");
+                    throw response.err().orElseThrow();
+                }
             } else {
                 _logger.warn("Validation failed");
                 var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());
