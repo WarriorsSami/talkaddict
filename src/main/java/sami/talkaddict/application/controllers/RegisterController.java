@@ -92,7 +92,6 @@ public class RegisterController implements Initializable {
         _userViewModel.usernameProperty().bind(_usernameField.textProperty());
         _userViewModel.emailProperty().bind(_emailField.textProperty());
         _userViewModel.passwordProperty().bind(_passwordField.textProperty());
-        _userViewModel.passwordProperty().bind(_passwordTextField.textProperty());
     }
 
     @FXML

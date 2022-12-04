@@ -49,7 +49,6 @@ public class LoginController implements Initializable {
     private void bindViewModelToFields() {
         _userViewModel.emailProperty().bind(_emailField.textProperty());
         _userViewModel.passwordProperty().bind(_passwordField.textProperty());
-        _userViewModel.passwordProperty().bind(_passwordTextField.textProperty());
     }
 
     @FXML
