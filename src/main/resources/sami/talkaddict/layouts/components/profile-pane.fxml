@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ProfileEditorController">
+<AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../../styles/bootstrapfx.css, @../../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ProfileController">
     <VBox alignment="CENTER" prefHeight="460.0" prefWidth="980.0">
         <Label fx:id="_welcomeLabel" layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Edit your profile!">
             <font>

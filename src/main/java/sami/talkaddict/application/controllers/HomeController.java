@@ -2,15 +2,15 @@ package sami.talkaddict.application.controllers;
 
 import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import sami.talkaddict.application.cqrs.commands.auth.LogoutUser;
+import javafx.scene.layout.VBox;
+import sami.talkaddict.application.requests.commands.auth.LogoutUser;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.io.IOException;
@@ -21,11 +21,11 @@ public class HomeController implements Initializable {
     @FXML
     private BorderPane _homePane;
     @FXML
-    private FontAwesomeIconView _homeMenuItem;
+    private VBox _homeMenuItem;
     @FXML
-    private FontAwesomeIconView _profileMenuItem;
+    private VBox _profileMenuItem;
     @FXML
-    private FontAwesomeIconView _logoutMenuItem;
+    private VBox _logoutMenuItem;
 
     private Logger _logger;
     private Pipeline _mediator;
@@ -35,7 +35,7 @@ public class HomeController implements Initializable {
         _logger = ProviderService.provideLogger(HomeController.class);
         _mediator = ProviderService.provideMediator();
         try {
-            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_VIEW));
+            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
         } catch (IOException ex) {
             SceneFxManager.showAlertDialog(
                     "Error",
@@ -47,10 +47,10 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    private void openChatView(MouseEvent mouseEvent) {
+    private void inflateChatPane(MouseEvent mouseEvent) {
         try {
             _logger.info("Opening chat view");
-            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_VIEW));
+            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
         } catch (IOException e) {
             SceneFxManager.showAlertDialog(
                     "Error opening chat view",
@@ -62,10 +62,10 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    private void openProfileView(MouseEvent mouseEvent) {
+    private void inflateProfilePane(MouseEvent mouseEvent) {
         try {
             _logger.info("Opening profile view");
-            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.PROFILE_VIEW));
+            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.PROFILE_PANE));
         } catch (IOException e) {
             SceneFxManager.showAlertDialog(
                     "Error opening profile view",
@@ -77,7 +77,7 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    private void logoutAndOpenMainView(MouseEvent mouseEvent) {
+    private void onLogoutUser(MouseEvent mouseEvent) {
         try {
             _mediator.send(new LogoutUser.Command());
             _logger.info("User logged out");

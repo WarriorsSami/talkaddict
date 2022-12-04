@@ -1,10 +1,10 @@
-package sami.talkaddict.application.cqrs.commands.auth;
+package sami.talkaddict.application.requests.commands.auth;
 
 import an.awesome.pipelinr.Voidy;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.domain.exceptions.ApplicationException;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
 import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
 

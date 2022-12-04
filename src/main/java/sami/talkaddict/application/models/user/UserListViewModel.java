@@ -6,7 +6,7 @@ import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.converters.UserConverter;
 
 import java.sql.SQLException;

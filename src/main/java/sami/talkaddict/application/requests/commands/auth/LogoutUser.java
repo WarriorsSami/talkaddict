@@ -1,7 +1,7 @@
-package sami.talkaddict.application.cqrs.commands.auth;
+package sami.talkaddict.application.requests.commands.auth;
 
 import an.awesome.pipelinr.Voidy;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
 
 public class LogoutUser {

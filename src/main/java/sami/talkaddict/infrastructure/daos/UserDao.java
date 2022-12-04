@@ -1,4 +1,4 @@
-package sami.talkaddict.infrastructure.dao;
+package sami.talkaddict.infrastructure.daos;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.logger.Logger;
@@ -7,7 +7,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.domain.entities.User;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 
 import java.sql.SQLException;

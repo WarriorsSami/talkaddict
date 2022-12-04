@@ -13,10 +13,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import net.synedra.validatorfx.Validator;
-import sami.talkaddict.application.cqrs.commands.auth.RegisterUser;
+import sami.talkaddict.application.requests.commands.auth.RegisterUser;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;

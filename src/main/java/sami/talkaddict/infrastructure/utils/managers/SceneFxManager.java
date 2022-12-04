@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import net.synedra.validatorfx.ValidationMessage;
 import net.synedra.validatorfx.ValidationResult;
 import sami.talkaddict.TalkaddictApplication;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 
 import java.io.IOException;
 

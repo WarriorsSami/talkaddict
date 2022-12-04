@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import sami.talkaddict.application.cqrs.queries.auth.GetLoggedInUser;
+import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 

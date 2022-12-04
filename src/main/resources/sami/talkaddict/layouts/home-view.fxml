@@ -9,24 +9,24 @@
 
 <AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
     <VBox prefHeight="460.0" prefWidth="78.0" spacing="20.0" styleClass="panel-body, context-menu, menu-panel">
-        <VBox layoutX="23.0" layoutY="98.0" styleClass="menu-panel-item">
-            <FontAwesomeIconView fx:id="_homeMenuItem" glyphName="HOME" onMouseClicked="#openChatView" size="40" styleClass="icon-blue" />
+        <VBox fx:id="_homeMenuItem" onMouseClicked="#inflateChatPane" layoutX="23.0" layoutY="98.0" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="HOME" size="40" styleClass="icon-blue" />
             <Label styleClass="text-white" text="Home">
                 <font>
                     <Font name="Ubuntu Mono Bold" size="15.0" />
                 </font>
             </Label>
         </VBox>
-        <VBox layoutX="23.0" layoutY="164.0" styleClass="menu-panel-item">
-            <FontAwesomeIconView fx:id="_profileMenuItem" glyphName="USER" onMouseClicked="#openProfileView" size="40" styleClass="icon-blue" />
+        <VBox fx:id="_profileMenuItem" onMouseClicked="#inflateProfilePane" layoutX="23.0" layoutY="164.0" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="USER" size="40" styleClass="icon-blue" />
             <Label styleClass="text-white" text="Profile">
                 <font>
                     <Font name="Ubuntu Mono Bold" size="15.0" />
                 </font>
             </Label>
         </VBox>
-        <VBox layoutX="23.0" layoutY="230.0" styleClass="menu-panel-item">
-            <FontAwesomeIconView fx:id="_logoutMenuItem" glyphName="SIGN_OUT" onMouseClicked="#logoutAndOpenMainView" size="40" styleClass="icon-blue" />
+        <VBox fx:id="_logoutMenuItem" onMouseClicked="#onLogoutUser" layoutX="23.0" layoutY="230.0" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="SIGN_OUT" size="40" styleClass="icon-blue" />
             <Label styleClass="text-white" text="Logout">
                 <font>
                     <Font name="Ubuntu Mono Bold" size="15.0" />

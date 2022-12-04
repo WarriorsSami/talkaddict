@@ -1,4 +1,4 @@
-package sami.talkaddict.infrastructure.utils;
+package sami.talkaddict.di;
 
 public class Config {
     public static class Database {
@@ -14,12 +14,12 @@ public class Config {
     }
 
     public static class Views {
-        public static final String MAIN_VIEW = "layouts/main-view.fxml";
-        public static final String LOGIN_VIEW = "layouts/login-view.fxml";
-        public static final String REGISTER_VIEW = "layouts/register-view.fxml";
+        public static final String MAIN_VIEW = "layouts/splash-view.fxml";
         public static final String HOME_VIEW = "layouts/home-view.fxml";
-        public static final String PROFILE_VIEW = "layouts/profile-editor-view.fxml";
-        public static final String CHAT_VIEW = "layouts/chat-view.fxml";
+        public static final String LOGIN_PANE = "layouts/components/login-pane.fxml";
+        public static final String REGISTER_PANE = "layouts/components/register-pane.fxml";
+        public static final String PROFILE_PANE = "layouts/components/profile-pane.fxml";
+        public static final String CHAT_PANE = "layouts/components/chat-pane.fxml";
     }
 
     public static class AppSettings {
@@ -39,8 +39,6 @@ public class Config {
         public static final String EMAIL_FIELD_REGISTER_KEY = "emailFieldRegister";
         public static final String PASSWORD_FIELD_REGISTER_KEY = "passwordFieldRegister";
 
-        public static final String USERNAME_FIELD_LOGIN_KEY = "usernameFieldLogin";
-        public static final String PASSWORD_FIELD_LOGIN_KEY = "passwordFieldLogin";
     }
 
     public static class FxmlSettings {

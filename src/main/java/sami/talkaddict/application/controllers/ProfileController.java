@@ -6,14 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import sami.talkaddict.application.cqrs.queries.auth.GetLoggedInUser;
+import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ProfileEditorController implements Initializable {
+public class ProfileController implements Initializable {
     @FXML
     private Label _welcomeLabel;
 
@@ -22,14 +22,14 @@ public class ProfileEditorController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _logger = ProviderService.provideLogger(ProfileEditorController.class);
+        _logger = ProviderService.provideLogger(ProfileController.class);
         _mediator = ProviderService.provideMediator();
         try {
             var response = _mediator.send(new GetLoggedInUser.Query());
             if (response.isOk()) {
                 var loggedInUser = response.ok().orElseThrow();
                 _logger.info("Current logged in user name: " + loggedInUser.getUsername());
-                _welcomeLabel.setText("Edit your profile, " + loggedInUser.getUsername() + "!");
+                _welcomeLabel.setText(loggedInUser.getUsername() + "'s profile");
             } else {
                 _logger.error("Failed to get logged in user");
                 throw response.err().orElseThrow();
