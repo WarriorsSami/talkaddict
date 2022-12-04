@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.ValidationMessage;
 import net.synedra.validatorfx.ValidationResult;
@@ -22,6 +23,11 @@ public class SceneFxManager {
         var scene = new Scene(loader.load());
         stage.setScene(scene);
         stage.show();
+    }
+
+    public static Pane loadPane(String path) throws IOException {
+        var loader = new FXMLLoader(TalkaddictApplication.class.getResource(path));
+        return loader.load();
     }
 
     public static void showAlertDialog(String title, String message, Alert.AlertType type) {

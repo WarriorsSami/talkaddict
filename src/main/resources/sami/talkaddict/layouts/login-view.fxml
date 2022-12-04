@@ -36,7 +36,7 @@
             <Insets left="15.0" right="15.0" top="20.0" />
         </VBox.margin>
         <FontAwesomeIconView fill="WHITE" glyphName="LOCK" size="1.6em" />
-        <StackPane  HBox.hgrow="ALWAYS">
+        <StackPane HBox.hgrow="ALWAYS">
             <PasswordField fx:id="_passwordField" promptText="Password" styleClass="tf_box" />
             <TextField fx:id="_passwordTextField" promptText="Password" styleClass="tf_box" />
         </StackPane>

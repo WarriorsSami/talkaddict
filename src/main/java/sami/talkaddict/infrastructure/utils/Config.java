@@ -18,6 +18,8 @@ public class Config {
         public static final String LOGIN_VIEW = "layouts/login-view.fxml";
         public static final String REGISTER_VIEW = "layouts/register-view.fxml";
         public static final String HOME_VIEW = "layouts/home-view.fxml";
+        public static final String PROFILE_VIEW = "layouts/profile-editor-view.fxml";
+        public static final String CHAT_VIEW = "layouts/chat-view.fxml";
     }
 
     public static class AppSettings {

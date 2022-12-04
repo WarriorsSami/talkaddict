@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
-    <VBox alignment="CENTER" prefHeight="460.0" prefWidth="980.0">
-        <Label layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Label>
-        <Button fx:id="_logoutUserButton" mnemonicParsing="false" onAction="#openMainViewAndLogout"
-                prefHeight="38.0" prefWidth="316.0" styleClass="blue-btn" text="Logout" textFill="WHITE">
-            <font>
-                <Font size="17.0" />
-            </font>
-            <VBox.margin>
-                <Insets left="15.0" right="15.0" top="20.0" />
-            </VBox.margin>
-        </Button>
+    <VBox prefHeight="460.0" prefWidth="78.0" spacing="20.0" styleClass="panel-body, context-menu, menu-panel">
+        <VBox layoutX="23.0" layoutY="98.0" styleClass="menu-panel-item">
+            <FontAwesomeIconView fx:id="_homeMenuItem" glyphName="HOME" onMouseClicked="#openChatView" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Home">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
+        <VBox layoutX="23.0" layoutY="164.0" styleClass="menu-panel-item">
+            <FontAwesomeIconView fx:id="_profileMenuItem" glyphName="USER" onMouseClicked="#openProfileView" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Profile">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
+        <VBox layoutX="23.0" layoutY="230.0" styleClass="menu-panel-item">
+            <FontAwesomeIconView fx:id="_logoutMenuItem" glyphName="SIGN_OUT" onMouseClicked="#logoutAndOpenMainView" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Logout">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
     </VBox>
+    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="460.0" prefWidth="901.0" />
 </AnchorPane>

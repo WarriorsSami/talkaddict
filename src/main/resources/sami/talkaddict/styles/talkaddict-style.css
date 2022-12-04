@@ -4,6 +4,14 @@
 .pane{
     -fx-background-color: #2196f3;
 }
+.menu-panel{
+    -fx-background-color: #151928;
+    -fx-alignment: center;
+    -fx-padding: 10.0, 10.0, 10.0, 40.0;
+}
+.menu-panel-item{
+    -fx-alignment: center;
+}
 .trans-btn-white-border{
     -fx-background-color: transparent;
     -fx-background-radius: 5px;
@@ -31,4 +39,10 @@
     -fx-background-color: #2196f3;
     -fx-background-radius: 5px;
     -fx-text-fill: whitesmoke;
+}
+.text-white{
+    -fx-text-fill: whitesmoke;
+}
+.icon-blue{
+    -fx-fill: #2196f3;
 }
