@@ -54,6 +54,11 @@ public class LoginController implements Initializable {
     @FXML
     private void onLoginUser(ActionEvent actionEvent) {
         try {
+            // if password text field is active, update password field
+            if (_passwordTextField.isVisible()) {
+                _passwordField.setText(_passwordTextField.getText());
+            }
+
             var response = _mediator.send(new LoginUser.Command(_userViewModel));
                 if (response.isOk()) {
                     _logger.info("User logged in successfully");

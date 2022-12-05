@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../../styles/bootstrapfx.css, @../../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ProfileController">
-    <VBox alignment="CENTER" prefHeight="460.0" prefWidth="980.0">
-        <Label fx:id="_welcomeLabel" layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Edit your profile!">
-            <font>
-                <Font name="Ubuntu Mono Bold" size="25.0" />
-            </font>
-        </Label>
-    </VBox>
+   <BorderPane layoutX="240.0" layoutY="55.0" prefHeight="350.0" prefWidth="500.0">
+      <center>
+          <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+              <ImageView fitHeight="140.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"/>
+              <TextField/>
+              <TextArea prefHeight="200.0" prefWidth="200.0"/>
+          </VBox>
+      </center>
+   </BorderPane>
 </AnchorPane>

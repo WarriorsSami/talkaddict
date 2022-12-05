@@ -97,6 +97,11 @@ public class RegisterController implements Initializable {
     @FXML
     private void onRegisterUser(ActionEvent actionEvent) {
         try {
+            // if password text field is active, update password field
+            if (_passwordTextField.isVisible()) {
+                _passwordField.setText(_passwordTextField.getText());
+            }
+
             if (_validator.validate()) {
                 var response = _mediator.send(new RegisterUser.Command(_userViewModel));
                 if (response.isOk()) {
