@@ -69,7 +69,7 @@ public class ProviderService {
         if (_mediator == null) {
             _mediator = new Pipelinr()
                     .with(() -> Stream.of(
-                            new RegisterUser.Handler(),
+                            new RegisterUser.Handler(provideLogger(RegisterUser.class)),
                             new LoginUser.Handler(
                                     provideLogger(LoginUser.class),
                                     provideDao(User.class)

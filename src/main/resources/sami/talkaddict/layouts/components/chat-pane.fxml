@@ -10,7 +10,7 @@
             fx:controller="sami.talkaddict.application.controllers.ChatController"
             prefHeight="400.0" prefWidth="600.0">
     <VBox alignment="CENTER" prefHeight="460.0" prefWidth="980.0">
-        <Label fx:id="_welcomeLabel" layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
+        <Label styleClass="label" fx:id="_welcomeLabel" layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
             <font>
                 <Font name="Ubuntu Mono Bold" size="25.0" />
             </font>

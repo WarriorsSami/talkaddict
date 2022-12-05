@@ -1,19 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../../styles/bootstrapfx.css, @../../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ProfileController">
-   <BorderPane layoutX="240.0" layoutY="55.0" prefHeight="350.0" prefWidth="500.0">
+<AnchorPane stylesheets="@../../styles/bootstrapfx.css, @../../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ProfileController">
+   <BorderPane layoutY="40.0" prefHeight="350.0" prefWidth="950.0">
       <center>
           <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
-              <ImageView fitHeight="140.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"/>
-              <TextField/>
-              <TextArea prefHeight="200.0" prefWidth="200.0"/>
+              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                  <ImageView fx:id="_avatarImageView" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true">
+                      <Image url="@../../../../../../../../../../../../home/sami/Pictures/Wallpapers/flutter-logo-4k-qn.jpg" />
+                  </ImageView>
+                  <Button styleClass="btn, btn-primary, btn-rounded" text="Upload avatar">
+                      <font>
+                          <Font name="Ubuntu Mono Bold" size="15.0" />
+                      </font>
+                  </Button>
+                  <padding>
+                      <Insets left="50.0" />
+                  </padding>
+              </VBox>
+              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="18.0">
+                  <Label styleClass="label" text="Username: ">
+                      <font>
+                          <Font name="Ubuntu Mono Bold" size="15.0" />
+                      </font>
+                  </Label>
+                  <TextField fx:id="_usernameField" prefHeight="30.0" prefWidth="290.0" styleClass="tf-input" />
+              </HBox>
+              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                  <Label styleClass="label" text="Description: ">
+                      <font>
+                          <Font name="Ubuntu Mono Bold" size="15.0" />
+                      </font>
+                  </Label>
+                  <TextArea fx:id="_descriptionField" prefHeight="70.0" prefWidth="290.0" styleClass="tf-input" wrapText="true" />
+              </HBox>
           </VBox>
       </center>
    </BorderPane>

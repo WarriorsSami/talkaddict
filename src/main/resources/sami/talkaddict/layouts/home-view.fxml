@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
     <VBox prefHeight="460.0" prefWidth="78.0" spacing="20.0" styleClass="panel-body, context-menu, menu-panel">
-        <VBox fx:id="_homeMenuItem" onMouseClicked="#inflateChatPane" layoutX="23.0" layoutY="98.0" styleClass="menu-panel-item">
+        <VBox fx:id="_userAvatar" styleClass="menu-panel-item" spacing="5.0">
+            <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+                <Image url="@../../../../../../../../../../../home/sami/Pictures/Wallpapers/flutter-logo-4k-qn.jpg"/>
+            </ImageView>
+            <Label fx:id="_usernameLabel" styleClass="text-white" text="Avatar">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+            <VBox.margin>
+                <Insets top="10.0" bottom="20.0" />
+            </VBox.margin>
+        </VBox>
+        <VBox fx:id="_homeMenuItem" onMouseClicked="#inflateChatPane" styleClass="menu-panel-item">
             <FontAwesomeIconView glyphName="HOME" size="40" styleClass="icon-blue" />
             <Label styleClass="text-white" text="Home">
                 <font>
@@ -17,7 +31,7 @@
                 </font>
             </Label>
         </VBox>
-        <VBox fx:id="_profileMenuItem" onMouseClicked="#inflateProfilePane" layoutX="23.0" layoutY="164.0" styleClass="menu-panel-item">
+        <VBox fx:id="_profileMenuItem" onMouseClicked="#inflateProfilePane" styleClass="menu-panel-item">
             <FontAwesomeIconView glyphName="USER" size="40" styleClass="icon-blue" />
             <Label styleClass="text-white" text="Profile">
                 <font>
@@ -25,7 +39,7 @@
                 </font>
             </Label>
         </VBox>
-        <VBox fx:id="_logoutMenuItem" onMouseClicked="#onLogoutUser" layoutX="23.0" layoutY="230.0" styleClass="menu-panel-item">
+        <VBox fx:id="_logoutMenuItem" onMouseClicked="#onLogoutUser" styleClass="menu-panel-item">
             <FontAwesomeIconView glyphName="SIGN_OUT" size="40" styleClass="icon-blue" />
             <Label styleClass="text-white" text="Logout">
                 <font>
@@ -34,5 +48,5 @@
             </Label>
         </VBox>
     </VBox>
-    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="460.0" prefWidth="901.0" />
+    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="460.0" prefWidth="980.0" styleClass="blue-pane" />
 </AnchorPane>

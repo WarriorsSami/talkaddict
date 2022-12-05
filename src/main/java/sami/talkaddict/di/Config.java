@@ -39,10 +39,14 @@ public class Config {
         public static final String EMAIL_FIELD_REGISTER_KEY = "emailFieldRegister";
         public static final String PASSWORD_FIELD_REGISTER_KEY = "passwordFieldRegister";
 
+        public static final String AVATARS_DIRECTORY_PATH = "/media/sami/Dev Space4/JavaStuff/talkaddict/src/main/resources/sami/talkaddict/assets/avatars";
     }
 
     public static class FxmlSettings {
         public static final String EYE_GLYPH = "EYE";
         public static final String EYE_SLASH_GLYPH = "EYE_SLASH";
+
+        public static final Double AVATAR_CLIP_ARC_WIDTH = 360.0;
+        public static final Double AVATAR_CLIP_ARC_HEIGHT = 360.0;
     }
 }

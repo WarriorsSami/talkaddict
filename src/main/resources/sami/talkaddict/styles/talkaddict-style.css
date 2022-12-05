@@ -6,7 +6,7 @@
 }
 .menu-panel{
     -fx-background-color: #151928;
-    -fx-alignment: center;
+    -fx-alignment: top-center;
     -fx-padding: 10.0, 10.0, 10.0, 40.0;
 }
 .menu-panel-item{
@@ -35,13 +35,28 @@
 .tf{
     -fx-background-color: transparent;
 }
+.tf-input{
+    -fx-background-color: whitesmoke;
+    -fx-font-weight: bold;
+    -fx-text-fill: #151928;
+    -fx-border-style: solid;
+}
+.label{
+   -fx-text-fill: #151928;
+}
 .blue-btn{
     -fx-background-color: #2196f3;
     -fx-background-radius: 5px;
     -fx-text-fill: whitesmoke;
 }
+.btn-rounded{
+    -fx-background-radius: 20px;
+}
 .text-white{
     -fx-text-fill: whitesmoke;
+}
+.blue-pane{
+    -fx-background-color: #42909a;
 }
 .icon-blue{
     -fx-fill: #2196f3;

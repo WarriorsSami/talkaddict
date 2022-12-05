@@ -5,12 +5,17 @@ import com.j256.ormlite.logger.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.auth.LogoutUser;
+import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
+import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.io.IOException;
@@ -21,6 +26,12 @@ public class HomeController implements Initializable {
     @FXML
     private BorderPane _homePane;
     @FXML
+    private VBox _userAvatar;
+    @FXML
+    private ImageView _avatarImageView;
+    @FXML
+    private Label _usernameLabel;
+    @FXML
     private VBox _homeMenuItem;
     @FXML
     private VBox _profileMenuItem;
@@ -29,14 +40,32 @@ public class HomeController implements Initializable {
 
     private Logger _logger;
     private Pipeline _mediator;
+    private UserViewModel _userViewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         _logger = ProviderService.provideLogger(HomeController.class);
         _mediator = ProviderService.provideMediator();
         try {
+            var response = _mediator.send(new GetLoggedInUser.Query());
+            if (response.isOk()) {
+                _userViewModel = new UserViewModel(response.ok().orElseThrow());
+
+                _usernameLabel.setText(_userViewModel.usernameProperty().get());
+                var avatarImage = AvatarManager.convertByteArrayToImage(_userViewModel.avatarProperty().get());
+
+                _avatarImageView.setClip(AvatarManager.getAvatarClip(
+                        _avatarImageView.getFitWidth(),
+                        _avatarImageView.getFitHeight())
+                );
+                _avatarImageView.setImage(avatarImage);
+            } else {
+                _logger.error("Failed to get logged in user!");
+                throw response.err().orElseThrow();
+            }
+
             _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             SceneFxManager.showAlertDialog(
                     "Error",
                     "Error loading chat view",

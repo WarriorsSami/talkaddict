@@ -27,7 +27,7 @@ public class UserListViewModel {
         userFxObservableList.clear();
 
         users.forEach(user -> {
-            userFxObservableList.add(UserConverter.toUserFx(user));
+            userFxObservableList.add(UserConverter.convertUserToUserFx(user));
         });
     }
 
@@ -39,7 +39,7 @@ public class UserListViewModel {
         userFxObservableList.clear();
 
         users.forEach(user -> {
-            userFxObservableList.add(UserConverter.toUserFx(user));
+            userFxObservableList.add(UserConverter.convertUserToUserFx(user));
         });
     }
 }

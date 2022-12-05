@@ -25,14 +25,24 @@ public class UserViewModel {
         userDao = ProviderService.provideDao(User.class);
     }
 
+    public UserViewModel(User user) {
+        this();
+        initUser(user);
+    }
+
+    private void initUser(User user) {
+        var userFx = UserConverter.convertUserToUserFx(user);
+        userFxObject.set(userFx);
+    }
+
     public void saveOrUpdateUser() throws ApplicationException {
-        var user = UserConverter.toUser(userFxObject.get());
+        var user = UserConverter.convertUserFxToUser(userFxObject.get());
         userDao.createOrUpdate(user);
     }
 
     public void initUserByEmail(String email) throws ApplicationException {
         var user = ((UserDao) userDao).findByEmail(email);
-        userFxObject.set(UserConverter.toUserFx(user));
+        userFxObject.set(UserConverter.convertUserToUserFx(user));
     }
 
     public IntegerProperty idProperty() {

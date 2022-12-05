@@ -16,7 +16,7 @@
       prefHeight="480.0" prefWidth="520.0" styleClass="blue-panel" stylesheets="@../../styles/talkaddict-style.css"
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="sami.talkaddict.application.controllers.LoginController">
-    <Label text="Login" textFill="#2196f3">
+    <Label text="Login" styleClass="text-white">
         <font>
             <Font size="20.0" />
         </font>

@@ -7,7 +7,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="460.0" prefWidth="980.0" styleClass="parent" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.SplashController">
+<AnchorPane id="AnchorPane" prefHeight="460.0" prefWidth="980.0" styleClass="parent" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.SplashController">
     <Pane prefHeight="460.0" prefWidth="980.0" styleClass="pane">
         <Label layoutX="21.0" layoutY="98.0" text="Don't have an account?" textFill="WHITE">
             <font>

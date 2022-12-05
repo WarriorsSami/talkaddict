@@ -1,10 +1,12 @@
 package sami.talkaddict.application.requests.commands.auth;
 
 import an.awesome.pipelinr.Voidy;
+import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.di.Config;
+import sami.talkaddict.domain.exceptions.ApplicationException;
+import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
 import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
 
@@ -13,6 +15,12 @@ public class RegisterUser {
     }
 
     public static class Handler implements an.awesome.pipelinr.Command.Handler<Command, Result<Voidy, Exception>> {
+        private final Logger _logger;
+
+        public Handler(Logger logger) {
+            _logger = logger;
+        }
+
         @Override
         public Result<Voidy, Exception> handle(Command command) {
             var dto = command.dto;
@@ -29,10 +37,12 @@ public class RegisterUser {
             registeredUser.passwordProperty().set(encodedPassword);
 
             try {
+                registeredUser.avatarProperty().set(AvatarManager.getRandomAvatar());
                 registeredUser.saveOrUpdateUser();
                 registeredUser.initUserByEmail(dto.emailProperty().get());
-            } catch (Exception e) {
-                return Result.err(e);
+            } catch (Exception ex) {
+                _logger.error(ex.toString());
+                return Result.err(ex);
             }
 
             PreferencesManager.setKey(
