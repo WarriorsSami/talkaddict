@@ -43,7 +43,7 @@ public class Config {
         public static final String DESCRIPTION_FIELD_PROFILE_KEY = "descriptionFieldProfile";
 
         public static final String DEFAULT_USER_DESCRIPTION = "I'm a new user!";
-        public static final String AVATARS_DIRECTORY_PATH = "/media/sami/Dev Space4/JavaStuff/talkaddict/src/main/resources/sami/talkaddict/assets/avatars";
+        public static final String DEFAULT_AVATAR_DIRECTORY_PATH = "AVATAR_DIRECTORY";
     }
 
     public static class FxmlSettings {

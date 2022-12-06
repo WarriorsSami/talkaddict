@@ -23,7 +23,9 @@ public class AvatarManager {
     }
 
     public static byte[] getRandomAvatar() {
-        var file = getRandomFileFromDirectory(Config.ValidationTweaks.AVATARS_DIRECTORY_PATH);
+        var file = getRandomFileFromDirectory(
+                DotenvManager.get(Config.ValidationTweaks.DEFAULT_AVATAR_DIRECTORY_PATH)
+        );
         return convertFileToByteArray(file);
     }
 
