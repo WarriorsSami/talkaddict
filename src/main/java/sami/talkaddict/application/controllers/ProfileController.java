@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import net.synedra.validatorfx.Validator;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
@@ -108,6 +109,16 @@ public class ProfileController implements Initializable {
 
     @FXML
     private void onSaveProfileChanges(ActionEvent event) {
+        _saveProfileProgressBar.setVisible(true);
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            _saveProfileProgressBar.setVisible(false);
+        }).start();
+
         try {
             if (_validator.validate()) {
                 var response = _mediator.send(new UpdateUserProfile.Command(_userViewModel));
@@ -126,7 +137,11 @@ public class ProfileController implements Initializable {
                 }
 
                 _userViewModel.initFromUser(responseLoggedInUser.ok().orElseThrow());
-                SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _saveChangesButton);
+                SceneFxManager.showToastNotification(
+                        "Success",
+                        "Profile updated successfully",
+                        Duration.seconds(5)
+                );
             } else {
                 _logger.warn("Validation failed");
                 var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());

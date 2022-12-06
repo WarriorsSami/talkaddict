@@ -10,8 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.ValidationMessage;
 import net.synedra.validatorfx.ValidationResult;
+import org.controlsfx.control.Notifications;
 import sami.talkaddict.TalkaddictApplication;
 import sami.talkaddict.di.Config;
 
@@ -46,6 +48,15 @@ public class SceneFxManager {
         alert.setTitle(title);
         alert.setResizable(true);
         alert.show();
+    }
+
+    public static void showToastNotification(String title, String message, Duration duration) {
+        Notifications.create()
+                .darkStyle()
+                .title(title)
+                .text(message)
+                .hideAfter(duration)
+                .showInformation();
     }
 
     public static void togglePasswordField(PasswordField passwordField,
