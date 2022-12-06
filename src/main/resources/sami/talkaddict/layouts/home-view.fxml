@@ -11,12 +11,10 @@
 <AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
     <VBox prefHeight="460.0" prefWidth="78.0" spacing="20.0" styleClass="panel-body, context-menu, menu-panel">
         <VBox fx:id="_userAvatar" styleClass="menu-panel-item" spacing="5.0">
-            <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
-                <Image url="@../../../../../../../../../../../home/sami/Pictures/Wallpapers/flutter-logo-4k-qn.jpg"/>
-            </ImageView>
-            <Label fx:id="_usernameLabel" styleClass="text-white" text="Avatar">
+            <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" />
+            <Label fx:id="_usernameLabel" styleClass="text-white" text="User">
                 <font>
-                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                    <Font name="Ubuntu Mono Bold" size="12.0" />
                 </font>
             </Label>
             <VBox.margin>
