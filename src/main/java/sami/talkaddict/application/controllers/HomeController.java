@@ -47,6 +47,8 @@ public class HomeController implements Initializable {
     private Pipeline _mediator;
     private UserViewModel _userViewModel;
 
+    private Timeline _updateLoggedInUserViewModelTimeline;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         _logger = ProviderService.provideLogger(HomeController.class);
@@ -76,14 +78,14 @@ public class HomeController implements Initializable {
     }
 
     private void updateLoggedInUserViewModelPeriodically() {
-         var timeline = new Timeline(
+         _updateLoggedInUserViewModelTimeline = new Timeline(
                  new KeyFrame(
                          Duration.seconds(5),
                          event -> updateLoggedInUserViewModel()
                  )
          );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        _updateLoggedInUserViewModelTimeline.setCycleCount(Timeline.INDEFINITE);
+        _updateLoggedInUserViewModelTimeline.play();
     }
 
     private void updateLoggedInUserViewModel() {
@@ -152,6 +154,7 @@ public class HomeController implements Initializable {
     private void onLogoutUser(MouseEvent mouseEvent) {
         try {
             _mediator.send(new LogoutUser.Command());
+            _updateLoggedInUserViewModelTimeline.stop();
             _logger.info("User logged out");
             SceneFxManager.redirectTo(Config.Views.MAIN_VIEW, _logoutMenuItem);
         } catch (Exception ex) {
