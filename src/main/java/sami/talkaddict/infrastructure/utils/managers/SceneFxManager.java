@@ -8,12 +8,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.ValidationMessage;
 import net.synedra.validatorfx.ValidationResult;
 import sami.talkaddict.TalkaddictApplication;
 import sami.talkaddict.di.Config;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SceneFxManager {
@@ -28,6 +30,15 @@ public class SceneFxManager {
     public static Pane loadPane(String path) throws IOException {
         var loader = new FXMLLoader(TalkaddictApplication.class.getResource(path));
         return loader.load();
+    }
+
+    public static File loadFileUsingFileChooser(Node anchor) {
+        var fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose a file");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+        return fileChooser.showOpenDialog(anchor.getScene().getWindow());
     }
 
     public static void showAlertDialog(String title, String message, Alert.AlertType type) {

@@ -24,6 +24,10 @@ public class ProfileController implements Initializable {
     @FXML
     private ImageView _avatarImageView;
     @FXML
+    private Button _uploadAvatarButton;
+    @FXML
+    private Button _resetAvatarButton;
+    @FXML
     private TextField _usernameField;
     @FXML
     private TextArea _descriptionField;
@@ -140,5 +144,22 @@ public class ProfileController implements Initializable {
             );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
+    }
+
+    @FXML
+    private void onUploadAvatar() {
+        var file = SceneFxManager.loadFileUsingFileChooser(_uploadAvatarButton);
+        if (file != null) {
+            _userViewModel.avatarProperty().set(AvatarManager.convertFileToByteArray(file));
+            var fileAsByteArray = AvatarManager.convertFileToByteArray(file);
+            _avatarImageView.setImage(AvatarManager.convertByteArrayToImage(fileAsByteArray));
+        }
+    }
+
+    @FXML
+    private void onResetAvatar() {
+        var randomAvatar = AvatarManager.getRandomAvatar();
+        _userViewModel.avatarProperty().set(randomAvatar);
+        _avatarImageView.setImage(AvatarManager.convertByteArrayToImage(randomAvatar));
     }
 }
