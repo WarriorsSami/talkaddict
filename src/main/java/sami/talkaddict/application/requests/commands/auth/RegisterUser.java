@@ -1,10 +1,12 @@
-package sami.talkaddict.application.cqrs.commands.auth;
+package sami.talkaddict.application.requests.commands.auth;
 
 import an.awesome.pipelinr.Voidy;
+import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.domain.exceptions.ApplicationException;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
 import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
 
@@ -13,8 +15,16 @@ public class RegisterUser {
     }
 
     public static class Handler implements an.awesome.pipelinr.Command.Handler<Command, Result<Voidy, Exception>> {
+        private final Logger _logger;
+
+        public Handler(Logger logger) {
+            _logger = logger;
+        }
+
         @Override
         public Result<Voidy, Exception> handle(Command command) {
+            _logger.info("RegisterUser Use Case invoked");
+
             var dto = command.dto;
             if (dto == null) {
                 return Result.err(new ApplicationException("Invalid register data provided!"));
@@ -27,12 +37,15 @@ public class RegisterUser {
             registeredUser.emailProperty().set(dto.emailProperty().get());
             registeredUser.usernameProperty().set(dto.usernameProperty().get());
             registeredUser.passwordProperty().set(encodedPassword);
+            registeredUser.descriptionProperty().set(Config.ValidationTweaks.DEFAULT_USER_DESCRIPTION);
 
             try {
+                registeredUser.avatarProperty().set(AvatarManager.getRandomAvatar());
                 registeredUser.saveOrUpdateUser();
                 registeredUser.initUserByEmail(dto.emailProperty().get());
-            } catch (Exception e) {
-                return Result.err(e);
+            } catch (Exception ex) {
+                _logger.error(ex.toString());
+                return Result.err(ex);
             }
 
             PreferencesManager.setKey(

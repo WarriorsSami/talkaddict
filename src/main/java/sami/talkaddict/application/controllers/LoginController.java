@@ -11,11 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import sami.talkaddict.application.cqrs.commands.auth.LoginUser;
+import sami.talkaddict.application.requests.commands.auth.LoginUser;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.exceptions.ApplicationException;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -44,17 +44,22 @@ public class LoginController implements Initializable {
         _userViewModel = new UserViewModel();
         bindViewModelToFields();
         _passwordTextField.setVisible(false);
+        _logger.info("Login View Initialized");
     }
 
     private void bindViewModelToFields() {
         _userViewModel.emailProperty().bind(_emailField.textProperty());
         _userViewModel.passwordProperty().bind(_passwordField.textProperty());
-        _userViewModel.passwordProperty().bind(_passwordTextField.textProperty());
     }
 
     @FXML
     private void onLoginUser(ActionEvent actionEvent) {
         try {
+            // if password text field is active, update password field
+            if (_passwordTextField.isVisible()) {
+                _passwordField.setText(_passwordTextField.getText());
+            }
+
             var response = _mediator.send(new LoginUser.Command(_userViewModel));
                 if (response.isOk()) {
                     _logger.info("User logged in successfully");

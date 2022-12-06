@@ -4,43 +4,35 @@ import com.j256.ormlite.logger.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import sami.talkaddict.TalkaddictApplication;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.infrastructure.utils.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class SplashController implements Initializable {
     @FXML
-    private VBox _vbox;
+    private VBox _authPane;
     private Parent _fxml;
 
     private Logger _logger;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        _logger = ProviderService.provideLogger(MainController.class);
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
-        t.setToX(_vbox.getLayoutX() * 20);
+        _logger = ProviderService.provideLogger(SplashController.class);
+        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _authPane);
+        t.setToX(_authPane.getLayoutX() * 20);
         t.play();
         t.setOnFinished((e) -> {
             try {
-                _fxml = FXMLLoader.load(
-                        Objects.requireNonNull(TalkaddictApplication.class
-                        .getResource(Config.Views.LOGIN_VIEW)
-                        ));
-                _vbox.getChildren().removeAll();
-                _vbox.getChildren().setAll(_fxml);
+                _authPane.getChildren().removeAll();
+                _authPane.getChildren().setAll(SceneFxManager.loadPane(Config.Views.LOGIN_PANE));
             } catch (Exception ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
@@ -50,21 +42,18 @@ public class MainController implements Initializable {
                 _logger.error(ex, ex.getMessage(), ex.getStackTrace());
             }
         });
+        _logger.info("Splash View initialized");
     }
 
     @FXML
-    private void openLoginView(ActionEvent event) {
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
-        t.setToX(_vbox.getLayoutX() * 20);
+    private void inflateLoginPane(ActionEvent event) {
+        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _authPane);
+        t.setToX(_authPane.getLayoutX() * 20);
         t.play();
         t.setOnFinished((e) -> {
             try {
-                _fxml = FXMLLoader.load(
-                        Objects.requireNonNull(TalkaddictApplication.class
-                        .getResource(Config.Views.LOGIN_VIEW)
-                        ));
-                _vbox.getChildren().removeAll();
-                _vbox.getChildren().setAll(_fxml);
+                _authPane.getChildren().removeAll();
+                _authPane.getChildren().setAll(SceneFxManager.loadPane(Config.Views.LOGIN_PANE));
             } catch (Exception ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",
@@ -77,18 +66,14 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void openRegisterView(ActionEvent event) {
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _vbox);
+    private void inflateRegisterPane(ActionEvent event) {
+        TranslateTransition t = new TranslateTransition(Duration.seconds(1), _authPane);
         t.setToX(0);
         t.play();
         t.setOnFinished((e) -> {
             try {
-                _fxml = FXMLLoader.load(
-                        Objects.requireNonNull(TalkaddictApplication.class
-                        .getResource(Config.Views.REGISTER_VIEW)
-                        ));
-                _vbox.getChildren().removeAll();
-                _vbox.getChildren().setAll(_fxml);
+                _authPane.getChildren().removeAll();
+                _authPane.getChildren().setAll(SceneFxManager.loadPane(Config.Views.REGISTER_PANE));
             } catch (Exception ex) {
                 SceneFxManager.showAlertDialog(
                         "Initialization error",

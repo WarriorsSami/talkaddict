@@ -7,12 +7,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.synedra.validatorfx.ValidationMessage;
 import net.synedra.validatorfx.ValidationResult;
+import org.controlsfx.control.Notifications;
 import sami.talkaddict.TalkaddictApplication;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SceneFxManager {
@@ -24,11 +29,34 @@ public class SceneFxManager {
         stage.show();
     }
 
+    public static Pane loadPane(String path) throws IOException {
+        var loader = new FXMLLoader(TalkaddictApplication.class.getResource(path));
+        return loader.load();
+    }
+
+    public static File loadFileUsingFileChooser(Node anchor) {
+        var fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose a file");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+        return fileChooser.showOpenDialog(anchor.getScene().getWindow());
+    }
+
     public static void showAlertDialog(String title, String message, Alert.AlertType type) {
         var alert = new Alert(type, message);
         alert.setTitle(title);
         alert.setResizable(true);
         alert.show();
+    }
+
+    public static void showToastNotification(String title, String message, Duration duration) {
+        Notifications.create()
+                .darkStyle()
+                .title(title)
+                .text(message)
+                .hideAfter(duration)
+                .showInformation();
     }
 
     public static void togglePasswordField(PasswordField passwordField,

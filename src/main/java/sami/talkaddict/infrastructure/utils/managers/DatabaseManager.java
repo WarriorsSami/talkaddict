@@ -5,7 +5,7 @@ import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import sami.talkaddict.domain.entities.User;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 
 import java.sql.SQLException;
 

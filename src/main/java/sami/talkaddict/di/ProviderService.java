@@ -5,21 +5,18 @@ import an.awesome.pipelinr.Pipelinr;
 import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.logger.LoggerFactory;
 import sami.talkaddict.TalkaddictApplication;
-import sami.talkaddict.application.controllers.HomeController;
-import sami.talkaddict.application.controllers.LoginController;
-import sami.talkaddict.application.controllers.MainController;
-import sami.talkaddict.application.controllers.RegisterController;
-import sami.talkaddict.application.cqrs.commands.auth.LoginUser;
-import sami.talkaddict.application.cqrs.commands.auth.LogoutUser;
-import sami.talkaddict.application.cqrs.commands.auth.RegisterUser;
-import sami.talkaddict.application.cqrs.queries.auth.GetLoggedInUser;
+import sami.talkaddict.application.controllers.*;
+import sami.talkaddict.application.requests.commands.auth.LoginUser;
+import sami.talkaddict.application.requests.commands.auth.LogoutUser;
+import sami.talkaddict.application.requests.commands.auth.RegisterUser;
+import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
+import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.domain.entities.BaseEntity;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
-import sami.talkaddict.infrastructure.dao.UserDao;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.infrastructure.daos.UserDao;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 import sami.talkaddict.infrastructure.utils.managers.DotenvManager;
 
@@ -43,10 +40,18 @@ public class ProviderService {
 
         _loggers.put(UserViewModel.class, LoggerFactory.getLogger(UserViewModel.class));
 
+        _loggers.put(LoginUser.class, LoggerFactory.getLogger(LoginUser.class));
+        _loggers.put(RegisterUser.class, LoggerFactory.getLogger(RegisterUser.class));
+        _loggers.put(LogoutUser.class, LoggerFactory.getLogger(LogoutUser.class));
+        _loggers.put(GetLoggedInUser.class, LoggerFactory.getLogger(GetLoggedInUser.class));
+        _loggers.put(UpdateUserProfile.class, LoggerFactory.getLogger(UpdateUserProfile.class));
+
         _loggers.put(LoginController.class, LoggerFactory.getLogger(LoginController.class));
         _loggers.put(RegisterController.class, LoggerFactory.getLogger(RegisterController.class));
-        _loggers.put(MainController.class, LoggerFactory.getLogger(MainController.class));
+        _loggers.put(SplashController.class, LoggerFactory.getLogger(SplashController.class));
         _loggers.put(HomeController.class, LoggerFactory.getLogger(HomeController.class));
+        _loggers.put(ChatController.class, LoggerFactory.getLogger(ChatController.class));
+        _loggers.put(ProfileController.class, LoggerFactory.getLogger(ProfileController.class));
 
         if (_logger == null) {
             _logger = LoggerFactory.getLogger(ProviderService.class);
@@ -66,10 +71,23 @@ public class ProviderService {
         if (_mediator == null) {
             _mediator = new Pipelinr()
                     .with(() -> Stream.of(
-                            new RegisterUser.Handler(),
-                            new LoginUser.Handler(provideDao(User.class)),
-                            new LogoutUser.Handler(),
-                            new GetLoggedInUser.Handler(provideDao(User.class))
+                            new RegisterUser.Handler(
+                                    provideLogger(RegisterUser.class)
+                            ),
+                            new LoginUser.Handler(
+                                    provideLogger(LoginUser.class),
+                                    provideDao(User.class)
+                            ),
+                            new LogoutUser.Handler(
+                                    provideLogger(LogoutUser.class)
+                            ),
+                            new GetLoggedInUser.Handler(
+                                    provideLogger(GetLoggedInUser.class),
+                                    provideDao(User.class)
+                            ),
+                            new UpdateUserProfile.Handler(
+                                    provideLogger(UpdateUserProfile.class)
+                            )
                     ));
         }
         _logger.info("Application module initialized.");

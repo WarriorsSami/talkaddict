@@ -1,13 +1,14 @@
-package sami.talkaddict.application.cqrs.commands.auth;
+package sami.talkaddict.application.requests.commands.auth;
 
 import an.awesome.pipelinr.Voidy;
+import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
-import sami.talkaddict.infrastructure.dao.UserDao;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.infrastructure.daos.UserDao;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
 import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
 
@@ -16,14 +17,18 @@ public class LoginUser {
     }
 
     public static class Handler implements an.awesome.pipelinr.Command.Handler<Command, Result<Voidy, Exception>> {
-        public final GenericDao<User> _userDao;
+        private final Logger _logger;
+        private final GenericDao<User> _userDao;
 
-        public Handler(GenericDao<User> userDao) {
+        public Handler(Logger logger, GenericDao<User> userDao) {
+            _logger = logger;
             _userDao = userDao;
         }
 
         @Override
         public Result<Voidy, Exception> handle(Command command) {
+            _logger.info("LoginUser Use Case invoked");
+
             var dto = command.dto;
             if (dto == null) {
                 return Result.err(new ApplicationException("Invalid login credentials!"));
@@ -35,8 +40,9 @@ public class LoginUser {
                 if (user == null) {
                     return Result.err(new ApplicationException("Invalid login credentials!"));
                 }
-            } catch (ApplicationException e) {
-               return Result.err(e);
+            } catch (Exception ex) {
+                _logger.error(ex.toString());
+               return Result.err(ex);
             }
 
             if (!PasswordManager.verify(dto.passwordProperty().get(), user.getPassword())) {

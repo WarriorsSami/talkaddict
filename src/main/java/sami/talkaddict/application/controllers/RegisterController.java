@@ -13,10 +13,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import net.synedra.validatorfx.Validator;
-import sami.talkaddict.application.cqrs.commands.auth.RegisterUser;
+import sami.talkaddict.application.requests.commands.auth.RegisterUser;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.infrastructure.utils.Config;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -50,39 +50,40 @@ public class RegisterController implements Initializable {
         bindViewModelToFields();
         bindValidatorToFields();
         _passwordTextField.setVisible(false);
+        _logger.info("Register View Initialized");
     }
 
     private void bindValidatorToFields() {
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
+                .dependsOn(Config.ValidationTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
                 .withMethod(_userViewModel::isUsernameValid)
                 .decorates(_usernameField)
                 .immediate();
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
+                .dependsOn(Config.ValidationTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
                 .withMethod(_userViewModel::isUsernameUnique)
                 .decorates(_usernameField);
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
+                .dependsOn(Config.ValidationTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
                 .withMethod(_userViewModel::isEmailValid)
                 .decorates(_emailField)
                 .immediate();
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
+                .dependsOn(Config.ValidationTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
                 .withMethod(_userViewModel::isEmailUnique)
                 .decorates(_emailField);
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordField.textProperty())
+                .dependsOn(Config.ValidationTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordField.textProperty())
                 .withMethod(_userViewModel::isPasswordValid)
                 .decorates(_passwordField)
                 .immediate();
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordTextField.textProperty())
+                .dependsOn(Config.ValidationTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordTextField.textProperty())
                 .withMethod(_userViewModel::isPasswordValid)
                 .decorates(_passwordTextField)
                 .immediate();
@@ -92,12 +93,16 @@ public class RegisterController implements Initializable {
         _userViewModel.usernameProperty().bind(_usernameField.textProperty());
         _userViewModel.emailProperty().bind(_emailField.textProperty());
         _userViewModel.passwordProperty().bind(_passwordField.textProperty());
-        _userViewModel.passwordProperty().bind(_passwordTextField.textProperty());
     }
 
     @FXML
     private void onRegisterUser(ActionEvent actionEvent) {
         try {
+            // if password text field is active, update password field
+            if (_passwordTextField.isVisible()) {
+                _passwordField.setText(_passwordTextField.getText());
+            }
+
             if (_validator.validate()) {
                 var response = _mediator.send(new RegisterUser.Command(_userViewModel));
                 if (response.isOk()) {

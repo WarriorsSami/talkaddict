@@ -1,27 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
-    <VBox alignment="CENTER" prefHeight="460.0" prefWidth="980.0">
-        <Label layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Label>
-        <Button fx:id="_logoutUserButton" mnemonicParsing="false" onAction="#openMainViewAndLogout"
-                prefHeight="38.0" prefWidth="316.0" styleClass="blue-btn" text="Logout" textFill="WHITE">
-            <font>
-                <Font size="17.0" />
-            </font>
+    <VBox prefHeight="460.0" prefWidth="78.0" spacing="20.0" styleClass="panel-body, context-menu, menu-panel">
+        <VBox fx:id="_userAvatar" styleClass="menu-panel-item" spacing="5.0">
+            <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+                <Image url="@../../../../../../../../../../../home/sami/Pictures/Wallpapers/flutter-logo-4k-qn.jpg"/>
+            </ImageView>
+            <Label fx:id="_usernameLabel" styleClass="text-white" text="Avatar">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
             <VBox.margin>
-                <Insets left="15.0" right="15.0" top="20.0" />
+                <Insets top="10.0" bottom="20.0" />
             </VBox.margin>
-        </Button>
+        </VBox>
+        <VBox fx:id="_chatMenuItem" onMouseClicked="#inflateChatPane" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="COMMENTS" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Chats">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
+        <VBox fx:id="_notificationMenuItem" onMouseClicked="#inflateNotificationPane" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="BELL" size="35" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="News">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
+        <VBox fx:id="_profileMenuItem" onMouseClicked="#inflateProfilePane" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="USER" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Profile">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
+        <VBox fx:id="_logoutMenuItem" onMouseClicked="#onLogoutUser" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="SIGN_OUT" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Logout">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
     </VBox>
+    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="460.0" prefWidth="980.0" styleClass="blue-pane" />
 </AnchorPane>

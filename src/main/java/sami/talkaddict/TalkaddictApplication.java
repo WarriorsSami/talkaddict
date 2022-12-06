@@ -8,10 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import sami.talkaddict.application.cqrs.commands.auth.LogoutUser;
+import sami.talkaddict.application.requests.commands.auth.LogoutUser;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.exceptions.ApplicationException;
-import sami.talkaddict.infrastructure.utils.Config;
 
 import java.io.IOException;
 import java.sql.SQLException;

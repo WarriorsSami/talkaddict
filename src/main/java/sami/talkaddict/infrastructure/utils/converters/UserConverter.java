@@ -4,8 +4,9 @@ import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.domain.entities.User;
 
 public class UserConverter {
-    public static User toUser(UserFx userFx) {
+    public static User convertUserFxToUser(UserFx userFx) {
         return new User(
+                userFx.Id.get(),
                 userFx.Username.get(),
                 userFx.Password.get(),
                 userFx.Email.get(),
@@ -14,7 +15,7 @@ public class UserConverter {
         );
     }
 
-    public static UserFx toUserFx(User user) {
+    public static UserFx convertUserToUserFx(User user) {
         UserFx userFx = new UserFx();
         userFx.Id.set(user.getId());
         userFx.Username.set(user.getUsername());
