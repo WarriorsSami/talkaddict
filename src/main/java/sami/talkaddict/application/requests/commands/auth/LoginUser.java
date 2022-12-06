@@ -28,6 +28,7 @@ public class LoginUser {
         @Override
         public Result<Voidy, Exception> handle(Command command) {
             _logger.info("LoginUser Use Case invoked");
+
             var dto = command.dto;
             if (dto == null) {
                 return Result.err(new ApplicationException("Invalid login credentials!"));
@@ -39,8 +40,9 @@ public class LoginUser {
                 if (user == null) {
                     return Result.err(new ApplicationException("Invalid login credentials!"));
                 }
-            } catch (ApplicationException e) {
-               return Result.err(e);
+            } catch (Exception ex) {
+                _logger.error(ex.toString());
+               return Result.err(ex);
             }
 
             if (!PasswordManager.verify(dto.passwordProperty().get(), user.getPassword())) {

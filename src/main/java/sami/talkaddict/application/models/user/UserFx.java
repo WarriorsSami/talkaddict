@@ -9,4 +9,13 @@ public class UserFx {
     public StringProperty Email = new SimpleStringProperty();
     public StringProperty Description = new SimpleStringProperty();
     public ObjectProperty<byte[]> Avatar = new SimpleObjectProperty<>();
+
+    public void initFromUserFx(UserFx userFx) {
+        Id.set(userFx.Id.get());
+        Username.set(userFx.Username.get());
+        Password.set(userFx.Password.get());
+        Email.set(userFx.Email.get());
+        Description.set(userFx.Description.get());
+        Avatar.set(userFx.Avatar.get());
+    }
 }

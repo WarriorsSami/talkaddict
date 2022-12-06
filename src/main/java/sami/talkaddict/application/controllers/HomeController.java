@@ -32,7 +32,9 @@ public class HomeController implements Initializable {
     @FXML
     private Label _usernameLabel;
     @FXML
-    private VBox _homeMenuItem;
+    private VBox _chatMenuItem;
+    @FXML
+    private VBox _notificationMenuItem;
     @FXML
     private VBox _profileMenuItem;
     @FXML
@@ -46,12 +48,14 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         _logger = ProviderService.provideLogger(HomeController.class);
         _mediator = ProviderService.provideMediator();
+        _userViewModel = new UserViewModel();
+
+        bindFieldsToViewModel();
         try {
             var response = _mediator.send(new GetLoggedInUser.Query());
             if (response.isOk()) {
-                _userViewModel = new UserViewModel(response.ok().orElseThrow());
+                _userViewModel.initFromUser(response.ok().orElseThrow());
 
-                _usernameLabel.setText(_userViewModel.usernameProperty().get());
                 var avatarImage = AvatarManager.convertByteArrayToImage(_userViewModel.avatarProperty().get());
 
                 _avatarImageView.setClip(AvatarManager.getAvatarClip(
@@ -72,7 +76,13 @@ public class HomeController implements Initializable {
                     Alert.AlertType.ERROR
             );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+        } finally {
+            _logger.info("Home View Initialized");
         }
+    }
+
+    private void bindFieldsToViewModel() {
+        _usernameLabel.textProperty().bind(_userViewModel.usernameProperty());
     }
 
     @FXML
@@ -88,6 +98,11 @@ public class HomeController implements Initializable {
             );
             _logger.error(e, e.getMessage(), e.getStackTrace());
         }
+    }
+
+    @FXML
+    private void inflateNotificationPane(MouseEvent mouseEvent) {
+
     }
 
     @FXML

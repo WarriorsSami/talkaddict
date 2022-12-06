@@ -42,6 +42,7 @@ public class SplashController implements Initializable {
                 _logger.error(ex, ex.getMessage(), ex.getStackTrace());
             }
         });
+        _logger.info("Splash View initialized");
     }
 
     @FXML

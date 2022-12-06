@@ -23,7 +23,7 @@ public class AvatarManager {
     }
 
     public static byte[] getRandomAvatar() {
-        var file = getRandomFileFromDirectory(Config.AuthTweaks.AVATARS_DIRECTORY_PATH);
+        var file = getRandomFileFromDirectory(Config.ValidationTweaks.AVATARS_DIRECTORY_PATH);
         return convertFileToByteArray(file);
     }
 

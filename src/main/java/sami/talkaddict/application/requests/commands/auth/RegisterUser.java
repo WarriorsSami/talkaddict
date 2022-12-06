@@ -23,6 +23,8 @@ public class RegisterUser {
 
         @Override
         public Result<Voidy, Exception> handle(Command command) {
+            _logger.info("RegisterUser Use Case invoked");
+
             var dto = command.dto;
             if (dto == null) {
                 return Result.err(new ApplicationException("Invalid register data provided!"));
@@ -35,6 +37,7 @@ public class RegisterUser {
             registeredUser.emailProperty().set(dto.emailProperty().get());
             registeredUser.usernameProperty().set(dto.usernameProperty().get());
             registeredUser.passwordProperty().set(encodedPassword);
+            registeredUser.descriptionProperty().set(Config.ValidationTweaks.DEFAULT_USER_DESCRIPTION);
 
             try {
                 registeredUser.avatarProperty().set(AvatarManager.getRandomAvatar());

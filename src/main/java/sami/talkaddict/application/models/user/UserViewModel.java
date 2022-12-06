@@ -25,14 +25,9 @@ public class UserViewModel {
         userDao = ProviderService.provideDao(User.class);
     }
 
-    public UserViewModel(User user) {
-        this();
-        initUser(user);
-    }
-
-    private void initUser(User user) {
+    public void initFromUser(User user) {
         var userFx = UserConverter.convertUserToUserFx(user);
-        userFxObject.set(userFx);
+        userFxObject.get().initFromUserFx(userFx);
     }
 
     public void saveOrUpdateUser() throws ApplicationException {
@@ -74,15 +69,15 @@ public class UserViewModel {
             ctx.error("Username is required!");
         }
 
-        if (usernameProperty().get().length() < Config.AuthTweaks.MIN_USERNAME_LENGTH) {
-            ctx.error("Username must be at least " + Config.AuthTweaks.MIN_USERNAME_LENGTH + " characters long!");
+        if (usernameProperty().get().length() < Config.ValidationTweaks.MIN_USERNAME_LENGTH) {
+            ctx.error("Username must be at least " + Config.ValidationTweaks.MIN_USERNAME_LENGTH + " characters long!");
         }
 
-        if (usernameProperty().get().length() > Config.AuthTweaks.MAX_USERNAME_LENGTH) {
-            ctx.error("Username must be at most " + Config.AuthTweaks.MAX_USERNAME_LENGTH + " characters long!");
+        if (usernameProperty().get().length() > Config.ValidationTweaks.MAX_USERNAME_LENGTH) {
+            ctx.error("Username must be at most " + Config.ValidationTweaks.MAX_USERNAME_LENGTH + " characters long!");
         }
 
-        if (!usernameProperty().get().matches(Config.AuthTweaks.USERNAME_REGEX)) {
+        if (!usernameProperty().get().matches(Config.ValidationTweaks.USERNAME_REGEX)) {
             ctx.error("Username must contain only letters, numbers and underscores!");
         }
     }
@@ -90,7 +85,7 @@ public class UserViewModel {
     public void isUsernameUnique(Check.Context ctx) {
         try {
             var user = ((UserDao) userDao).findByName(usernameProperty().get());
-            if (user != null) {
+            if (user != null && user.getId() != idProperty().get()) {
                 ctx.error("Username is already taken!");
             }
         } catch (ApplicationException ex) {
@@ -104,7 +99,7 @@ public class UserViewModel {
             ctx.error("Email is required!");
         }
 
-        if (!emailProperty().get().matches(Config.AuthTweaks.EMAIL_REGEX)) {
+        if (!emailProperty().get().matches(Config.ValidationTweaks.EMAIL_REGEX)) {
             ctx.error("Email must be valid!");
         }
     }
@@ -126,12 +121,18 @@ public class UserViewModel {
             ctx.error("Password is required!");
         }
 
-        if (passwordProperty().get().length() < Config.AuthTweaks.MIN_PASSWORD_LENGTH) {
-            ctx.error("Password must be at least " + Config.AuthTweaks.MIN_PASSWORD_LENGTH + " characters long!");
+        if (passwordProperty().get().length() < Config.ValidationTweaks.MIN_PASSWORD_LENGTH) {
+            ctx.error("Password must be at least " + Config.ValidationTweaks.MIN_PASSWORD_LENGTH + " characters long!");
         }
 
-        if (!passwordProperty().get().matches(Config.AuthTweaks.PASSWORD_REGEX)) {
+        if (!passwordProperty().get().matches(Config.ValidationTweaks.PASSWORD_REGEX)) {
             ctx.error("Password must contain at least one uppercase letter, one lowercase letter and one number!");
+        }
+    }
+
+    public void isDescriptionValid(Check.Context ctx) {
+        if (descriptionProperty().get().length() > Config.ValidationTweaks.MAX_DESCRIPTION_LENGTH) {
+            ctx.error("Description must be at most " + Config.ValidationTweaks.MAX_DESCRIPTION_LENGTH + " characters long!");
         }
     }
 }

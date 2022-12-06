@@ -44,6 +44,7 @@ public class LoginController implements Initializable {
         _userViewModel = new UserViewModel();
         bindViewModelToFields();
         _passwordTextField.setVisible(false);
+        _logger.info("Login View Initialized");
     }
 
     private void bindViewModelToFields() {

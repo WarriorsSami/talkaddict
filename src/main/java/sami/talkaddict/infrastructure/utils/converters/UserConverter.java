@@ -6,6 +6,7 @@ import sami.talkaddict.domain.entities.User;
 public class UserConverter {
     public static User convertUserFxToUser(UserFx userFx) {
         return new User(
+                userFx.Id.get(),
                 userFx.Username.get(),
                 userFx.Password.get(),
                 userFx.Email.get(),

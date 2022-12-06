@@ -27,18 +27,22 @@ public class Config {
         public static final Boolean RESIZABLE = false;
     }
 
-    public static class AuthTweaks {
+    public static class ValidationTweaks {
         public static final Integer MIN_USERNAME_LENGTH = 3;
         public static final Integer MAX_USERNAME_LENGTH = 20;
         public static final String USERNAME_REGEX = "^[a-zA-Z0-9_]*$";
         public static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         public static final Integer MIN_PASSWORD_LENGTH = 8;
         public static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
+        public static final Integer MAX_DESCRIPTION_LENGTH = 100;
 
         public static final String USERNAME_FIELD_REGISTER_KEY = "usernameFieldRegister";
         public static final String EMAIL_FIELD_REGISTER_KEY = "emailFieldRegister";
         public static final String PASSWORD_FIELD_REGISTER_KEY = "passwordFieldRegister";
+        public static final String USERNAME_FIELD_PROFILE_KEY = "usernameFieldProfile";
+        public static final String DESCRIPTION_FIELD_PROFILE_KEY = "descriptionFieldProfile";
 
+        public static final String DEFAULT_USER_DESCRIPTION = "I'm a new user!";
         public static final String AVATARS_DIRECTORY_PATH = "/media/sami/Dev Space4/JavaStuff/talkaddict/src/main/resources/sami/talkaddict/assets/avatars";
     }
 

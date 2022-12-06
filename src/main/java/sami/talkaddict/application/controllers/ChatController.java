@@ -41,6 +41,8 @@ public class ChatController implements Initializable {
                     Alert.AlertType.ERROR
             );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+        } finally {
+            _logger.info("Chat View initialized");
         }
     }
 }

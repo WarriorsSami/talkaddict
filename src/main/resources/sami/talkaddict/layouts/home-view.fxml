@@ -23,9 +23,17 @@
                 <Insets top="10.0" bottom="20.0" />
             </VBox.margin>
         </VBox>
-        <VBox fx:id="_homeMenuItem" onMouseClicked="#inflateChatPane" styleClass="menu-panel-item">
-            <FontAwesomeIconView glyphName="HOME" size="40" styleClass="icon-blue" />
-            <Label styleClass="text-white" text="Home">
+        <VBox fx:id="_chatMenuItem" onMouseClicked="#inflateChatPane" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="COMMENTS" size="40" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="Chats">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="15.0" />
+                </font>
+            </Label>
+        </VBox>
+        <VBox fx:id="_notificationMenuItem" onMouseClicked="#inflateNotificationPane" styleClass="menu-panel-item">
+            <FontAwesomeIconView glyphName="BELL" size="35" styleClass="icon-blue" />
+            <Label styleClass="text-white" text="News">
                 <font>
                     <Font name="Ubuntu Mono Bold" size="15.0" />
                 </font>

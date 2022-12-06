@@ -50,39 +50,40 @@ public class RegisterController implements Initializable {
         bindViewModelToFields();
         bindValidatorToFields();
         _passwordTextField.setVisible(false);
+        _logger.info("Register View Initialized");
     }
 
     private void bindValidatorToFields() {
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
+                .dependsOn(Config.ValidationTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
                 .withMethod(_userViewModel::isUsernameValid)
                 .decorates(_usernameField)
                 .immediate();
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
+                .dependsOn(Config.ValidationTweaks.USERNAME_FIELD_REGISTER_KEY, _usernameField.textProperty())
                 .withMethod(_userViewModel::isUsernameUnique)
                 .decorates(_usernameField);
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
+                .dependsOn(Config.ValidationTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
                 .withMethod(_userViewModel::isEmailValid)
                 .decorates(_emailField)
                 .immediate();
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
+                .dependsOn(Config.ValidationTweaks.EMAIL_FIELD_REGISTER_KEY, _emailField.textProperty())
                 .withMethod(_userViewModel::isEmailUnique)
                 .decorates(_emailField);
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordField.textProperty())
+                .dependsOn(Config.ValidationTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordField.textProperty())
                 .withMethod(_userViewModel::isPasswordValid)
                 .decorates(_passwordField)
                 .immediate();
 
         _validator.createCheck()
-                .dependsOn(Config.AuthTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordTextField.textProperty())
+                .dependsOn(Config.ValidationTweaks.PASSWORD_FIELD_REGISTER_KEY, _passwordTextField.textProperty())
                 .withMethod(_userViewModel::isPasswordValid)
                 .decorates(_passwordTextField)
                 .immediate();
