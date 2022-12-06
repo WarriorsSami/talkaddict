@@ -2,6 +2,8 @@ package sami.talkaddict.application.controllers;
 
 import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -10,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.auth.LogoutUser;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
@@ -51,6 +54,39 @@ public class HomeController implements Initializable {
         _userViewModel = new UserViewModel();
 
         bindFieldsToViewModel();
+        updateLoggedInUserViewModel();
+        updateLoggedInUserViewModelPeriodically();
+
+        try {
+            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
+        } catch (IOException ex) {
+            SceneFxManager.showAlertDialog(
+                    "Error",
+                    "Error loading chat view",
+                    Alert.AlertType.ERROR
+            );
+            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+        } finally {
+            _logger.info("Home View Initialized");
+        }
+    }
+
+    private void bindFieldsToViewModel() {
+        _usernameLabel.textProperty().bind(_userViewModel.usernameProperty());
+    }
+
+    private void updateLoggedInUserViewModelPeriodically() {
+         var timeline = new Timeline(
+                 new KeyFrame(
+                         Duration.seconds(5),
+                         event -> updateLoggedInUserViewModel()
+                 )
+         );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void updateLoggedInUserViewModel() {
         try {
             var response = _mediator.send(new GetLoggedInUser.Query());
             if (response.isOk()) {
@@ -67,8 +103,6 @@ public class HomeController implements Initializable {
                 _logger.error("Failed to get logged in user!");
                 throw response.err().orElseThrow();
             }
-
-            _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
         } catch (Exception ex) {
             SceneFxManager.showAlertDialog(
                     "Error",
@@ -76,13 +110,7 @@ public class HomeController implements Initializable {
                     Alert.AlertType.ERROR
             );
             _logger.error(ex, ex.getMessage(), ex.getStackTrace());
-        } finally {
-            _logger.info("Home View Initialized");
         }
-    }
-
-    private void bindFieldsToViewModel() {
-        _usernameLabel.textProperty().bind(_userViewModel.usernameProperty());
     }
 
     @FXML
