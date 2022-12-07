@@ -27,7 +27,7 @@ public class SplashController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         _logger = ProviderService.provideLogger(SplashController.class);
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), _authPane);
-        t.setToX(_authPane.getLayoutX() * 20);
+        t.setToX(Config.FxmlSettings.MAIN_SLIDER_POSITION);
         t.play();
         t.setOnFinished((e) -> {
             try {
@@ -48,7 +48,7 @@ public class SplashController implements Initializable {
     @FXML
     private void inflateLoginPane(ActionEvent event) {
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), _authPane);
-        t.setToX(_authPane.getLayoutX() * 20);
+        t.setToX(Config.FxmlSettings.MAIN_SLIDER_POSITION);
         t.play();
         t.setOnFinished((e) -> {
             try {

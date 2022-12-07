@@ -52,5 +52,7 @@ public class Config {
 
         public static final Double AVATAR_CLIP_ARC_WIDTH = 360.0;
         public static final Double AVATAR_CLIP_ARC_HEIGHT = 360.0;
+
+        public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
     }
 }

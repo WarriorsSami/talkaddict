@@ -18,7 +18,7 @@
 }
 .menu-panel .menu-panel-item:hover{
     -fx-background-color: cyan;
-    -fx-background-radius: 5;
+    -fx-background-radius: 10;
 }
 .menu-panel .menu-panel-item:hover .menu-item-text{
     -fx-text-fill: black;

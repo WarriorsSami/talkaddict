@@ -7,8 +7,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane styleClass="blue-pane" prefHeight="460.0" prefWidth="980.0" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
-    <VBox prefHeight="460.0" prefWidth="78.0" spacing="20.0" styleClass="menu-panel">
+<AnchorPane styleClass="blue-pane" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
+    <VBox prefHeight="700.0" prefWidth="80.0" spacing="40.0" styleClass="menu-panel">
         <VBox fx:id="_userAvatar" spacing="5.0" styleClass="avatar-menu-item">
             <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" />
             <Label fx:id="_usernameLabel" styleClass="menu-item-text" text="User">
@@ -53,5 +53,5 @@
             </Label>
         </VBox>
     </VBox>
-    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="460.0" prefWidth="980.0" styleClass="blue-pane" />
+    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="700.0" prefWidth="1120.0" styleClass="blue-pane" />
 </AnchorPane>

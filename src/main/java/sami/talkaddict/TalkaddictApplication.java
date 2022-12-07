@@ -2,6 +2,7 @@ package sami.talkaddict;
 
 import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
+import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +29,7 @@ public class TalkaddictApplication extends Application {
         _mediator = ProviderService.provideMediator();
 
         _logger.info("Initializing application...");
+        CSSFX.start();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Config.Views.MAIN_VIEW)));
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
