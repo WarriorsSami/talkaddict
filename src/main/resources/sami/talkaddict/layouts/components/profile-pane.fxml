@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane stylesheets="@../../styles/bootstrapfx.css, @../../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ProfileController">
    <BorderPane layoutY="20.0" prefHeight="400.0" prefWidth="950.0">
@@ -22,13 +14,13 @@
                   <ImageView fx:id="_avatarImageView" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" />
                   <HBox alignment="CENTER" spacing="10.0">
                       <Button fx:id="_uploadAvatarButton" onAction="#onUploadAvatar"
-                              prefHeight="32.0" prefWidth="98.0" styleClass="btn, btn-primary, btn-rounded" text="Upload">
+                              prefHeight="32.0" prefWidth="98.0" styleClass="btn, btn-primary, btn-text" text="Upload">
                           <font>
                               <Font name="Ubuntu Mono Bold" size="12.0" />
                           </font>
                       </Button>
                       <Button fx:id="_resetAvatarButton" onAction="#onResetAvatar"
-                              prefHeight="32.0" prefWidth="98.0" styleClass="btn, btn-danger, btn-rounded" text="Reset">
+                              prefHeight="32.0" prefWidth="98.0" styleClass="btn, btn-danger, btn-text" text="Reset">
                           <font>
                               <Font name="Ubuntu Mono Bold" size="12.0" />
                           </font>
@@ -56,7 +48,7 @@
               </HBox>
               <VBox alignment="CENTER" spacing="10.0">
                   <ProgressBar fx:id="_saveProfileProgressBar" prefHeight="50.0" prefWidth="415.0" styleClass="progress-bar-success" />
-                  <Button fx:id="_saveChangesButton" prefHeight="32.0" prefWidth="158.0" styleClass="btn, btn-success, btn-rounded"
+                  <Button fx:id="_saveChangesButton" prefHeight="32.0" prefWidth="158.0" styleClass="btn, btn-success, btn-text"
                           onAction="#onSaveProfileChanges" text="Save changes">
                       <font>
                           <Font name="Ubuntu Mono Bold" size="15.0" />

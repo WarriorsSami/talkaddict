@@ -7,10 +7,31 @@
 .menu-panel{
     -fx-background-color: #151928;
     -fx-alignment: top-center;
-    -fx-padding: 10.0, 10.0, 10.0, 40.0;
+    -fx-background-insets: -1 -5 -1 -1;
+    -fx-background-radius: 0 20 20 0;
 }
-.menu-panel-item{
+.menu-panel .avatar-menu-item{
     -fx-alignment: center;
+}
+.menu-panel .menu-panel-item{
+    -fx-alignment: center;
+}
+.menu-panel .menu-panel-item:hover{
+    -fx-background-color: cyan;
+    -fx-background-radius: 5;
+}
+.menu-panel .menu-panel-item:hover .menu-item-text{
+    -fx-text-fill: black;
+    -fx-font-family: "Ubuntu Mono";
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+.btn-text{
+    -fx-text-fill: whitesmoke;
+    -fx-font-weight: bold;
+}
+.menu-panel .menu-panel-item:hover .icon-blue{
+    -fx-fill: #03329c;
 }
 .trans-btn-white-border{
     -fx-background-color: transparent;
@@ -52,7 +73,7 @@
 .btn-rounded{
     -fx-background-radius: 20px;
 }
-.text-white{
+.menu-item-text{
     -fx-text-fill: whitesmoke;
 }
 .blue-pane{
