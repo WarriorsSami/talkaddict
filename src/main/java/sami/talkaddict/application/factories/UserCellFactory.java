@@ -25,22 +25,3 @@ public class UserCellFactory extends MFXListCell<UserFx> {
 //        }
     }
 }
-
-//import javafx.scene.Node;
-//import javafx.scene.control.Label;
-//import javafx.scene.image.ImageView;
-//import javafx.scene.layout.HBox;
-//import sami.talkaddict.application.models.user.UserFx;
-//import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
-//
-//public class UserCellFactory {
-//    public static Node getNode(UserFx data) {
-//        var userAvatarImageView = new ImageView();
-//        AvatarManager.assignAvatarToImageView(userAvatarImageView, data.Avatar.get());
-//        var usernameLabel = new Label(data.Username.get());
-//
-//        var hbox = new HBox();
-//        hbox.getChildren().addAll(userAvatarImageView, usernameLabel);
-//        return hbox;
-//    }
-//}

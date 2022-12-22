@@ -32,8 +32,6 @@ public class HomeController implements Initializable {
     @FXML
     private BorderPane _homePane;
     @FXML
-    private VBox _userAvatar;
-    @FXML
     private ImageView _avatarImageView;
     @FXML
     private Label _usernameLabel;
@@ -60,7 +58,10 @@ public class HomeController implements Initializable {
 
         bindFieldsToViewModel();
         updateLoggedInUserViewModel();
-        updateLoggedInUserViewModelPeriodically();
+
+        var updateLoggedInUserViewModelThread = new Thread(this::updateLoggedInUserViewModelPeriodically);
+        updateLoggedInUserViewModelThread.setDaemon(true);
+        updateLoggedInUserViewModelThread.start();
 
         try {
             _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
