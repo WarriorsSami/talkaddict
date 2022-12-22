@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
 import sami.talkaddict.application.factories.UserCellFactory;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.application.models.user.UserListViewModel;
@@ -22,6 +23,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
+    @FXML
+    private Pane _loadingOverlay;
     @FXML
     private MFXListView<UserFx> _usersListView;
 
@@ -42,7 +45,12 @@ public class ChatController implements Initializable {
             }
         };
 
+        getAllUsersTask.setOnRunning(event -> {
+            _loadingOverlay.setVisible(true);
+        });
+
         getAllUsersTask.setOnSucceeded(event -> {
+            _loadingOverlay.setVisible(false);
             try {
                 var response = getAllUsersTask.getValue();
                 if (response.isOk()) {

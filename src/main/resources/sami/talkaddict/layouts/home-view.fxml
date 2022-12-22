@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane styleClass="blue-pane" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" styleClass="blue-pane" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
     <VBox prefHeight="700.0" prefWidth="80.0" spacing="40.0" styleClass="menu-panel">
         <VBox fx:id="_userAvatar" spacing="5.0" styleClass="avatar-menu-item">
             <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" />
@@ -17,7 +17,7 @@
                 </font>
             </Label>
             <VBox.margin>
-                <Insets top="10.0" bottom="20.0" />
+                <Insets bottom="20.0" top="10.0" />
             </VBox.margin>
         </VBox>
         <VBox fx:id="_chatMenuItem" onMouseClicked="#inflateChatPane" styleClass="menu-panel-item">
@@ -53,5 +53,5 @@
             </Label>
         </VBox>
     </VBox>
-    <BorderPane fx:id="_homePane" layoutX="78.0" prefHeight="700.0" prefWidth="1120.0" styleClass="blue-pane" />
+    <BorderPane fx:id="_homePane" layoutX="90.0" prefHeight="700.0" prefWidth="1100.0" styleClass="blue-pane" />
 </AnchorPane>
