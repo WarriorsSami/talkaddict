@@ -13,33 +13,40 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserListViewModel {
-    public ObservableList<UserFx> userFxObservableList = FXCollections.observableArrayList();
+    private ObservableList<UserFx> _userFxObservableList = FXCollections.observableArrayList();
 
-    private final GenericDao<User> userDao;
+    private final GenericDao<User> _userDao;
 
-    public UserListViewModel() throws ApplicationException {
-        userDao = ProviderService.provideDao(User.class);
-        getAllUsers();
+    public UserListViewModel() {
+        _userDao = ProviderService.provideDao(User.class);
     }
 
-    public void getAllUsers() throws ApplicationException {
-        var users = (List<User>) userDao.findAll();
-        userFxObservableList.clear();
+    public void initAllUsers() throws ApplicationException {
+        var users = (List<User>) _userDao.findAll();
+        _userFxObservableList.clear();
 
         users.forEach(user -> {
-            userFxObservableList.add(UserConverter.convertUserToUserFx(user));
+            _userFxObservableList.add(UserConverter.convertUserToUserFx(user));
         });
     }
 
-    public void getUsersByName(String name) throws ApplicationException, SQLException {
-        var filterByName = userDao.queryBuilder();
+    public void initUsersByName(String name) throws ApplicationException, SQLException {
+        var filterByName = _userDao.queryBuilder();
         filterByName.where().like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%");
 
-        var users = userDao.findByFilter(filterByName);
-        userFxObservableList.clear();
+        var users = _userDao.findByFilter(filterByName);
+        _userFxObservableList.clear();
 
         users.forEach(user -> {
-            userFxObservableList.add(UserConverter.convertUserToUserFx(user));
+            _userFxObservableList.add(UserConverter.convertUserToUserFx(user));
         });
+    }
+
+    public ObservableList<UserFx> getUserFxObservableList() {
+        return _userFxObservableList;
+    }
+
+    public void setUserFxObservableList(ObservableList<UserFx> userFxObservableList) {
+        _userFxObservableList = userFxObservableList;
     }
 }

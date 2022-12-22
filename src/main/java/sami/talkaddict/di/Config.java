@@ -52,7 +52,10 @@ public class Config {
 
         public static final Double AVATAR_CLIP_ARC_WIDTH = 360.0;
         public static final Double AVATAR_CLIP_ARC_HEIGHT = 360.0;
+        public static final Double AVATAR_FIT_WIDTH = 50.0;
+        public static final Double AVATAR_FIT_HEIGHT = 50.0;
 
         public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
+        public static final Double USER_LIST_VIEW_SCROLLING_SPEED = 0.5;
     }
 }

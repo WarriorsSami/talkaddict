@@ -1,20 +1,23 @@
 package sami.talkaddict.application.controllers;
 
 import an.awesome.pipelinr.Pipeline;
+import an.awesome.pipelinr.Voidy;
 import com.j256.ormlite.logger.Logger;
+import dev.kylesilver.result.Result;
 import javafx.beans.binding.Bindings;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 import net.synedra.validatorfx.Validator;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
+import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
@@ -50,37 +53,49 @@ public class ProfileController implements Initializable {
         _validator = new Validator();
 
         bindBidirectionalViewModelToFields();
-        try {
-            _saveProfileProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-            _saveProfileProgressBar.setVisible(false);
+        _saveProfileProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        _saveProfileProgressBar.setVisible(false);
 
-            var response = _mediator.send(new GetLoggedInUser.Query());
-            if (response.isOk()) {
-                _userViewModel.initFromUser(response.ok().orElseThrow());
-                _logger.info("Current logged in user name: " + _userViewModel.usernameProperty().get());
-
-                _avatarImageView.setClip(AvatarManager.getAvatarClip(
-                        _avatarImageView.getFitWidth(),
-                        _avatarImageView.getFitHeight())
-                );
-                _avatarImageView.setImage(AvatarManager.convertByteArrayToImage(
-                        _userViewModel.avatarProperty().get())
-                );
-            } else {
-                _logger.error("Failed to get logged in user");
-                throw response.err().orElseThrow();
+        var getLoggedInUserTask = new Task<Result<User, Exception>>() {
+            @Override
+            protected Result<User, Exception> call() throws Exception {
+                return _mediator.send(new GetLoggedInUser.Query());
             }
-        } catch (Exception ex) {
-            SceneFxManager.showAlertDialog(
-                    "Error getting logged in user",
-                    "Something went wrong!",
-                    Alert.AlertType.ERROR
-            );
-            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
-        } finally {
-            _logger.info("Profile view initialized");
-        }
-        bindValidatorToFields();
+        };
+
+        getLoggedInUserTask.setOnSucceeded(event -> {
+            try {
+                var response = getLoggedInUserTask.getValue();
+                if (response.isOk()) {
+                    _userViewModel.initFromUser(response.ok().orElseThrow());
+                    _logger.info("Current logged in user name: " + _userViewModel.usernameProperty().get());
+
+                    AvatarManager.assignAvatarToImageView(
+                            _avatarImageView,
+                            _userViewModel.avatarProperty().get(),
+                            _avatarImageView.getFitWidth(),
+                            _avatarImageView.getFitHeight()
+                    );
+                } else {
+                    _logger.error("Failed to get logged in user");
+                    throw response.err().orElseThrow();
+                }
+            } catch (Exception ex) {
+                SceneFxManager.showAlertDialog(
+                        "Error getting logged in user",
+                        "Something went wrong!",
+                        Alert.AlertType.ERROR
+                );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+            } finally {
+                _logger.info("Profile view initialized");
+                bindValidatorToFields();
+            }
+        });
+
+        var getLoggedInUserThread = new Thread(getLoggedInUserTask);
+        getLoggedInUserThread.setDaemon(true);
+        getLoggedInUserThread.start();
     }
 
     private void bindBidirectionalViewModelToFields() {
@@ -109,55 +124,58 @@ public class ProfileController implements Initializable {
 
     @FXML
     private void onSaveProfileChanges(ActionEvent event) {
-        _saveProfileProgressBar.setVisible(true);
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-            _saveProfileProgressBar.setVisible(false);
-        }).start();
-
-        try {
-            if (_validator.validate()) {
-                var response = _mediator.send(new UpdateUserProfile.Command(_userViewModel));
-
-                if (response.isErr()) {
-                    _logger.error("User profile update failed");
-                    throw response.err().orElseThrow();
+        if (_validator.validate()) {
+           var updateProfileTask = new Task<Result<Voidy, Exception>>() {
+                @Override
+                protected Result<Voidy, Exception> call() throws Exception {
+                     return _mediator.send(new UpdateUserProfile.Command(_userViewModel));
                 }
+           };
 
-                _logger.info("User profile updated successfully");
-                var responseLoggedInUser = _mediator.send(new GetLoggedInUser.Query());
+           updateProfileTask.setOnRunning(workerStateEvent -> {
+               _saveProfileProgressBar.setVisible(true);
+           });
 
-                if (responseLoggedInUser.isErr()) {
-                    _logger.error("Failed to get logged in user");
-                    throw responseLoggedInUser.err().orElseThrow();
-                }
+           updateProfileTask.setOnSucceeded(workerStateEvent -> {
+               _saveProfileProgressBar.setVisible(false);
+               try {
+                   var response = updateProfileTask.getValue();
 
-                _userViewModel.initFromUser(responseLoggedInUser.ok().orElseThrow());
-                SceneFxManager.showToastNotification(
-                        "Success",
-                        "Profile updated successfully",
-                        Duration.seconds(5)
-                );
-            } else {
-                _logger.warn("Validation failed");
-                var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());
-                SceneFxManager.showAlertDialog(
-                        "Invalid data",
-                        Bindings.concat("Cannot update profile:\n", errors).getValue(),
-                        Alert.AlertType.WARNING
-                );
-            }
-        } catch (Exception ex) {
+                   if (response.isErr()) {
+                       _logger.error("User profile update failed");
+                       throw response.err().orElseThrow();
+                   }
+
+//                   SceneFxManager.showToastNotification(
+//                           "Success",
+//                           "Profile updated successfully",
+//                           Duration.seconds(5)
+//                   );
+                   SceneFxManager.showToastNotification(
+                           "Success",
+                           "Profile updated successfully"
+                   );
+               } catch (Exception ex) {
+                   SceneFxManager.showAlertDialog(
+                           "Update Profile Error",
+                           "Something went wrong!",
+                           Alert.AlertType.ERROR
+                   );
+                   _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+               }
+           });
+
+           var updateProfileThread = new Thread(updateProfileTask);
+           updateProfileThread.setDaemon(true);
+           updateProfileThread.start();
+        } else {
+            _logger.warn("Validation failed");
+            var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());
             SceneFxManager.showAlertDialog(
-                    "Update Profile Error",
-                    "Something went wrong!",
-                    Alert.AlertType.ERROR
+                    "Invalid data",
+                    Bindings.concat("Cannot update profile:\n", errors).getValue(),
+                    Alert.AlertType.WARNING
             );
-            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
     }
 

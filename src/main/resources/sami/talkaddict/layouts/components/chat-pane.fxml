@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ChatController">
+    <GridPane hgap="5.0" prefHeight="700.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" />
+            <ColumnConstraints halignment="CENTER" maxWidth="408.00001220703126" minWidth="0.0" prefWidth="267.1999938964844" />
+            <ColumnConstraints halignment="CENTER" maxWidth="801.5999999999999" minWidth="195.2" prefWidth="791.2000061035155" />
+            <ColumnConstraints halignment="CENTER" maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+        </columnConstraints>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sami.talkaddict.application.controllers.ChatController">
-    <VBox alignment="CENTER" prefHeight="700.0" prefWidth="1100.0">
-        <Label styleClass="label" fx:id="_welcomeLabel" layoutX="327.0" layoutY="177.0" prefHeight="78.0" prefWidth="298.0" text="Welcome to Talkaddict!">
-            <font>
-                <Font name="Ubuntu Mono Bold" size="25.0" />
-            </font>
-        </Label>
-    </VBox>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+
+        <MFXListView fx:id="_usersListView" prefHeight="700.0" prefWidth="313.0" GridPane.columnSpan="2" GridPane.rowIndex="0">
+        </MFXListView>
+
+        <VBox fx:id="_chatBox" alignment="CENTER" prefHeight="700.0" prefWidth="729.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="0">
+            <Label text="Chat">
+                <font>
+                    <Font name="Ubuntu Mono Bold" size="20.0" />
+                </font>
+            </Label>
+        </VBox>
+    </GridPane>
 </AnchorPane>

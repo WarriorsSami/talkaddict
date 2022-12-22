@@ -2,8 +2,10 @@ package sami.talkaddict.application.controllers;
 
 import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
+import dev.kylesilver.result.Result;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -18,6 +20,7 @@ import sami.talkaddict.application.requests.commands.auth.LogoutUser;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
+import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
@@ -89,30 +92,41 @@ public class HomeController implements Initializable {
     }
 
     private void updateLoggedInUserViewModel() {
-        try {
-            var response = _mediator.send(new GetLoggedInUser.Query());
-            if (response.isOk()) {
-                _userViewModel.initFromUser(response.ok().orElseThrow());
-
-                var avatarImage = AvatarManager.convertByteArrayToImage(_userViewModel.avatarProperty().get());
-
-                _avatarImageView.setClip(AvatarManager.getAvatarClip(
-                        _avatarImageView.getFitWidth(),
-                        _avatarImageView.getFitHeight())
-                );
-                _avatarImageView.setImage(avatarImage);
-            } else {
-                _logger.error("Failed to get logged in user!");
-                throw response.err().orElseThrow();
+        var getLoggedInUserTask = new Task<Result<User, Exception>>() {
+            @Override
+            protected Result<User, Exception> call() {
+                return _mediator.send(new GetLoggedInUser.Query());
             }
-        } catch (Exception ex) {
-            SceneFxManager.showAlertDialog(
-                    "Error",
-                    "Error loading chat view",
-                    Alert.AlertType.ERROR
-            );
-            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
-        }
+        };
+
+        getLoggedInUserTask.setOnSucceeded(event -> {
+            try {
+                var response = getLoggedInUserTask.getValue();
+                if (response.isOk()) {
+                    _userViewModel.initFromUser(response.ok().orElseThrow());
+                    AvatarManager.assignAvatarToImageView(
+                            _avatarImageView,
+                            _userViewModel.avatarProperty().get(),
+                            _avatarImageView.getFitWidth(),
+                            _avatarImageView.getFitHeight()
+                    );
+                } else {
+                    _logger.error("Failed to get logged in user!");
+                    throw response.err().orElseThrow();
+                }
+            } catch (Exception ex) {
+                SceneFxManager.showAlertDialog(
+                        "Error",
+                        "Error loading chat view",
+                        Alert.AlertType.ERROR
+                );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+            }
+        });
+
+        var getLoggedInUserThread = new Thread(getLoggedInUserTask);
+        getLoggedInUserThread.setDaemon(true);
+        getLoggedInUserThread.start();
     }
 
     @FXML

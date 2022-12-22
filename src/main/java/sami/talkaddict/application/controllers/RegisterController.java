@@ -1,9 +1,12 @@
 package sami.talkaddict.application.controllers;
 
 import an.awesome.pipelinr.Pipeline;
+import an.awesome.pipelinr.Voidy;
 import com.j256.ormlite.logger.Logger;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import dev.kylesilver.result.Result;
 import javafx.beans.binding.Bindings;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,10 +16,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import net.synedra.validatorfx.Validator;
-import sami.talkaddict.application.requests.commands.auth.RegisterUser;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.di.ProviderService;
+import sami.talkaddict.application.requests.commands.auth.RegisterUser;
 import sami.talkaddict.di.Config;
+import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -97,37 +100,50 @@ public class RegisterController implements Initializable {
 
     @FXML
     private void onRegisterUser(ActionEvent actionEvent) {
-        try {
-            // if password text field is active, update password field
-            if (_passwordTextField.isVisible()) {
-                _passwordField.setText(_passwordTextField.getText());
-            }
+        // if password text field is active, update password field
+        if (_passwordTextField.isVisible()) {
+            _passwordField.setText(_passwordTextField.getText());
+        }
 
-            if (_validator.validate()) {
-                var response = _mediator.send(new RegisterUser.Command(_userViewModel));
-                if (response.isOk()) {
-                    _logger.info("User registered successfully");
-                    SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _registerButton);
-                } else {
-                    _logger.error("User registration failed");
-                    throw response.err().orElseThrow();
+        if (_validator.validate()) {
+            var registerUserTask = new Task<Result<Voidy, Exception>>() {
+                @Override
+                protected Result<Voidy, Exception> call() {
+                    return _mediator.send(new RegisterUser.Command(_userViewModel));
                 }
-            } else {
-                _logger.warn("Validation failed");
-                var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());
-                SceneFxManager.showAlertDialog(
-                        "Invalid data",
-                        Bindings.concat("Cannot register:\n", errors).getValue(),
-                        Alert.AlertType.WARNING
-                );
-            }
-        } catch (Exception ex) {
+            };
+
+            registerUserTask.setOnSucceeded(event -> {
+                try {
+                    var response = registerUserTask.getValue();
+                    if (response.isOk()) {
+                        _logger.info("User registered successfully");
+                        SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _registerButton);
+                    } else {
+                        _logger.error("User registration failed");
+                        throw response.err().orElseThrow();
+                    }
+                } catch (Exception ex) {
+                    SceneFxManager.showAlertDialog(
+                            "Register Error",
+                            "Something went wrong!",
+                            Alert.AlertType.ERROR
+                    );
+                    _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+                }
+            });
+
+            var registerUserThread = new Thread(registerUserTask);
+            registerUserThread.setDaemon(true);
+            registerUserThread.start();
+        } else {
+            _logger.warn("Validation failed");
+            var errors = SceneFxManager.removeDuplicateErrors(_validator.getValidationResult());
             SceneFxManager.showAlertDialog(
-                    "Register Error",
-                    "Something went wrong!",
-                    Alert.AlertType.ERROR
+                    "Invalid data",
+                    Bindings.concat("Cannot register:\n", errors).getValue(),
+                    Alert.AlertType.WARNING
             );
-            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
         }
     }
 

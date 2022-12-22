@@ -2,6 +2,7 @@ package sami.talkaddict.infrastructure.utils.managers;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import sami.talkaddict.di.Config;
 
@@ -50,5 +51,25 @@ public class AvatarManager {
         rectangularClip.setArcWidth(Config.FxmlSettings.AVATAR_CLIP_ARC_WIDTH);
         rectangularClip.setArcHeight(Config.FxmlSettings.AVATAR_CLIP_ARC_HEIGHT);
         return rectangularClip;
+    }
+
+    public static Node getAvatarClip() {
+        var rectangularClip = new Rectangle(
+                Config.FxmlSettings.AVATAR_FIT_WIDTH,
+                Config.FxmlSettings.AVATAR_FIT_HEIGHT
+        );
+        rectangularClip.setArcWidth(Config.FxmlSettings.AVATAR_CLIP_ARC_WIDTH);
+        rectangularClip.setArcHeight(Config.FxmlSettings.AVATAR_CLIP_ARC_HEIGHT);
+        return rectangularClip;
+    }
+
+    public static void assignAvatarToImageView(ImageView imageView, byte[] avatar) {
+        imageView.setImage(convertByteArrayToImage(avatar));
+        imageView.setClip(getAvatarClip());
+    }
+
+    public static void assignAvatarToImageView(ImageView imageView, byte[] avatar, double fitWidth, double fitHeight) {
+        imageView.setImage(convertByteArrayToImage(avatar));
+        imageView.setClip(getAvatarClip(fitWidth, fitHeight));
     }
 }

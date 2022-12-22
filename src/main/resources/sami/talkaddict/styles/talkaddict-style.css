@@ -1,3 +1,5 @@
+@import 'MFXColors.css';
+
 .parent{
     -fx-background-color: transparent;
 }
@@ -25,6 +27,9 @@
     -fx-font-family: "Ubuntu Mono";
     -fx-font-size: 15;
     -fx-font-weight: bold;
+}
+.username-label{
+    -fx-wrap-text: true;
 }
 .btn-text{
     -fx-text-fill: whitesmoke;
@@ -81,4 +86,36 @@
 }
 .icon-blue{
     -fx-fill: #2196f3;
+}
+
+.notification {
+    -fx-background-color: whitesmoke;
+    -fx-background-radius: 5;
+    -fx-border-color: #ebebeb;
+    -fx-border-radius: 5;
+}
+
+.notification .label {
+    -fx-font-family: 'Visby Round CF Bold';
+    -fx-text-fill: -mfx-text-he;
+    -fx-font-size: 17;
+    -fx-font-weight: bold;
+}
+
+.notification .content {
+    -fx-padding: 10;
+    -fx-font-family: 'Visby Round CF Medium';
+    -fx-font-size: 14;
+}
+
+.notification .mfx-button {
+    -fx-min-height: 27;
+    -fx-border-color: -mfx-purple;
+    -fx-border-radius: 3;
+    -fx-text-fill: -mfx-purple;
+}
+
+.notification .mfx-button .mfx-ripple-generator {
+    -mfx-auto-clip: true;
+    -mfx-ripple-color: derive(#7a0ed9, 125%);
 }

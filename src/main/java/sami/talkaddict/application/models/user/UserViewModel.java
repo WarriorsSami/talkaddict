@@ -15,53 +15,54 @@ import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.converters.UserConverter;
 
 public class UserViewModel {
-    private final ObjectProperty<UserFx> userFxObject = new SimpleObjectProperty<>(new UserFx());
+    private final ObjectProperty<UserFx> _userFxObject = new SimpleObjectProperty<>(new UserFx());
 
     private final Logger _logger;
-    private final GenericDao<User> userDao;
+    private final GenericDao<User> _userDao;
 
     public UserViewModel() {
         _logger = ProviderService.provideLogger(UserViewModel.class);
-        userDao = ProviderService.provideDao(User.class);
+        _userDao = ProviderService.provideDao(User.class);
     }
 
     public void initFromUser(User user) {
         var userFx = UserConverter.convertUserToUserFx(user);
-        userFxObject.get().initFromUserFx(userFx);
+        _userFxObject.get().initFromUserFx(userFx);
     }
 
     public void saveOrUpdateUser() throws ApplicationException {
-        var user = UserConverter.convertUserFxToUser(userFxObject.get());
-        userDao.createOrUpdate(user);
+        var user = UserConverter.convertUserFxToUser(_userFxObject.get());
+        _userDao.createOrUpdate(user);
+        initUserByEmail(user.getEmail());
     }
 
     public void initUserByEmail(String email) throws ApplicationException {
-        var user = ((UserDao) userDao).findByEmail(email);
-        userFxObject.set(UserConverter.convertUserToUserFx(user));
+        var user = ((UserDao) _userDao).findByEmail(email);
+        _userFxObject.set(UserConverter.convertUserToUserFx(user));
     }
 
     public IntegerProperty idProperty() {
-        return userFxObject.get().Id;
+        return _userFxObject.get().Id;
     }
 
     public StringProperty usernameProperty() {
-        return userFxObject.get().Username;
+        return _userFxObject.get().Username;
     }
 
     public StringProperty emailProperty() {
-        return userFxObject.get().Email;
+        return _userFxObject.get().Email;
     }
 
     public StringProperty passwordProperty() {
-        return userFxObject.get().Password;
+        return _userFxObject.get().Password;
     }
 
     public StringProperty descriptionProperty() {
-        return userFxObject.get().Description;
+        return _userFxObject.get().Description;
     }
 
     public ObjectProperty<byte[]> avatarProperty() {
-        return userFxObject.get().Avatar;
+        return _userFxObject.get().Avatar;
     }
 
     public void isUsernameValid(Check.Context ctx) {
@@ -84,7 +85,7 @@ public class UserViewModel {
 
     public void isUsernameUnique(Check.Context ctx) {
         try {
-            var user = ((UserDao) userDao).findByName(usernameProperty().get());
+            var user = ((UserDao) _userDao).findByName(usernameProperty().get());
             if (user != null && user.getId() != idProperty().get()) {
                 ctx.error("Username is already taken!");
             }
@@ -106,7 +107,7 @@ public class UserViewModel {
 
     public void isEmailUnique(Check.Context ctx) {
         try {
-            var user = ((UserDao) userDao).findByEmail(emailProperty().get());
+            var user = ((UserDao) _userDao).findByEmail(emailProperty().get());
             if (user != null) {
                 ctx.error("Email is already taken!");
             }

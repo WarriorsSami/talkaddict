@@ -12,6 +12,7 @@ import sami.talkaddict.application.requests.commands.auth.RegisterUser;
 import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.application.models.user.UserViewModel;
+import sami.talkaddict.application.requests.queries.chat.GetAllUsers;
 import sami.talkaddict.domain.entities.BaseEntity;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
@@ -45,6 +46,7 @@ public class ProviderService {
         _loggers.put(LogoutUser.class, LoggerFactory.getLogger(LogoutUser.class));
         _loggers.put(GetLoggedInUser.class, LoggerFactory.getLogger(GetLoggedInUser.class));
         _loggers.put(UpdateUserProfile.class, LoggerFactory.getLogger(UpdateUserProfile.class));
+        _loggers.put(GetAllUsers.class, LoggerFactory.getLogger(GetAllUsers.class));
 
         _loggers.put(LoginController.class, LoggerFactory.getLogger(LoginController.class));
         _loggers.put(RegisterController.class, LoggerFactory.getLogger(RegisterController.class));
@@ -87,6 +89,10 @@ public class ProviderService {
                             ),
                             new UpdateUserProfile.Handler(
                                     provideLogger(UpdateUserProfile.class)
+                            ),
+                            new GetAllUsers.Handler(
+                                    provideLogger(GetAllUsers.class),
+                                    provideMediator()
                             )
                     ));
         }
