@@ -62,6 +62,7 @@ public class Config {
 
         public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
         public static final Double USER_LIST_VIEW_SCROLLING_SPEED = 0.5;
+        public static final Long SEARCH_DELAY = 250L;
 
         public static final String AVATAR_STATUS_ONLINE_STYLE_CLASS = "online-status";
         public static final String AVATAR_STATUS_OFFLINE_STYLE_CLASS = "offline-status";

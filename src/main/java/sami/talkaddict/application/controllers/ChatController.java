@@ -17,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import org.reactfx.EventStreams;
 import sami.talkaddict.application.factories.UserCellFactory;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.application.models.user.UserListViewModel;
@@ -27,6 +28,7 @@ import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
@@ -75,9 +77,10 @@ public class ChatController implements Initializable {
         _usersListView.features().enableSmoothScrolling(Config.FxmlSettings.USER_LIST_VIEW_SCROLLING_SPEED);
 
         MFXTooltip.of(_searchBox, "Filter users by name").install();
-        _searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filterUsersByName(newValue);
-        });
+        // add a debouncing of x milliseconds to the search field
+        EventStreams.valuesOf(_searchField.textProperty())
+                .successionEnds(Duration.ofMillis(Config.FxmlSettings.SEARCH_DELAY))
+                .subscribe(this::filterUsersByName);
         _searchIcon.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {
                 filterUsersByName(_searchField.getText());

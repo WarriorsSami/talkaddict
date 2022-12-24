@@ -4,6 +4,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -30,12 +31,12 @@
 
         <VBox spacing="10.0" GridPane.columnSpan="2" GridPane.rowIndex="0">
             <HBox fx:id="_searchBox" alignment="CENTER_RIGHT" spacing="10.0">
-                <MFXTextField fx:id="_searchField" floatingText="Search" prefHeight="51.0" prefWidth="241.0">
+                <MFXTextField fx:id="_searchField" styleClass="tf-input" floatingText="Search" prefHeight="51.0" prefWidth="241.0">
                     <font>
                         <Font name="Ubuntu Mono Bold" size="14.0" />
                     </font>
                 </MFXTextField>
-                <MFXProgressSpinner fx:id="_searchSpinner" visible="false" radius="5.0" />
+                <MFXProgressSpinner fx:id="_searchSpinner" radius="6.0" visible="false" />
                 <FontAwesomeIconView fx:id="_searchIcon" glyphName="SEARCH" size="25.0" />
             </HBox>
             <StackPane>
@@ -51,6 +52,9 @@
                     </VBox>
                 </Pane>
             </StackPane>
+         <padding>
+            <Insets bottom="5.0" left="2.0" right="2.0" top="5.0" />
+         </padding>
         </VBox>
 
         <VBox fx:id="_chatBox" alignment="CENTER" prefHeight="700.0" prefWidth="729.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="0">
