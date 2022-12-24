@@ -1,9 +1,15 @@
 package sami.talkaddict.infrastructure.utils.managers;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.di.Config;
 
 import java.io.ByteArrayInputStream;
@@ -53,23 +59,34 @@ public class AvatarManager {
         return rectangularClip;
     }
 
-    public static Node getAvatarClip() {
-        var rectangularClip = new Rectangle(
-                Config.FxmlSettings.AVATAR_FIT_WIDTH,
-                Config.FxmlSettings.AVATAR_FIT_HEIGHT
-        );
-        rectangularClip.setArcWidth(Config.FxmlSettings.AVATAR_CLIP_ARC_WIDTH);
-        rectangularClip.setArcHeight(Config.FxmlSettings.AVATAR_CLIP_ARC_HEIGHT);
-        return rectangularClip;
-    }
-
-    public static void assignAvatarToImageView(ImageView imageView, byte[] avatar) {
-        imageView.setImage(convertByteArrayToImage(avatar));
-        imageView.setClip(getAvatarClip());
-    }
-
     public static void assignAvatarToImageView(ImageView imageView, byte[] avatar, double fitWidth, double fitHeight) {
         imageView.setImage(convertByteArrayToImage(avatar));
         imageView.setClip(getAvatarClip(fitWidth, fitHeight));
+    }
+
+    public static Node getAvatarForUser(UserFx user) {
+        var avatarImageView = new ImageView();
+        avatarImageView.setFitHeight(40);
+        avatarImageView.setFitWidth(40);
+        AvatarManager.assignAvatarToImageView(
+                avatarImageView,
+                user.Avatar.get(),
+                avatarImageView.getFitWidth(),
+                avatarImageView.getFitHeight()
+        );
+        var statusClip = new Circle(avatarImageView.getFitWidth(), avatarImageView.getFitHeight(), 5);
+        switch (user.Status.get()) {
+            case ONLINE -> statusClip.getStyleClass().add("online-status");
+            case OFFLINE -> statusClip.getStyleClass().add("offline-status");
+            case BUSY -> statusClip.getStyleClass().add("busy-status");
+            case AWAY -> statusClip.getStyleClass().add("away-status");
+        }
+        statusClip.getStyleClass().add("online-status");
+        var statusHBox = new HBox(statusClip);
+        statusHBox.setAlignment(Pos.CENTER_RIGHT);
+        var statusBorderPane = new BorderPane();
+        statusBorderPane.setBottom(statusHBox);
+
+        return new StackPane(avatarImageView, statusBorderPane);
     }
 }

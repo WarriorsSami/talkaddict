@@ -11,7 +11,8 @@ public class UserConverter {
                 userFx.Password.get(),
                 userFx.Email.get(),
                 userFx.Description.get(),
-                userFx.Avatar.get()
+                userFx.Avatar.get(),
+                userFx.Status.get()
         );
     }
 

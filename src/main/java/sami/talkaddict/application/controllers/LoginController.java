@@ -80,6 +80,7 @@ public class LoginController implements Initializable {
                     throw response.err().orElseThrow();
                 }
             } catch (ApplicationException ex) {
+                //TODO: move javafx related operations to Main Thread somehow
                 SceneFxManager.showAlertDialog(
                         "Invalid credentials",
                         "Invalid email or password!",

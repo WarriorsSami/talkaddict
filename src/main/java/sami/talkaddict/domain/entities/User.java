@@ -21,24 +21,28 @@ public class User implements BaseEntity {
         private String description;
         @DatabaseField(columnName = "image", dataType = DataType.BYTE_ARRAY)
         private byte[] avatar;
+        @DatabaseField(columnName = "status", canBeNull = false)
+        private UserStatus status;
 
         public User() {}
 
-        public User(String username, String password, String email, String description, byte[] avatar) {
+        public User(String username, String password, String email, String description, byte[] avatar, UserStatus status) {
                 this.username = username;
                 this.password = password;
                 this.email = email;
                 this.description = description;
                 this.avatar = avatar;
+                this.status = status;
         }
 
-        public User(Integer id, String username, String password, String email, String description, byte[] avatar) {
+        public User(Integer id, String username, String password, String email, String description, byte[] avatar, UserStatus status) {
                 this.id = id;
                 this.username = username;
                 this.password = password;
                 this.email = email;
                 this.description = description;
                 this.avatar = avatar;
+                this.status = status;
         }
 
         public Integer getId() {
@@ -89,6 +93,14 @@ public class User implements BaseEntity {
                 this.avatar = avatar;
         }
 
+        public UserStatus getStatus() {
+                return status;
+        }
+
+        public void setStatus(UserStatus status) {
+                this.status = status;
+        }
+
         @Override
         public String toString() {
                 return "User{" +
@@ -98,6 +110,7 @@ public class User implements BaseEntity {
                         ", email='" + email + '\'' +
                         ", description='" + description + '\'' +
                         ", avatar=" + Arrays.toString(avatar) +
+                        ", status=" + status +
                         '}';
         }
 
@@ -107,12 +120,12 @@ public class User implements BaseEntity {
                 if (!(o instanceof User user)) return false;
                 return id.equals(user.id) && username.equals(user.username)
                         && password.equals(user.password) && email.equals(user.email)
-                        && description.equals(user.description) && Arrays.equals(avatar, user.avatar);
+                        && description.equals(user.description) && Arrays.equals(avatar, user.avatar) && status == user.status;
         }
 
         @Override
         public int hashCode() {
-                int result = Objects.hash(id, username, password, email, description);
+                int result = Objects.hash(id, username, password, email, description, status);
                 result = 31 * result + Arrays.hashCode(avatar);
                 return result;
         }

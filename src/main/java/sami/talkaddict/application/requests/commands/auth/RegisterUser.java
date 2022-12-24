@@ -5,6 +5,7 @@ import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.Config;
+import sami.talkaddict.domain.entities.UserStatus;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
@@ -38,6 +39,7 @@ public class RegisterUser {
             registeredUser.usernameProperty().set(dto.usernameProperty().get());
             registeredUser.passwordProperty().set(encodedPassword);
             registeredUser.descriptionProperty().set(Config.ValidationTweaks.DEFAULT_USER_DESCRIPTION);
+            registeredUser.statusProperty().set(UserStatus.ONLINE);
 
             try {
                 registeredUser.avatarProperty().set(AvatarManager.getRandomAvatar());

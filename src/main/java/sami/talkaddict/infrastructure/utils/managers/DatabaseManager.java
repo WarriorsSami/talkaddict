@@ -4,8 +4,8 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.di.Config;
+import sami.talkaddict.domain.entities.User;
 
 import java.sql.SQLException;
 
@@ -13,6 +13,8 @@ public class DatabaseManager {
     private final Logger _logger;
     private final String JDBC_URL;
     private ConnectionSource _conn;
+
+    private static final int SCHEMA_VERSION = 1;
 
     public DatabaseManager(Logger logger, String jdbcUrl) {
         if (logger == null) {
@@ -29,6 +31,7 @@ public class DatabaseManager {
         if (DotenvManager.get(Config.Database.APPLY_DB_MIGRATIONS).equals("true")) {
             dropTables();
             createTables();
+            populateTables();
         }
         closeConnectionSource();
     }
@@ -63,6 +66,14 @@ public class DatabaseManager {
             TableUtils.createTableIfNotExists(_conn, User.class);
         } catch (SQLException ex) {
             _logger.error(ex, "Error creating tables: " + ex.getMessage(), ex.getStackTrace());
+        }
+    }
+
+    private void populateTables() {
+        try {
+
+        } catch (Exception ex) {
+            _logger.error(ex, "Error populating tables: " + ex.getMessage(), ex.getStackTrace());
         }
     }
 

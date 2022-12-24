@@ -47,7 +47,7 @@
     -fx-text-fill: whitesmoke;
 }
 .white-pane{
-    -fx-background-color: #ffffff;
+    -fx-background-color: whitesmoke;
 }
 .blue-panel{
     -fx-background-color: #151928;
@@ -84,10 +84,33 @@
 .blue-pane{
     -fx-background-color: #42909a;
 }
+.user-cell{
+    -fx-background-color: #1f88d3;
+    -fx-background-radius: 10px;
+}
+.user-icon{
+    -fx-fill: #6ecb57;
+}
+.user-label{
+    -fx-text-fill: whitesmoke;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
 .icon-blue{
     -fx-fill: #2196f3;
 }
-
+.online-status{
+    -fx-fill: #32ee04;
+}
+.offline-status{
+    -fx-fill: #746d6d;
+}
+.busy-status{
+    -fx-fill: #ff0000;
+}
+.away-status{
+    -fx-fill: #ff9f00;
+}
 .notification {
     -fx-background-color: whitesmoke;
     -fx-background-radius: 5;

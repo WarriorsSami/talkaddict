@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import sami.talkaddict.application.factories.UserCellFactory;
 import sami.talkaddict.application.models.user.UserFx;
@@ -26,6 +27,8 @@ public class ChatController implements Initializable {
     @FXML
     private Pane _loadingOverlay;
     @FXML
+    private Label _chatLabel;
+    @FXML
     private MFXListView<UserFx> _usersListView;
 
     private Logger _logger;
@@ -37,6 +40,24 @@ public class ChatController implements Initializable {
         _logger = ProviderService.provideLogger(ChatController.class);
         _mediator = ProviderService.provideMediator();
         _userListViewModel = new UserListViewModel();
+
+        _usersListView.setConverter(FunctionalStringConverter.to(userFx -> userFx.Username.get()));
+        _usersListView.setCellFactory(userFx -> new UserCellFactory(_usersListView, userFx));
+
+        _usersListView.setOnMouseClicked(event -> {
+            if (event.getEventType().getName().equals("MOUSE_CLICKED")) {
+                var selectedUser = _usersListView.getSelectionModel().getSelectedValues().get(0);
+                if (selectedUser != null) {
+                    _logger.info("Selected user: " + selectedUser.Username.get());
+                    _chatLabel.setText("Chat with " + selectedUser.Username.get());
+                } else {
+                    _logger.info("Selected user is null");
+                }
+            }
+        });
+
+        _usersListView.features().enableBounceEffect();
+        _usersListView.features().enableSmoothScrolling(Config.FxmlSettings.USER_LIST_VIEW_SCROLLING_SPEED);
 
         var getAllUsersTask = new Task<Result<ObservableList<UserFx>, Exception>>() {
             @Override
@@ -55,15 +76,7 @@ public class ChatController implements Initializable {
                 var response = getAllUsersTask.getValue();
                 if (response.isOk()) {
                     var users = response.ok().orElseThrow();
-
-//                  users.stream().map(UserCellFactory::getNode).forEach(item -> _usersListView.getItems().add(item));
-
                     _usersListView.setItems(users);
-                    _usersListView.setConverter(FunctionalStringConverter.to(userFx -> userFx.Username.get()));
-                    _usersListView.setCellFactory(userFx -> new UserCellFactory(_usersListView, userFx));
-
-                    _usersListView.features().enableBounceEffect();
-                    _usersListView.features().enableSmoothScrolling(Config.FxmlSettings.USER_LIST_VIEW_SCROLLING_SPEED);
 
                     _logger.info("Users fetched successfully");
                 } else {

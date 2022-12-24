@@ -25,6 +25,7 @@ public class Config {
     public static class AppSettings {
         public static final String APP_TITLE = "Talkaddict";
         public static final Boolean RESIZABLE = false;
+        public static final Double REFRESH_RATE = 5.0;
     }
 
     public static class ValidationTweaks {

@@ -84,7 +84,7 @@ public class HomeController implements Initializable {
     private void updateLoggedInUserViewModelPeriodically() {
          _updateLoggedInUserViewModelTimeline = new Timeline(
                  new KeyFrame(
-                         Duration.seconds(5),
+                         Duration.seconds(Config.AppSettings.REFRESH_RATE),
                          event -> updateLoggedInUserViewModel()
                  )
          );

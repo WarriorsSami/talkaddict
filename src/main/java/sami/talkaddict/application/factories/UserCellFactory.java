@@ -2,26 +2,26 @@ package sami.talkaddict.application.factories;
 
 import io.github.palexdev.materialfx.controls.MFXListView;
 import io.github.palexdev.materialfx.controls.cell.MFXListCell;
-import javafx.scene.image.ImageView;
-import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
+import javafx.scene.layout.HBox;
 import sami.talkaddict.application.models.user.UserFx;
+import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 
 public class UserCellFactory extends MFXListCell<UserFx> {
-    private final ImageView _userAvatarImageView;
-
     public UserCellFactory(MFXListView<UserFx> listView, UserFx data) {
         super(listView, data);
-        setPrefHeight(100);
-        _userAvatarImageView = new ImageView();
-        AvatarManager.assignAvatarToImageView(_userAvatarImageView, data.Avatar.get());
+        setPrefHeight(60);
+        getStyleClass().add("user-cell");
         render(data);
     }
 
     @Override
     protected void render(UserFx data) {
         super.render(data);
-//        if (_userAvatarImageView != null) {
-//            getChildren().add(0, _userAvatarImageView);
-//        }
+
+        var hbox = new HBox(10, AvatarManager.getAvatarForUser(data));
+        hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        getChildren().get(getChildren().size() - 1).getStyleClass().add("user-label");
+        getChildren().add(0, hbox);
     }
 }

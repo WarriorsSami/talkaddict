@@ -6,12 +6,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import net.synedra.validatorfx.Check;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.UserStatus;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.infrastructure.daos.UserDao;
-import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.converters.UserConverter;
 
 public class UserViewModel {
@@ -63,6 +64,10 @@ public class UserViewModel {
 
     public ObjectProperty<byte[]> avatarProperty() {
         return _userFxObject.get().Avatar;
+    }
+
+    public ObjectProperty<UserStatus> statusProperty() {
+        return _userFxObject.get().Status;
     }
 
     public void isUsernameValid(Check.Context ctx) {
