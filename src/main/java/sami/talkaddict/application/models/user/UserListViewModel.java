@@ -9,10 +9,9 @@ import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
-import sami.talkaddict.di.Config;
+import sami.talkaddict.infrastructure.daos.UserDao;
 import sami.talkaddict.infrastructure.utils.converters.UserConverter;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserListViewModel {
@@ -37,11 +36,8 @@ public class UserListViewModel {
         });
     }
 
-    public void initUsersByName(String name) throws ApplicationException, SQLException {
-        var filterByName = _userDao.queryBuilder();
-        filterByName.where().like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%");
-
-        var users = _userDao.findByFilter(filterByName);
+    public void initUsersByName(String name) throws ApplicationException {
+        var users = (List<User>) ((UserDao) _userDao).findByNameLike(name);
         Platform.runLater(() -> {
             _userFxObservableList.get().clear();
             users.forEach(user -> {

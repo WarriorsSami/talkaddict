@@ -126,6 +126,20 @@ public class UserDao implements GenericDao<User> {
         }
     }
 
+    public Iterable<User> findByNameLike(String name) throws ApplicationException {
+        try {
+            _logger.info("Finding users by name like: " + name);
+            QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
+            queryBuilder.where().like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%");
+            return _dao.query(queryBuilder.prepare());
+        } catch (SQLException ex) {
+            _logger.error(ex, "Error finding users by name like: " + ex.getMessage(), ex.getStackTrace());
+            throw new ApplicationException("Error finding users by name like: " + ex.getMessage());
+        } finally {
+            _databaseManager.closeConnectionSource();
+        }
+    }
+
     public User findByEmail(String email) throws ApplicationException {
         try {
             _logger.info("Finding user by email: " + email);
