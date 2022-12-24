@@ -3,7 +3,10 @@ package sami.talkaddict.application.controllers;
 import an.awesome.pipelinr.Pipeline;
 import an.awesome.pipelinr.Voidy;
 import com.j256.ormlite.logger.Logger;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import dev.kylesilver.result.Result;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTooltip;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -11,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import net.synedra.validatorfx.Validator;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
@@ -18,6 +22,7 @@ import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.UserStatus;
 import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
@@ -25,6 +30,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProfileController implements Initializable {
+    @FXML
+    private Circle _statusClip;
+    @FXML
+    private MFXComboBox<UserStatus> _statusComboBox;
     @FXML
     private ImageView _avatarImageView;
     @FXML
@@ -49,12 +58,27 @@ public class ProfileController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         _logger = ProviderService.provideLogger(ProfileController.class);
         _mediator = ProviderService.provideMediator();
+
         _userViewModel = new UserViewModel();
         _validator = new Validator();
-
         bindBidirectionalViewModelToFields();
+
         _saveProfileProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
         _saveProfileProgressBar.setVisible(false);
+
+        MFXTooltip.of(_statusComboBox, "Update your status activity here").install();
+
+        var leadingIcon = new FontAwesomeIconView();
+        leadingIcon.setGlyphName("SIGNAL");
+        _statusComboBox.setLeadingIcon(leadingIcon);
+
+        _statusComboBox.setItems(UserStatus.getAllStatuses());
+        _statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            _logger.info("Status changed to: " + newValue);
+            if (oldValue != newValue) {
+                AvatarManager.assignStatusToClip(_statusClip, newValue);
+            }
+        });
 
         var getLoggedInUserTask = new Task<Result<User, Exception>>() {
             @Override
@@ -76,6 +100,11 @@ public class ProfileController implements Initializable {
                             _avatarImageView.getFitWidth(),
                             _avatarImageView.getFitHeight()
                     );
+                    AvatarManager.assignStatusToClip(
+                            _statusClip,
+                            _userViewModel.statusProperty().get()
+                    );
+                    _statusComboBox.setValue(_userViewModel.statusProperty().get());
                 } else {
                     _logger.error("Failed to get logged in user");
                     throw response.err().orElseThrow();
@@ -101,6 +130,7 @@ public class ProfileController implements Initializable {
     private void bindBidirectionalViewModelToFields() {
         _userViewModel.usernameProperty().bindBidirectional(_usernameField.textProperty());
         _userViewModel.descriptionProperty().bindBidirectional(_descriptionField.textProperty());
+        _userViewModel.statusProperty().bindBidirectional(_statusComboBox.valueProperty());
     }
 
     private void bindValidatorToFields() {

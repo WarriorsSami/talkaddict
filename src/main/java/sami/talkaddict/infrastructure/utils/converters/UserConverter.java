@@ -24,6 +24,7 @@ public class UserConverter {
         userFx.Email.set(user.getEmail());
         userFx.Description.set(user.getDescription());
         userFx.Avatar.set(user.getAvatar());
+        userFx.Status.set(user.getStatus());
         return userFx;
     }
 }

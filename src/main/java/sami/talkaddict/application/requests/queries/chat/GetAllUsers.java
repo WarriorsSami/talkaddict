@@ -3,11 +3,10 @@ package sami.talkaddict.application.requests.queries.chat;
 import an.awesome.pipelinr.Pipeline;
 import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
-import dev.kylesilver.result.UnwrapException;
 import javafx.collections.ObservableList;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.application.models.user.UserListViewModel;
-import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
+import sami.talkaddict.application.requests.helpers.RemoveLoggedInUserFromCollection;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 
 public class GetAllUsers {
@@ -40,20 +39,7 @@ public class GetAllUsers {
                 return Result.err(ex);
             }
 
-            var users = dto.getUserFxObservableList();
-            var response = _mediator.send(new GetLoggedInUser.Query());
-            if (response.isOk()) {
-                Integer loggedInUserId;
-                try {
-                    loggedInUserId = response.unwrap().getId();
-                } catch (UnwrapException e) {
-                    _logger.error(e.toString());
-                    return Result.err(e);
-                }
-                users.removeIf(user -> user.Id.get() == loggedInUserId);
-            }
-
-            return Result.ok(users);
+            return RemoveLoggedInUserFromCollection.execute(_mediator, _logger, dto.usersProperty().get());
         }
     }
 }

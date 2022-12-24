@@ -2,15 +2,31 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Box?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" styleClass="blue-pane" stylesheets="@../styles/bootstrapfx.css, @../styles/talkaddict-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.HomeController">
     <VBox prefHeight="700.0" prefWidth="80.0" spacing="40.0" styleClass="menu-panel">
         <VBox spacing="5.0" styleClass="avatar-menu-item">
-            <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" />
+            <StackPane>
+                <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" />
+                <BorderPane>
+                    <bottom>
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                            <Circle fx:id="_statusClip" radius="5.0" />
+                            <Box depth="0.0" height="0.0" width="10.0" />
+                        </HBox>
+                    </bottom>
+                </BorderPane>
+            </StackPane>
             <Label fx:id="_usernameLabel" styleClass="menu-item-text" text="User">
                 <font>
                     <Font name="Ubuntu Mono Bold" size="12.0" />

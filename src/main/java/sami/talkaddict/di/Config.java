@@ -4,6 +4,9 @@ public class Config {
     public static class Database {
         public static final String JDBC_URL = "JDBC_URL";
         public static final String APPLY_DB_MIGRATIONS = "APPLY_DB_MIGRATIONS";
+        public static final String POPULATE_DB_DIRECTORY = "POPULATE_DB_DIRECTORY";
+
+        public static final String USER_DATA_FILENAME = "/user.csv";
 
         public static final String USERNAME_COLUMN_NAME = "name";
         public static final String EMAIL_COLUMN_NAME = "email";
@@ -25,7 +28,8 @@ public class Config {
     public static class AppSettings {
         public static final String APP_TITLE = "Talkaddict";
         public static final Boolean RESIZABLE = false;
-        public static final Double REFRESH_RATE = 5.0;
+        public static final Double PROFILE_REFRESH_RATE = 10.0;
+        public static final Double CHAT_REFRESH_RATE = 3.0;
     }
 
     public static class ValidationTweaks {
@@ -58,5 +62,10 @@ public class Config {
 
         public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
         public static final Double USER_LIST_VIEW_SCROLLING_SPEED = 0.5;
+
+        public static final String AVATAR_STATUS_ONLINE_STYLE_CLASS = "online-status";
+        public static final String AVATAR_STATUS_OFFLINE_STYLE_CLASS = "offline-status";
+        public static final String AVATAR_STATUS_BUSY_STYLE_CLASS = "busy-status";
+        public static final String AVATAR_STATUS_AWAY_STYLE_CLASS = "away-status";
     }
 }

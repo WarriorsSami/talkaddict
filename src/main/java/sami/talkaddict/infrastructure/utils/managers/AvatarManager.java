@@ -11,6 +11,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.di.Config;
+import sami.talkaddict.domain.entities.UserStatus;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -64,7 +65,23 @@ public class AvatarManager {
         imageView.setClip(getAvatarClip(fitWidth, fitHeight));
     }
 
-    public static Node getAvatarForUser(UserFx user) {
+    public static void assignStatusToClip(Circle statusClip, UserStatus status) {
+        // remove all style classes from the status clip
+        statusClip.getStyleClass().removeAll(
+                Config.FxmlSettings.AVATAR_STATUS_ONLINE_STYLE_CLASS,
+                Config.FxmlSettings.AVATAR_STATUS_OFFLINE_STYLE_CLASS,
+                Config.FxmlSettings.AVATAR_STATUS_BUSY_STYLE_CLASS,
+                Config.FxmlSettings.AVATAR_STATUS_AWAY_STYLE_CLASS
+        );
+        switch (status) {
+            case ONLINE -> statusClip.getStyleClass().add(Config.FxmlSettings.AVATAR_STATUS_ONLINE_STYLE_CLASS);
+            case OFFLINE -> statusClip.getStyleClass().add(Config.FxmlSettings.AVATAR_STATUS_OFFLINE_STYLE_CLASS);
+            case BUSY -> statusClip.getStyleClass().add(Config.FxmlSettings.AVATAR_STATUS_BUSY_STYLE_CLASS);
+            case AWAY -> statusClip.getStyleClass().add(Config.FxmlSettings.AVATAR_STATUS_AWAY_STYLE_CLASS);
+        }
+    }
+
+    public static Node getAvatarForUser(UserFx user) throws NullPointerException {
         var avatarImageView = new ImageView();
         avatarImageView.setFitHeight(40);
         avatarImageView.setFitWidth(40);
@@ -75,13 +92,7 @@ public class AvatarManager {
                 avatarImageView.getFitHeight()
         );
         var statusClip = new Circle(avatarImageView.getFitWidth(), avatarImageView.getFitHeight(), 5);
-        switch (user.Status.get()) {
-            case ONLINE -> statusClip.getStyleClass().add("online-status");
-            case OFFLINE -> statusClip.getStyleClass().add("offline-status");
-            case BUSY -> statusClip.getStyleClass().add("busy-status");
-            case AWAY -> statusClip.getStyleClass().add("away-status");
-        }
-        statusClip.getStyleClass().add("online-status");
+        AvatarManager.assignStatusToClip(statusClip, user.Status.get());
         var statusHBox = new HBox(statusClip);
         statusHBox.setAlignment(Pos.CENTER_RIGHT);
         var statusBorderPane = new BorderPane();

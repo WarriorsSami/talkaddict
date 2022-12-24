@@ -1,5 +1,8 @@
 package sami.talkaddict.application.models.user;
 
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sami.talkaddict.di.ProviderService;
@@ -13,7 +16,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserListViewModel {
-    private ObservableList<UserFx> _userFxObservableList = FXCollections.observableArrayList();
+    private final ObjectProperty<ObservableList<UserFx>> _userFxObservableList = new SimpleObjectProperty<>(
+            FXCollections.observableArrayList()
+    );
 
     private final GenericDao<User> _userDao;
 
@@ -23,10 +28,12 @@ public class UserListViewModel {
 
     public void initAllUsers() throws ApplicationException {
         var users = (List<User>) _userDao.findAll();
-        _userFxObservableList.clear();
-
-        users.forEach(user -> {
-            _userFxObservableList.add(UserConverter.convertUserToUserFx(user));
+        Platform.runLater(() -> {
+            _userFxObservableList.get().clear();
+            users.forEach(user -> {
+                var userFx = UserConverter.convertUserToUserFx(user);
+                _userFxObservableList.get().add(userFx);
+            });
         });
     }
 
@@ -35,18 +42,15 @@ public class UserListViewModel {
         filterByName.where().like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%");
 
         var users = _userDao.findByFilter(filterByName);
-        _userFxObservableList.clear();
-
-        users.forEach(user -> {
-            _userFxObservableList.add(UserConverter.convertUserToUserFx(user));
+        Platform.runLater(() -> {
+            _userFxObservableList.get().clear();
+            users.forEach(user -> {
+                _userFxObservableList.get().add(UserConverter.convertUserToUserFx(user));
+            });
         });
     }
 
-    public ObservableList<UserFx> getUserFxObservableList() {
+    public ObjectProperty<ObservableList<UserFx>> usersProperty() {
         return _userFxObservableList;
-    }
-
-    public void setUserFxObservableList(ObservableList<UserFx> userFxObservableList) {
-        _userFxObservableList = userFxObservableList;
     }
 }

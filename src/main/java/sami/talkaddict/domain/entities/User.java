@@ -21,7 +21,7 @@ public class User implements BaseEntity {
         private String description;
         @DatabaseField(columnName = "image", dataType = DataType.BYTE_ARRAY)
         private byte[] avatar;
-        @DatabaseField(columnName = "status", canBeNull = false)
+        @DatabaseField(canBeNull = false, dataType = DataType.ENUM_INTEGER)
         private UserStatus status;
 
         public User() {}

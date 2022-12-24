@@ -31,7 +31,7 @@ public class DatabaseManager {
         if (DotenvManager.get(Config.Database.APPLY_DB_MIGRATIONS).equals("true")) {
             dropTables();
             createTables();
-            populateTables();
+//            populateTables();
         }
         closeConnectionSource();
     }
@@ -69,13 +69,14 @@ public class DatabaseManager {
         }
     }
 
-    private void populateTables() {
-        try {
-
-        } catch (Exception ex) {
-            _logger.error(ex, "Error populating tables: " + ex.getMessage(), ex.getStackTrace());
-        }
-    }
+//    private void populateTables() {
+//        try {
+//            final var userDataPath = DotenvManager.get(Config.Database.POPULATE_DB_DIRECTORY) + Config.Database.USER_DATA_FILENAME;
+//            final List<User> userData = FileIOManager.readCsvFile(userDataPath);
+//        } catch (Exception ex) {
+//            _logger.error(ex, "Error populating tables: " + ex.getMessage(), ex.getStackTrace());
+//        }
+//    }
 
     private void dropTables() {
         try {
