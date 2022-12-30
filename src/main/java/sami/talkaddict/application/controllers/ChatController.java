@@ -34,6 +34,7 @@ import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.application.models.user.UserListViewModel;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.chat.CreateOrUpdateDirectMessageAndReloadMessagesList;
+import sami.talkaddict.application.requests.commands.chat.DeleteDirectMessageByIdAndReloadMessagesList;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.application.requests.queries.chat.GetAllUsers;
 import sami.talkaddict.application.requests.queries.chat.GetDirectMessagesByLoggedInUserAndOtherUser;
@@ -117,6 +118,7 @@ public class ChatController implements Initializable {
                     _logger.info("Selected user: " + selectedUser.Username.get());
                     _selectedUserViewModel.initFromUser(UserConverter.convertUserFxToUser(selectedUser));
                     initChatHeader(selectedUser);
+                    _messageText.clear();
 
                     // get direct messages
                     getDirectMessagesForChat();
@@ -131,6 +133,18 @@ public class ChatController implements Initializable {
 
         // direct messages list view
         _directMessagesListView.setCellFactory(dmFx -> new DirectMessageCellFactory(_directMessagesListView, dmFx));
+        _directMessagesListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                var selectedDm = _directMessagesListView.getSelectionModel().getSelectedValues().get(0);
+                if (selectedDm != null) {
+                    _logger.info("Selected dm: " + selectedDm.Id.get());
+                    deleteDirectMessage(selectedDm);
+                } else {
+                    _logger.info("Selected dm is null");
+                }
+            }
+        });
+        MFXTooltip.of(_directMessagesListView, "Double click to delete message").install();
 
         _directMessagesListView.features().enableBounceEffect();
         _directMessagesListView.features().enableSmoothScrolling(Config.FxmlSettings.LIST_VIEW_SCROLLING_SPEED);
@@ -287,6 +301,47 @@ public class ChatController implements Initializable {
         filterUsersThread.start();
     }
 
+    private void deleteDirectMessage(DirectMessageFx messageFx) {
+        var deleteDirectMessageTask = new Task<Result<Voidy, Exception>>() {
+            @Override
+            protected Result<Voidy, Exception> call() {
+                return _mediator.send(new DeleteDirectMessageByIdAndReloadMessagesList.Command(
+                        _directMessageListViewModel,
+                        messageFx.Id.get(),
+                        _selectedUserViewModel.idProperty().get()
+                ));
+            }
+        };
+
+        deleteDirectMessageTask.setOnRunning(event -> {
+            _loadingOverlay.setVisible(true);
+        });
+
+        deleteDirectMessageTask.setOnSucceeded(event -> {
+            _loadingOverlay.setVisible(false);
+            try {
+                var response = deleteDirectMessageTask.getValue();
+                if (response.isOk()) {
+                    var message = response.ok().orElseThrow();
+                    _logger.info("Direct message deleted successfully");
+                } else {
+                    _logger.error("Failed to delete direct message");
+                    throw response.err().orElseThrow();
+                }
+            } catch (Exception ex) {
+                SceneFxManager.showAlertDialog(
+                        "Error deleting direct message",
+                        "Something went wrong!",
+                        Alert.AlertType.ERROR
+                );
+                _logger.error(ex.toString(), ex.getStackTrace());
+            }
+        });
+
+        var deleteDirectMessageThread = new Thread(deleteDirectMessageTask);
+        deleteDirectMessageThread.setDaemon(true);
+        deleteDirectMessageThread.start();
+    }
 
     private void getDirectMessagesForChat() {
         var getDirectMessagesTask = new Task<Result<ObservableList<DirectMessageFx>, Exception>>() {
@@ -353,6 +408,10 @@ public class ChatController implements Initializable {
 
     @FXML
     private void onSendMessage(MouseEvent mouseEvent) {
+        if (_dmToBeWrittenViewModel.messageTextProperty().get().isEmpty() && _dmToBeWrittenViewModel.messageImageProperty().get() == null) {
+            return;
+        }
+
         var sendMessageTask = new Task<Result<Voidy, Exception>>() {
             @Override
             protected Result<Voidy, Exception> call() {
@@ -371,6 +430,7 @@ public class ChatController implements Initializable {
                 var response = sendMessageTask.getValue();
                 if (response.isOk()) {
                     var voidy = response.ok().orElseThrow();
+                    _messageText.clear();
                     _logger.info("Message sent successfully");
                 } else {
                     _logger.error("Failed to send message");
