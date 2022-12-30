@@ -19,12 +19,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.reactfx.EventStreams;
 import sami.talkaddict.application.factories.UserCellFactory;
+import sami.talkaddict.application.models.chat.DirectMessageListViewModel;
+import sami.talkaddict.application.models.chat.DirectMessageViewModel;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.application.models.user.UserListViewModel;
+import sami.talkaddict.application.models.user.UserViewModel;
+import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.application.requests.queries.chat.GetAllUsers;
 import sami.talkaddict.application.requests.queries.chat.GetUsersByName;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -50,14 +55,24 @@ public class ChatController implements Initializable {
     private Logger _logger;
     private Pipeline _mediator;
     private UserListViewModel _userListViewModel;
+    private DirectMessageListViewModel _directMessageListViewModel;
+    private UserViewModel _loggedInUserViewModel;
+    private DirectMessageViewModel _dmToBeWrittenViewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         _logger = ProviderService.provideLogger(ChatController.class);
         _mediator = ProviderService.provideMediator();
+
         _userListViewModel = new UserListViewModel();
+        _loggedInUserViewModel = new UserViewModel();
+
+        _directMessageListViewModel = new DirectMessageListViewModel();
+        _dmToBeWrittenViewModel = new DirectMessageViewModel();
+
         bindFieldsToViewModel();
 
+        // users list view
         _usersListView.setConverter(FunctionalStringConverter.to(userFx -> userFx.Username.get()));
         _usersListView.setCellFactory(userFx -> new UserCellFactory(_usersListView, userFx));
 
@@ -76,6 +91,10 @@ public class ChatController implements Initializable {
         _usersListView.features().enableBounceEffect();
         _usersListView.features().enableSmoothScrolling(Config.FxmlSettings.USER_LIST_VIEW_SCROLLING_SPEED);
 
+        // direct messages list view
+
+
+        // Search field
         MFXTooltip.of(_searchBox, "Filter users by name").install();
         // add a debouncing of x milliseconds to the search field
         EventStreams.valuesOf(_searchField.textProperty())
@@ -87,6 +106,45 @@ public class ChatController implements Initializable {
             }
         });
 
+        getLoggedInUser();
+        getAllUsers();
+    }
+
+    private void bindFieldsToViewModel() {
+        _usersListView.itemsProperty().bind(_userListViewModel.usersProperty());
+    }
+
+    private void getLoggedInUser() {
+        var getLoggedInUserTask = new Task<Result<User, Exception>>() {
+            @Override
+            protected Result<User, Exception> call() {
+                return _mediator.send(new GetLoggedInUser.Query());
+            }
+        };
+
+        getLoggedInUserTask.setOnSucceeded(event -> {
+            try {
+                var result = getLoggedInUserTask.getValue();
+                if (result.isOk()) {
+                    var user = result.ok().orElseThrow();
+                    _loggedInUserViewModel.initFromUser(user);
+                    _logger.info("Logged in user: " + _loggedInUserViewModel.usernameProperty().get());
+                } else {
+                    _logger.error("Failed to get logged in user");
+                    throw result.err().orElseThrow();
+                }
+            } catch (Exception ex) {
+                SceneFxManager.showAlertDialog(
+                        "Error fetching logged in user",
+                        "Something went wrong!",
+                        Alert.AlertType.ERROR
+                );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+            }
+        });
+    }
+
+    private void getAllUsers() {
         var getAllUsersTask = new Task<Result<ObservableList<UserFx>, Exception>>() {
             @Override
             protected Result<ObservableList<UserFx>, Exception> call() {
@@ -124,10 +182,6 @@ public class ChatController implements Initializable {
         var getAllUsersThread = new Thread(getAllUsersTask);
         getAllUsersThread.setDaemon(true);
         getAllUsersThread.start();
-    }
-
-    private void bindFieldsToViewModel() {
-        _usersListView.itemsProperty().bind(_userListViewModel.usersProperty());
     }
 
     private void filterUsersByName(String value) {

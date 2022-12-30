@@ -35,6 +35,7 @@ public class GetUsersByName {
             try {
                 dto.initUsersByName(name);
             } catch (Exception ex) {
+                _logger.error(ex.toString());
                 return Result.err(ex);
             }
 

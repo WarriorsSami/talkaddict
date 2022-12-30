@@ -11,7 +11,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.di.Config;
-import sami.talkaddict.domain.entities.UserStatus;
+import sami.talkaddict.domain.entities.user.UserStatus;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

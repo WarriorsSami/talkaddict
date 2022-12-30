@@ -6,7 +6,7 @@ import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.QueryBuilder;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
-import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 

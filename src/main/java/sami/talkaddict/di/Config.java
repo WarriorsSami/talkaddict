@@ -10,6 +10,8 @@ public class Config {
 
         public static final String USERNAME_COLUMN_NAME = "name";
         public static final String EMAIL_COLUMN_NAME = "email";
+        public static final String RECEIVER_ID_COLUMN_NAME = "receiver_id";
+        public static final String SENDER_ID_COLUMN_NAME = "sender_id";
     }
 
     public static class Preferences {

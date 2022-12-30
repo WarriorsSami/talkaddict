@@ -5,7 +5,8 @@ import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import sami.talkaddict.di.Config;
-import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.chat.DirectMessage;
+import sami.talkaddict.domain.entities.user.User;
 
 import java.sql.SQLException;
 
@@ -29,7 +30,7 @@ public class DatabaseManager {
         _logger.info("Initializing database...");
         createConnectionSource();
         if (DotenvManager.get(Config.Database.APPLY_DB_MIGRATIONS).equals("true")) {
-            dropTables();
+//            dropTables();
             createTables();
 //            populateTables();
         }
@@ -64,6 +65,7 @@ public class DatabaseManager {
     private void createTables() {
         try {
             TableUtils.createTableIfNotExists(_conn, User.class);
+            TableUtils.createTableIfNotExists(_conn, DirectMessage.class);
         } catch (SQLException ex) {
             _logger.error(ex, "Error creating tables: " + ex.getMessage(), ex.getStackTrace());
         }

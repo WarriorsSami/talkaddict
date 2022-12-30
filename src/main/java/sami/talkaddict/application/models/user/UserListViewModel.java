@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.infrastructure.daos.UserDao;
@@ -15,7 +15,7 @@ import sami.talkaddict.infrastructure.utils.converters.UserConverter;
 import java.util.List;
 
 public class UserListViewModel {
-    private final ObjectProperty<ObservableList<UserFx>> _userFxObservableList = new SimpleObjectProperty<>(
+    private final ObjectProperty<ObservableList<UserFx>> _userFxList = new SimpleObjectProperty<>(
             FXCollections.observableArrayList()
     );
 
@@ -28,10 +28,10 @@ public class UserListViewModel {
     public void initAllUsers() throws ApplicationException {
         var users = (List<User>) _userDao.findAll();
         Platform.runLater(() -> {
-            _userFxObservableList.get().clear();
+            _userFxList.get().clear();
             users.forEach(user -> {
                 var userFx = UserConverter.convertUserToUserFx(user);
-                _userFxObservableList.get().add(userFx);
+                _userFxList.get().add(userFx);
             });
         });
     }
@@ -39,14 +39,14 @@ public class UserListViewModel {
     public void initUsersByName(String name) throws ApplicationException {
         var users = (List<User>) ((UserDao) _userDao).findByNameLike(name);
         Platform.runLater(() -> {
-            _userFxObservableList.get().clear();
+            _userFxList.get().clear();
             users.forEach(user -> {
-                _userFxObservableList.get().add(UserConverter.convertUserToUserFx(user));
+                _userFxList.get().add(UserConverter.convertUserToUserFx(user));
             });
         });
     }
 
     public ObjectProperty<ObservableList<UserFx>> usersProperty() {
-        return _userFxObservableList;
+        return _userFxList;
     }
 }

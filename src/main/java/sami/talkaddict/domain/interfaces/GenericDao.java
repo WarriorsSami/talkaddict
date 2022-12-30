@@ -1,7 +1,6 @@
 package sami.talkaddict.domain.interfaces;
 
 import com.j256.ormlite.stmt.QueryBuilder;
-import sami.talkaddict.domain.entities.BaseEntity;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 
 public interface GenericDao<TEntity extends BaseEntity> {

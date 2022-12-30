@@ -21,8 +21,8 @@ import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.domain.entities.User;
-import sami.talkaddict.domain.entities.UserStatus;
+import sami.talkaddict.domain.entities.user.User;
+import sami.talkaddict.domain.entities.user.UserStatus;
 import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 

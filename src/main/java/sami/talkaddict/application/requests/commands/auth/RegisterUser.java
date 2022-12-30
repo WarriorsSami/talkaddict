@@ -5,7 +5,7 @@ import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.Config;
-import sami.talkaddict.domain.entities.UserStatus;
+import sami.talkaddict.domain.entities.user.UserStatus;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
