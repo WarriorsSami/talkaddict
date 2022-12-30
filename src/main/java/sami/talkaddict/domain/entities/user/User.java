@@ -31,10 +31,10 @@ public class User implements BaseEntity {
         @DatabaseField(canBeNull = false, dataType = DataType.ENUM_INTEGER)
         private UserStatus status;
 
-        @ForeignCollectionField(eager = true, columnName = "sender_id", orderColumnName = "created_at")
+        @ForeignCollectionField(columnName = "sender_id", orderColumnName = "timestamp")
         private ForeignCollection<DirectMessage> sentMessages;
 
-        @ForeignCollectionField(eager = true, columnName = "receiver_id", orderColumnName = "created_at")
+        @ForeignCollectionField(columnName = "receiver_id", orderColumnName = "timestamp")
         private ForeignCollection<DirectMessage> receivedMessages;
 
         public User() {}

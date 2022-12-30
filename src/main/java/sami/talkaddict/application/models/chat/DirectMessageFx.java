@@ -23,4 +23,12 @@ public class DirectMessageFx {
         Sender.set(directMessageFx.Sender.get());
         Receiver.set(directMessageFx.Receiver.get());
     }
+
+    public boolean hasImage() {
+        return MessageImage.get() != null;
+    }
+
+    public boolean hasText() {
+        return MessageText.get() != null;
+    }
 }

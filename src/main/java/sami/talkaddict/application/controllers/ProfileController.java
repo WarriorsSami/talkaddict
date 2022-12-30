@@ -23,7 +23,7 @@ import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.domain.entities.user.UserStatus;
-import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
+import sami.talkaddict.infrastructure.utils.managers.ImageManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -76,7 +76,7 @@ public class ProfileController implements Initializable {
         _statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             _logger.info("Status changed to: " + newValue);
             if (oldValue != newValue) {
-                AvatarManager.assignStatusToClip(_statusClip, newValue);
+                ImageManager.assignStatusToClip(_statusClip, newValue);
             }
         });
 
@@ -94,13 +94,13 @@ public class ProfileController implements Initializable {
                     _userViewModel.initFromUser(response.ok().orElseThrow());
                     _logger.info("Current logged in user name: " + _userViewModel.usernameProperty().get());
 
-                    AvatarManager.assignAvatarToImageView(
+                    ImageManager.assignAvatarToImageView(
                             _avatarImageView,
                             _userViewModel.avatarProperty().get(),
                             _avatarImageView.getFitWidth(),
                             _avatarImageView.getFitHeight()
                     );
-                    AvatarManager.assignStatusToClip(
+                    ImageManager.assignStatusToClip(
                             _statusClip,
                             _userViewModel.statusProperty().get()
                     );
@@ -176,11 +176,6 @@ public class ProfileController implements Initializable {
                        throw response.err().orElseThrow();
                    }
 
-//                   SceneFxManager.showToastNotification(
-//                           "Success",
-//                           "Profile updated successfully",
-//                           Duration.seconds(5)
-//                   );
                    SceneFxManager.showToastNotification(
                            "Success",
                            "Profile updated successfully"
@@ -211,18 +206,18 @@ public class ProfileController implements Initializable {
 
     @FXML
     private void onUploadAvatar() {
-        var file = SceneFxManager.loadFileUsingFileChooser(_uploadAvatarButton);
+        var file = ImageManager.loadFileUsingFileChooser(_uploadAvatarButton);
         if (file != null) {
-            _userViewModel.avatarProperty().set(AvatarManager.convertFileToByteArray(file));
-            var fileAsByteArray = AvatarManager.convertFileToByteArray(file);
-            _avatarImageView.setImage(AvatarManager.convertByteArrayToImage(fileAsByteArray));
+            _userViewModel.avatarProperty().set(ImageManager.convertFileToByteArray(file));
+            var fileAsByteArray = ImageManager.convertFileToByteArray(file);
+            _avatarImageView.setImage(ImageManager.convertByteArrayToImage(fileAsByteArray));
         }
     }
 
     @FXML
     private void onResetAvatar() {
-        var randomAvatar = AvatarManager.getRandomAvatar();
+        var randomAvatar = ImageManager.getRandomAvatar();
         _userViewModel.avatarProperty().set(randomAvatar);
-        _avatarImageView.setImage(AvatarManager.convertByteArrayToImage(randomAvatar));
+        _avatarImageView.setImage(ImageManager.convertByteArrayToImage(randomAvatar));
     }
 }

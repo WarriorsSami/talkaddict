@@ -19,7 +19,7 @@ import sami.talkaddict.application.requests.commands.auth.LogoutUser;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
+import sami.talkaddict.infrastructure.utils.managers.ImageManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.io.IOException;
@@ -97,13 +97,13 @@ public class HomeController implements Initializable {
             var response = _mediator.send(new GetLoggedInUser.Query());
             if (response.isOk()) {
                 _userViewModel.initFromUser(response.ok().orElseThrow());
-                AvatarManager.assignAvatarToImageView(
+                ImageManager.assignAvatarToImageView(
                         _avatarImageView,
                         _userViewModel.avatarProperty().get(),
                         _avatarImageView.getFitWidth(),
                         _avatarImageView.getFitHeight()
                 );
-                AvatarManager.assignStatusToClip(
+                ImageManager.assignStatusToClip(
                         _statusClip,
                         _userViewModel.statusProperty().get()
                 );

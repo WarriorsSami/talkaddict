@@ -11,6 +11,7 @@ import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 
 public class DirectMessageDao implements GenericDao<DirectMessage> {
     private final Logger _logger;
@@ -122,13 +123,22 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
                     .where()
                     .eq(Config.Database.RECEIVER_ID_COLUMN_NAME, receiverId)
                     .and()
-                    .eq(Config.Database.SENDER_ID_COLUMN_NAME, senderId)
-                    .or()
+                    .eq(Config.Database.SENDER_ID_COLUMN_NAME, senderId);
+
+            var reverseQb = _dao.queryBuilder();
+            reverseQb
+                    .where()
                     .eq(Config.Database.RECEIVER_ID_COLUMN_NAME, senderId)
                     .and()
                     .eq(Config.Database.SENDER_ID_COLUMN_NAME, receiverId);
 
             var directMessages = _dao.query(directMessageQb.prepare());
+            var reverseDirectMessages = _dao.query(reverseQb.prepare());
+            directMessages.addAll(reverseDirectMessages);
+
+            // sort directMessages by date
+            directMessages.sort(Comparator.comparing(DirectMessage::getCreatedAt));
+
             _logger.info("DirectMessages found");
             return directMessages;
         } catch (SQLException ex) {

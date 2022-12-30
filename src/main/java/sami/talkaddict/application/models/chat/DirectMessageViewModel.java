@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 public class DirectMessageViewModel {
-    private final ObjectProperty<DirectMessageFx> _directMessageFxObject = new SimpleObjectProperty<>();
+    private final ObjectProperty<DirectMessageFx> _directMessageFxObject = new SimpleObjectProperty<>(new DirectMessageFx());
 
     private final GenericDao<DirectMessage> _directMessageDao;
     private final GenericDao<User> _userDao;

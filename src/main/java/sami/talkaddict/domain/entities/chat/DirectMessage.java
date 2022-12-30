@@ -108,11 +108,11 @@ public class DirectMessage implements BaseEntity {
         this.createdAt = createdAt;
     }
 
-    public boolean isImageMessage() {
+    public boolean hasImageMessage() {
         return this.messageImage != null;
     }
 
-    public boolean isTextMessage() {
+    public boolean hasTextMessage() {
         return this.messageText != null;
     }
 }

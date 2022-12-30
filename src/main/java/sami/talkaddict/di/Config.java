@@ -31,7 +31,7 @@ public class Config {
         public static final String APP_TITLE = "Talkaddict";
         public static final Boolean RESIZABLE = false;
         public static final Double PROFILE_REFRESH_RATE = 10.0;
-        public static final Double CHAT_REFRESH_RATE = 3.0;
+        public static final Double CHAT_REFRESH_RATE = 10.0;
     }
 
     public static class ValidationTweaks {
@@ -63,12 +63,16 @@ public class Config {
         public static final Double AVATAR_FIT_HEIGHT = 50.0;
 
         public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
-        public static final Double USER_LIST_VIEW_SCROLLING_SPEED = 0.5;
-        public static final Long SEARCH_DELAY = 250L;
+        public static final Double LIST_VIEW_SCROLLING_SPEED = 0.5;
+        public static final Long SEARCH_DELAY = 1000L;
 
         public static final String AVATAR_STATUS_ONLINE_STYLE_CLASS = "online-status";
         public static final String AVATAR_STATUS_OFFLINE_STYLE_CLASS = "offline-status";
         public static final String AVATAR_STATUS_BUSY_STYLE_CLASS = "busy-status";
         public static final String AVATAR_STATUS_AWAY_STYLE_CLASS = "away-status";
+        public static final double MESSAGE_IMAGE_PREVIEW_WIDTH = 100.0;
+        public static final double MESSAGE_IMAGE_PREVIEW_HEIGHT = 50.0;
+        public static final double MESSAGE_IMAGE_WIDTH = 200.0;
+        public static final double MESSAGE_IMAGE_HEIGHT = 100.0;
     }
 }

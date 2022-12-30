@@ -7,7 +7,7 @@ import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.domain.entities.user.UserStatus;
 import sami.talkaddict.domain.exceptions.ApplicationException;
-import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
+import sami.talkaddict.infrastructure.utils.managers.ImageManager;
 import sami.talkaddict.infrastructure.utils.managers.PasswordManager;
 import sami.talkaddict.infrastructure.utils.managers.PreferencesManager;
 
@@ -42,7 +42,7 @@ public class RegisterUser {
             registeredUser.statusProperty().set(UserStatus.ONLINE);
 
             try {
-                registeredUser.avatarProperty().set(AvatarManager.getRandomAvatar());
+                registeredUser.avatarProperty().set(ImageManager.getRandomAvatar());
                 registeredUser.saveOrUpdateUser();
                 registeredUser.initUserByEmail(dto.emailProperty().get());
             } catch (Exception ex) {

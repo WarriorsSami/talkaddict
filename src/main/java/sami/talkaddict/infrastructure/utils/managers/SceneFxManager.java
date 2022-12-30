@@ -23,16 +23,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.synedra.validatorfx.ValidationMessage;
 import net.synedra.validatorfx.ValidationResult;
 import org.controlsfx.control.Notifications;
 import sami.talkaddict.TalkaddictApplication;
+import sami.talkaddict.application.models.chat.DirectMessageFx;
 import sami.talkaddict.di.Config;
 
-import java.io.File;
 import java.io.IOException;
 
 public class SceneFxManager {
@@ -49,13 +50,14 @@ public class SceneFxManager {
         return loader.load();
     }
 
-    public static File loadFileUsingFileChooser(Node anchor) {
-        var fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose a file");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
-        return fileChooser.showOpenDialog(anchor.getScene().getWindow());
+    public static void addMessageTextLabelToPane(DirectMessageFx data, BorderPane messageBorderPane) {
+        var messageLabel = new Label(data.MessageText.get());
+        messageLabel.setFont(Font.font("Ubuntu Mono", FontWeight.BOLD, 18));
+        messageLabel.setTextFill(Color.BLACK);
+        var textHBox = new HBox(messageLabel);
+        textHBox.setAlignment(Pos.CENTER);
+
+        messageBorderPane.setCenter(textHBox);
     }
 
     public static void showAlertDialog(String title, String message, Alert.AlertType type) {

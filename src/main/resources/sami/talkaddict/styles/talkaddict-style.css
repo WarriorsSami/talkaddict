@@ -91,6 +91,10 @@
     -fx-background-color: #1f88d3;
     -fx-background-radius: 10px;
 }
+.message-cell{
+    -fx-background-color: #3e68d2;
+    -fx-background-radius: 10px;
+}
 .user-icon{
     -fx-fill: #6ecb57;
 }
