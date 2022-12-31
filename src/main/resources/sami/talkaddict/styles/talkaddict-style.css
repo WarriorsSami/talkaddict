@@ -90,9 +90,10 @@
 .user-cell{
     -fx-background-color: #1f88d3;
     -fx-background-radius: 10px;
+    -fx-padding: 5px;
 }
 .message-cell{
-    -fx-background-color: #3e68d2;
+    -fx-background-color: #1f88d3;
     -fx-background-radius: 10px;
 }
 .user-icon{

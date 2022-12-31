@@ -1,27 +1,29 @@
 package sami.talkaddict.application.factories;
 
-import io.github.palexdev.materialfx.controls.MFXListView;
-import io.github.palexdev.materialfx.controls.cell.MFXListCell;
+import javafx.geometry.Insets;
+import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import sami.talkaddict.application.models.user.UserFx;
 import sami.talkaddict.infrastructure.utils.managers.ImageManager;
 
-public class UserCellFactory extends MFXListCell<UserFx> {
-    public UserCellFactory(MFXListView<UserFx> listView, UserFx data) {
-        super(listView, data);
-        setPrefHeight(60);
-        getStyleClass().add("user-cell");
-        render(data);
-    }
-
+public class UserCellFactory extends ListCell<UserFx> {
     @Override
-    protected void render(UserFx data) {
-        super.render(data);
+    protected void updateItem(UserFx item, boolean empty) {
+        super.updateItem(item, empty);
+        getStyleClass().add("user-cell");
+        setPadding(new Insets(10, 5, 10, 5));
 
-        var hbox = new HBox(10, ImageManager.getAvatarForUserFx(data));
-        hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        if (empty || item == null) {
+            setText(null);
+            setGraphic(null);
+        } else {
+            setFont(Font.font(14));
+            setText(item.Username.get());
 
-        getChildren().get(getChildren().size() - 1).getStyleClass().add("user-label");
-        getChildren().add(0, hbox);
+            var hbox = new HBox(10, ImageManager.getAvatarForUserFx(item));
+            hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            setGraphic(hbox);
+        }
     }
 }

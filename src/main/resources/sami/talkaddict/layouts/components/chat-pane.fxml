@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import io.github.palexdev.materialfx.controls.*?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.image.Image?>
@@ -36,7 +39,7 @@
                 <FontAwesomeIconView fx:id="_searchIcon" glyphName="SEARCH" size="25.0" />
             </HBox>
             <StackPane>
-                <MFXListView fx:id="_usersListView" prefHeight="698.0" prefWidth="302.0" styleClass="blue-pane" />
+                <ListView fx:id="_usersListView" prefHeight="698.0" prefWidth="302.0" styleClass="blue-pane" />
                 <Pane fx:id="_loadingOverlay" styleClass="white-pane" visible="false">
                     <VBox alignment="CENTER" layoutX="84.0" layoutY="280.0" prefHeight="140.0" prefWidth="131.0" spacing="10.0">
                         <MFXProgressSpinner layoutX="540.0" layoutY="300.0" prefWidth="77.0" />
@@ -75,7 +78,7 @@
                 </Label>
             </HBox>
 
-            <MFXListView fx:id="_directMessagesListView" prefHeight="604.0" prefWidth="776.0" />
+            <ListView fx:id="_directMessagesListView" prefHeight="604.0" prefWidth="776.0" />
 
             <HBox fx:id="_messageBox" alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="776.0" spacing="5.0">
                 <StackPane fx:id="_uploadImageIcon" prefHeight="51.0" prefWidth="40.0" onMouseClicked="#onUploadMessageImage">

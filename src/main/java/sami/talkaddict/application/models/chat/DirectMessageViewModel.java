@@ -31,11 +31,6 @@ public class DirectMessageViewModel {
         senderProperty().set((User) _userDao.findById(loggedInUserId));
         receiverProperty().set((User) _userDao.findById(otherUserId));
         _directMessageDao.createOrUpdate(DirectMessageConverter.convertDirectMessageFxToDirectMessage(_directMessageFxObject.get()));
-        resetDirectMessage();
-    }
-
-    public void resetDirectMessage() {
-        _directMessageFxObject.set(new DirectMessageFx());
     }
 
     public IntegerProperty idProperty() {

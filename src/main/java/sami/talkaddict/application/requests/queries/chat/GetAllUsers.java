@@ -25,7 +25,6 @@ public class GetAllUsers {
         @Override
         public Result<ObservableList<UserFx>, Exception> handle(Query query) {
             _logger.info("GetAllUsers Use Case invoked");
-
             var dto = query.dto;
 
             if (dto == null) {

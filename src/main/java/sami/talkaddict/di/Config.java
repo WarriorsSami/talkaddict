@@ -74,5 +74,7 @@ public class Config {
         public static final double MESSAGE_IMAGE_PREVIEW_HEIGHT = 50.0;
         public static final double MESSAGE_IMAGE_WIDTH = 200.0;
         public static final double MESSAGE_IMAGE_HEIGHT = 100.0;
+        public static final double USERS_LIST_CELL_SIZE = 60.0;
+        public static final double CHAT_LIST_CELL_SIZE = 200.0;
     }
 }

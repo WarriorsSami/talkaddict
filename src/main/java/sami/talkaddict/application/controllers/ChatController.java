@@ -5,17 +5,16 @@ import an.awesome.pipelinr.Voidy;
 import com.j256.ormlite.logger.Logger;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import dev.kylesilver.result.Result;
-import io.github.palexdev.materialfx.controls.MFXListView;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.MFXTooltip;
-import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -52,7 +51,7 @@ import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
     @FXML
-    private MFXListView<DirectMessageFx> _directMessagesListView;
+    private ListView<DirectMessageFx> _directMessagesListView;
     @FXML
     private Circle _discardImageIconClip;
     @FXML
@@ -82,7 +81,7 @@ public class ChatController implements Initializable {
     @FXML
     private Pane _loadingOverlay;
     @FXML
-    private MFXListView<UserFx> _usersListView;
+    private ListView<UserFx> _usersListView;
 
     private Logger _logger;
     private Pipeline _mediator;
@@ -108,17 +107,16 @@ public class ChatController implements Initializable {
         bindViewModelToFields();
 
         // users list view
-        _usersListView.setConverter(FunctionalStringConverter.to(userFx -> userFx.Username.get()));
-        _usersListView.setCellFactory(userFx -> new UserCellFactory(_usersListView, userFx));
+        _usersListView.setCellFactory(userFx -> new UserCellFactory());
+        _usersListView.setFixedCellSize(Config.FxmlSettings.USERS_LIST_CELL_SIZE);
 
         _usersListView.setOnMouseClicked(event -> {
             if (event.getEventType().getName().equals("MOUSE_CLICKED")) {
-                var selectedUser = _usersListView.getSelectionModel().getSelectedValues().get(0);
+                var selectedUser = _usersListView.getSelectionModel().getSelectedItems().get(0);
                 if (selectedUser != null) {
                     _logger.info("Selected user: " + selectedUser.Username.get());
                     _selectedUserViewModel.initFromUser(UserConverter.convertUserFxToUser(selectedUser));
                     initChatHeader(selectedUser);
-                    _messageText.clear();
 
                     // get direct messages
                     getDirectMessagesForChat();
@@ -128,14 +126,13 @@ public class ChatController implements Initializable {
             }
         });
 
-        _usersListView.features().enableBounceEffect();
-        _usersListView.features().enableSmoothScrolling(Config.FxmlSettings.LIST_VIEW_SCROLLING_SPEED);
-
         // direct messages list view
-        _directMessagesListView.setCellFactory(dmFx -> new DirectMessageCellFactory(_directMessagesListView, dmFx));
+        _directMessagesListView.setCellFactory(dmFx -> new DirectMessageCellFactory());
+        _directMessagesListView.setFixedCellSize(Config.FxmlSettings.CHAT_LIST_CELL_SIZE);
+
         _directMessagesListView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                var selectedDm = _directMessagesListView.getSelectionModel().getSelectedValues().get(0);
+                var selectedDm = _directMessagesListView.getSelectionModel().getSelectedItems().get(0);
                 if (selectedDm != null) {
                     _logger.info("Selected dm: " + selectedDm.Id.get());
                     deleteDirectMessage(selectedDm);
@@ -145,9 +142,6 @@ public class ChatController implements Initializable {
             }
         });
         MFXTooltip.of(_directMessagesListView, "Double click to delete message").install();
-
-        _directMessagesListView.features().enableBounceEffect();
-        _directMessagesListView.features().enableSmoothScrolling(Config.FxmlSettings.LIST_VIEW_SCROLLING_SPEED);
 
         // Search field
         MFXTooltip.of(_searchBox, "Filter users by name").install();
@@ -313,10 +307,6 @@ public class ChatController implements Initializable {
             }
         };
 
-        deleteDirectMessageTask.setOnRunning(event -> {
-            _loadingOverlay.setVisible(true);
-        });
-
         deleteDirectMessageTask.setOnSucceeded(event -> {
             _loadingOverlay.setVisible(false);
             try {
@@ -359,6 +349,7 @@ public class ChatController implements Initializable {
                 var response = getDirectMessagesTask.getValue();
                 if (response.isOk()) {
                     var directMessages = response.ok().orElseThrow();
+                    _directMessagesListView.scrollTo(directMessages.size() - 1);
                     _logger.info("Direct messages fetched successfully");
                 } else {
                     _logger.error("Failed to fetch direct messages");
@@ -408,7 +399,7 @@ public class ChatController implements Initializable {
 
     @FXML
     private void onSendMessage(MouseEvent mouseEvent) {
-        if (_dmToBeWrittenViewModel.messageTextProperty().get().isEmpty() && _dmToBeWrittenViewModel.messageImageProperty().get() == null) {
+        if (_dmToBeWrittenViewModel.messageTextProperty().get() == null && _dmToBeWrittenViewModel.messageImageProperty().get() == null) {
             return;
         }
 
@@ -430,7 +421,6 @@ public class ChatController implements Initializable {
                 var response = sendMessageTask.getValue();
                 if (response.isOk()) {
                     var voidy = response.ok().orElseThrow();
-                    _messageText.clear();
                     _logger.info("Message sent successfully");
                 } else {
                     _logger.error("Failed to send message");

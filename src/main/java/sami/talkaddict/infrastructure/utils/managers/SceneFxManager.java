@@ -52,10 +52,12 @@ public class SceneFxManager {
 
     public static void addMessageTextLabelToPane(DirectMessageFx data, BorderPane messageBorderPane) {
         var messageLabel = new Label(data.MessageText.get());
-        messageLabel.setFont(Font.font("Ubuntu Mono", FontWeight.BOLD, 18));
+        messageLabel.setFont(Font.font("Ubuntu Mono", FontWeight.BOLD, 15));
         messageLabel.setTextFill(Color.BLACK);
+        messageLabel.setWrapText(true);
         var textHBox = new HBox(messageLabel);
         textHBox.setAlignment(Pos.CENTER);
+        textHBox.setMaxWidth(500);
 
         messageBorderPane.setCenter(textHBox);
     }
