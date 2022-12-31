@@ -26,18 +26,18 @@ public class UserViewModel {
         _userDao = ProviderService.provideDao(User.class);
     }
 
-    public void initFromUser(User user) {
+    public synchronized void initFromUser(User user) {
         var userFx = UserConverter.convertUserToUserFx(user);
         _userFxObject.get().initFromUserFx(userFx);
     }
 
-    public void saveOrUpdateUser() throws ApplicationException {
+    public synchronized void saveOrUpdateUser() throws ApplicationException {
         var user = UserConverter.convertUserFxToUser(_userFxObject.get());
         _userDao.createOrUpdate(user);
         initUserByEmail(user.getEmail());
     }
 
-    public void initUserByEmail(String email) throws ApplicationException {
+    public synchronized void initUserByEmail(String email) throws ApplicationException {
         var user = ((UserDao) _userDao).findByEmail(email);
         _userFxObject.set(UserConverter.convertUserToUserFx(user));
     }

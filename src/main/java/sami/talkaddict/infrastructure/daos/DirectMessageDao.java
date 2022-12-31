@@ -31,7 +31,7 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public void createOrUpdate(DirectMessage entity) throws ApplicationException {
+    public synchronized void createOrUpdate(DirectMessage entity) throws ApplicationException {
         try {
             _dao.createOrUpdate(entity);
             _logger.info("DirectMessage created or updated with id: " + entity.getId());
@@ -44,7 +44,7 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public void delete(DirectMessage entity) throws ApplicationException {
+    public synchronized void delete(DirectMessage entity) throws ApplicationException {
         try {
             _dao.delete(entity);
             _logger.info("DirectMessage deleted with id: " + entity.getId());
@@ -57,7 +57,7 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public void deleteById(int id) throws ApplicationException {
+    public synchronized void deleteById(int id) throws ApplicationException {
         try {
             _dao.deleteById(id);
             _logger.info("DirectMessage deleted with id: " + id);
@@ -70,7 +70,7 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public DirectMessage findById(Integer id) throws ApplicationException {
+    public synchronized DirectMessage findById(Integer id) throws ApplicationException {
         try {
             DirectMessage directMessage = _dao.queryForId(id);
             _logger.info("DirectMessage found with id: " + id);
@@ -84,7 +84,7 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public Iterable<DirectMessage> findAll() throws ApplicationException {
+    public synchronized Iterable<DirectMessage> findAll() throws ApplicationException {
         try {
             Iterable<DirectMessage> directMessages = _dao.queryForAll();
             _logger.info("DirectMessages found");
@@ -98,7 +98,7 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public Iterable<DirectMessage> findByFilter(QueryBuilder<DirectMessage, Integer> filter) throws ApplicationException {
+    public synchronized Iterable<DirectMessage> findByFilter(QueryBuilder<DirectMessage, Integer> filter) throws ApplicationException {
         try {
             Iterable<DirectMessage> directMessages = _dao.query(filter.prepare());
             _logger.info("DirectMessages found");
@@ -112,11 +112,11 @@ public class DirectMessageDao implements GenericDao<DirectMessage> {
     }
 
     @Override
-    public QueryBuilder<DirectMessage, Integer> queryBuilder() {
+    public synchronized QueryBuilder<DirectMessage, Integer> queryBuilder() {
         return _dao.queryBuilder();
     }
 
-    public Iterable<DirectMessage> findByReceiverIdAndSenderIdAndViceVersa(int receiverId, int senderId) throws ApplicationException {
+    public synchronized Iterable<DirectMessage> findByReceiverIdAndSenderIdAndViceVersa(int receiverId, int senderId) throws ApplicationException {
         try {
             QueryBuilder<DirectMessage, Integer> directMessageQb = _dao.queryBuilder();
             directMessageQb

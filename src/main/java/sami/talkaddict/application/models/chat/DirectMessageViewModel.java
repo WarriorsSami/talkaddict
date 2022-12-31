@@ -26,7 +26,7 @@ public class DirectMessageViewModel {
         _directMessageFxObject.set(DirectMessageConverter.convertDirectMessageToDirectMessageFx(directMessage));
     }
 
-    public void saveOrUpdateDirectMessage(int loggedInUserId, int otherUserId) throws ApplicationException {
+    public synchronized void saveOrUpdateDirectMessage(int loggedInUserId, int otherUserId) throws ApplicationException {
         createdAtProperty().set(Timestamp.from(Instant.now()));
         senderProperty().set((User) _userDao.findById(loggedInUserId));
         receiverProperty().set((User) _userDao.findById(otherUserId));

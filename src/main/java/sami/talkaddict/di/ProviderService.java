@@ -125,16 +125,13 @@ public class ProviderService {
                                     provideMediator()
                             ),
                             new CreateOrUpdateDirectMessageAndReloadMessagesList.Handler(
-                                    provideLogger(CreateOrUpdateDirectMessageAndReloadMessagesList.class),
-                                    provideMediator()
+                                    provideLogger(CreateOrUpdateDirectMessageAndReloadMessagesList.class)
                             ),
                             new DeleteDirectMessageByIdAndReloadMessagesList.Handler(
-                                    provideLogger(DeleteDirectMessageByIdAndReloadMessagesList.class),
-                                    provideMediator()
+                                    provideLogger(DeleteDirectMessageByIdAndReloadMessagesList.class)
                             ),
                             new GetDirectMessagesByLoggedInUserAndOtherUser.Handler(
-                                    provideLogger(GetDirectMessagesByLoggedInUserAndOtherUser.class),
-                                    provideMediator()
+                                    provideLogger(GetDirectMessagesByLoggedInUserAndOtherUser.class)
                             )
                     ));
         }

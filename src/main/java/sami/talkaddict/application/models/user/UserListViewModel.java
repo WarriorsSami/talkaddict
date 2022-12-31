@@ -25,7 +25,7 @@ public class UserListViewModel {
         _userDao = ProviderService.provideDao(User.class);
     }
 
-    public void initAllUsers() throws ApplicationException {
+    public synchronized void initAllUsers() throws ApplicationException {
         var users = (List<User>) _userDao.findAll();
         Platform.runLater(() -> {
             _userFxList.get().clear();
@@ -36,7 +36,7 @@ public class UserListViewModel {
         });
     }
 
-    public void initUsersByName(String name) throws ApplicationException {
+    public synchronized void initUsersByName(String name) throws ApplicationException {
         var users = (List<User>) ((UserDao) _userDao).findByNameLike(name);
         Platform.runLater(() -> {
             _userFxList.get().clear();

@@ -88,12 +88,12 @@
     -fx-background-color: #42909a;
 }
 .user-cell{
-    -fx-background-color: #1f88d3;
+    -fx-background-color: #79a2be;
     -fx-background-radius: 10px;
     -fx-padding: 5px;
 }
 .message-cell{
-    -fx-background-color: #1f88d3;
+    -fx-background-color: #435c9c;
     -fx-background-radius: 10px;
 }
 .user-icon{

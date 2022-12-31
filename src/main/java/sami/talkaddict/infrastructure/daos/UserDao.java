@@ -30,7 +30,7 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public void createOrUpdate(User entity) throws ApplicationException {
+    public synchronized void createOrUpdate(User entity) throws ApplicationException {
         try {
             _dao.createOrUpdate(entity);
             _logger.info("User created or updated with email: " + entity.getEmail());
@@ -43,7 +43,7 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public void delete(User entity) throws ApplicationException {
+    public synchronized void delete(User entity) throws ApplicationException {
         try {
             _dao.delete(entity);
             _logger.info("User deleted with email: " + entity.getEmail());
@@ -56,7 +56,7 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public void deleteById(int id) throws ApplicationException{
+    public synchronized void deleteById(int id) throws ApplicationException{
         try {
             _dao.deleteById(id);
             _logger.info("User deleted with id: " + id);
@@ -69,7 +69,7 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public User findById(Integer id) throws ApplicationException {
+    public synchronized User findById(Integer id) throws ApplicationException {
         try {
             _logger.info("Finding user by id: " + id);
             return _dao.queryForId(id);
@@ -82,7 +82,7 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public Iterable<User> findAll() throws ApplicationException {
+    public synchronized Iterable<User> findAll() throws ApplicationException {
         try {
             _logger.info("Finding all users");
             return _dao.queryForAll();
@@ -95,7 +95,7 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public Iterable<User> findByFilter(QueryBuilder<User, Integer> filter) throws ApplicationException {
+    public synchronized Iterable<User> findByFilter(QueryBuilder<User, Integer> filter) throws ApplicationException {
         try {
             _logger.info("Finding users by filter");
             return _dao.query(filter.prepare());
@@ -108,11 +108,11 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public QueryBuilder<User, Integer> queryBuilder() {
+    public synchronized QueryBuilder<User, Integer> queryBuilder() {
         return _dao.queryBuilder();
     }
 
-    public User findByName(String name) throws ApplicationException {
+    public synchronized User findByName(String name) throws ApplicationException {
         try {
             _logger.info("Finding user by name: " + name);
             QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
@@ -126,7 +126,7 @@ public class UserDao implements GenericDao<User> {
         }
     }
 
-    public Iterable<User> findByNameLike(String name) throws ApplicationException {
+    public synchronized Iterable<User> findByNameLike(String name) throws ApplicationException {
         try {
             _logger.info("Finding users by name like: " + name);
             QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
@@ -140,7 +140,7 @@ public class UserDao implements GenericDao<User> {
         }
     }
 
-    public User findByEmail(String email) throws ApplicationException {
+    public synchronized User findByEmail(String email) throws ApplicationException {
         try {
             _logger.info("Finding user by email: " + email);
             QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();

@@ -25,7 +25,7 @@ public class DirectMessageListViewModel {
         _directMessageDao = ProviderService.provideDao(DirectMessage.class);
     }
 
-    public void initDirectMessagesByReceiverIdAndSenderIdAndViceVersa(int receiverId, int senderId) throws ApplicationException {
+    public synchronized void initDirectMessagesByReceiverIdAndSenderIdAndViceVersa(int receiverId, int senderId) throws ApplicationException {
         var directMessages = (List<DirectMessage>) ((DirectMessageDao) _directMessageDao)
                 .findByReceiverIdAndSenderIdAndViceVersa(receiverId, senderId);
         Platform.runLater( () -> {
@@ -36,7 +36,7 @@ public class DirectMessageListViewModel {
         });
     }
 
-    public void deleteDirectMessageById(int id, int receiverId, int senderId) throws ApplicationException {
+    public synchronized void deleteDirectMessageById(int id, int receiverId, int senderId) throws ApplicationException {
         _directMessageDao.deleteById(id);
         initDirectMessagesByReceiverIdAndSenderIdAndViceVersa(receiverId, senderId);
     }

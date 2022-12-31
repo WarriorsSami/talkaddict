@@ -30,8 +30,7 @@ public class Config {
     public static class AppSettings {
         public static final String APP_TITLE = "Talkaddict";
         public static final Boolean RESIZABLE = false;
-        public static final Double PROFILE_REFRESH_RATE = 10.0;
-        public static final Double CHAT_REFRESH_RATE = 10.0;
+        public static final Double PROFILE_REFRESH_RATE = 30.0;
     }
 
     public static class ValidationTweaks {
@@ -63,8 +62,7 @@ public class Config {
         public static final Double AVATAR_FIT_HEIGHT = 50.0;
 
         public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
-        public static final Double LIST_VIEW_SCROLLING_SPEED = 0.5;
-        public static final Long SEARCH_DELAY = 1000L;
+        public static final Long SEARCH_DELAY = 2000L;
 
         public static final String AVATAR_STATUS_ONLINE_STYLE_CLASS = "online-status";
         public static final String AVATAR_STATUS_OFFLINE_STYLE_CLASS = "offline-status";

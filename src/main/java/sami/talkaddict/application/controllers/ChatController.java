@@ -160,6 +160,9 @@ public class ChatController implements Initializable {
         MFXTooltip.of(_uploadImageIcon, "Upload image").install();
         MFXTooltip.of(_discardImageIcon, "Discard image").install();
 
+        // TODO 1. add loading overlays to chat panel, welcome overlay to chat header when no group is selected and no messages overlay when chat is empty
+        // TODO 2. implement the read message functionality
+
         getLoggedInUser();
         getAllUsers();
     }
@@ -215,6 +218,10 @@ public class ChatController implements Initializable {
                 _logger.error(ex, ex.getMessage(), ex.getStackTrace());
             }
         });
+
+        var getLoggedInUserThread = new Thread(getLoggedInUserTask);
+        getLoggedInUserThread.setDaemon(true);
+        getLoggedInUserThread.start();
     }
 
     private void getAllUsers() {
@@ -302,6 +309,7 @@ public class ChatController implements Initializable {
                 return _mediator.send(new DeleteDirectMessageByIdAndReloadMessagesList.Command(
                         _directMessageListViewModel,
                         messageFx.Id.get(),
+                        _loggedInUserViewModel.idProperty().get(),
                         _selectedUserViewModel.idProperty().get()
                 ));
             }
@@ -339,6 +347,7 @@ public class ChatController implements Initializable {
             protected Result<ObservableList<DirectMessageFx>, Exception> call() {
                 return _mediator.send(new GetDirectMessagesByLoggedInUserAndOtherUser.Query(
                     _directMessageListViewModel,
+                    _loggedInUserViewModel.idProperty().get(),
                     _selectedUserViewModel.idProperty().get()
                 ));
             }
@@ -410,6 +419,7 @@ public class ChatController implements Initializable {
                         new CreateOrUpdateDirectMessageAndReloadMessagesList.Command(
                                 _dmToBeWrittenViewModel,
                                 _directMessageListViewModel,
+                                _loggedInUserViewModel.idProperty().get(),
                                 _selectedUserViewModel.idProperty().get()
                         )
                 );
