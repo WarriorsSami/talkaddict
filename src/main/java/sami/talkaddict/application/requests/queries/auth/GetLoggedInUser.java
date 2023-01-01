@@ -2,7 +2,7 @@ package sami.talkaddict.application.requests.queries.auth;
 
 import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
-import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.di.Config;

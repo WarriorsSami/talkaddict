@@ -12,13 +12,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.auth.LogoutUser;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
-import sami.talkaddict.infrastructure.utils.managers.AvatarManager;
+import sami.talkaddict.infrastructure.utils.managers.ImageManager;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.io.IOException;
@@ -27,9 +28,9 @@ import java.util.ResourceBundle;
 
 public class HomeController implements Initializable {
     @FXML
-    private BorderPane _homePane;
+    private Circle _statusClip;
     @FXML
-    private VBox _userAvatar;
+    private BorderPane _homePane;
     @FXML
     private ImageView _avatarImageView;
     @FXML
@@ -57,7 +58,10 @@ public class HomeController implements Initializable {
 
         bindFieldsToViewModel();
         updateLoggedInUserViewModel();
-        updateLoggedInUserViewModelPeriodically();
+
+        var updateLoggedInUserViewModelThread = new Thread(this::updateLoggedInUserViewModelPeriodically);
+        updateLoggedInUserViewModelThread.setDaemon(true);
+        updateLoggedInUserViewModelThread.start();
 
         try {
             _homePane.setCenter(SceneFxManager.loadPane(Config.Views.CHAT_PANE));
@@ -80,7 +84,7 @@ public class HomeController implements Initializable {
     private void updateLoggedInUserViewModelPeriodically() {
          _updateLoggedInUserViewModelTimeline = new Timeline(
                  new KeyFrame(
-                         Duration.seconds(5),
+                         Duration.seconds(Config.AppSettings.PROFILE_REFRESH_RATE),
                          event -> updateLoggedInUserViewModel()
                  )
          );
@@ -93,14 +97,16 @@ public class HomeController implements Initializable {
             var response = _mediator.send(new GetLoggedInUser.Query());
             if (response.isOk()) {
                 _userViewModel.initFromUser(response.ok().orElseThrow());
-
-                var avatarImage = AvatarManager.convertByteArrayToImage(_userViewModel.avatarProperty().get());
-
-                _avatarImageView.setClip(AvatarManager.getAvatarClip(
+                ImageManager.assignAvatarToImageView(
+                        _avatarImageView,
+                        _userViewModel.avatarProperty().get(),
                         _avatarImageView.getFitWidth(),
-                        _avatarImageView.getFitHeight())
+                        _avatarImageView.getFitHeight()
                 );
-                _avatarImageView.setImage(avatarImage);
+                ImageManager.assignStatusToClip(
+                        _statusClip,
+                        _userViewModel.statusProperty().get()
+                );
             } else {
                 _logger.error("Failed to get logged in user!");
                 throw response.err().orElseThrow();

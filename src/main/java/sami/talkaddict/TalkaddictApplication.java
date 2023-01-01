@@ -13,6 +13,7 @@ import sami.talkaddict.application.requests.commands.auth.LogoutUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.exceptions.ApplicationException;
+import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,6 +31,7 @@ public class TalkaddictApplication extends Application {
 
         _logger.info("Initializing application...");
         CSSFX.start();
+        SceneFxManager.initMFXNotificationSystem(stage);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Config.Views.MAIN_VIEW)));
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);

@@ -4,7 +4,7 @@ import an.awesome.pipelinr.Voidy;
 import com.j256.ormlite.logger.Logger;
 import dev.kylesilver.result.Result;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
 import sami.talkaddict.infrastructure.daos.UserDao;

@@ -9,13 +9,20 @@ import sami.talkaddict.application.controllers.*;
 import sami.talkaddict.application.requests.commands.auth.LoginUser;
 import sami.talkaddict.application.requests.commands.auth.LogoutUser;
 import sami.talkaddict.application.requests.commands.auth.RegisterUser;
+import sami.talkaddict.application.requests.commands.chat.CreateOrUpdateDirectMessageAndReloadMessagesList;
+import sami.talkaddict.application.requests.commands.chat.DeleteDirectMessageByIdAndReloadMessagesList;
 import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.domain.entities.BaseEntity;
-import sami.talkaddict.domain.entities.User;
+import sami.talkaddict.application.requests.queries.chat.GetAllUsersExceptLoggedInUser;
+import sami.talkaddict.application.requests.queries.chat.GetDirectMessagesByLoggedInUserAndOtherUser;
+import sami.talkaddict.application.requests.queries.chat.GetUsersByNameExceptLoggedInUser;
+import sami.talkaddict.domain.entities.chat.DirectMessage;
+import sami.talkaddict.domain.interfaces.BaseEntity;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
+import sami.talkaddict.infrastructure.daos.DirectMessageDao;
 import sami.talkaddict.infrastructure.daos.UserDao;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 import sami.talkaddict.infrastructure.utils.managers.DotenvManager;
@@ -33,10 +40,12 @@ public class ProviderService {
     private static Pipeline _mediator;
 
     public static void init() throws ApplicationException, SQLException {
+        // Loggers
         _loggers.put(TalkaddictApplication.class, LoggerFactory.getLogger(TalkaddictApplication.class));
 
         _loggers.put(DatabaseManager.class, LoggerFactory.getLogger(DatabaseManager.class));
         _loggers.put(UserDao.class, LoggerFactory.getLogger(UserDao.class));
+        _loggers.put(DirectMessageDao.class, LoggerFactory.getLogger(DirectMessageDao.class));
 
         _loggers.put(UserViewModel.class, LoggerFactory.getLogger(UserViewModel.class));
 
@@ -45,6 +54,20 @@ public class ProviderService {
         _loggers.put(LogoutUser.class, LoggerFactory.getLogger(LogoutUser.class));
         _loggers.put(GetLoggedInUser.class, LoggerFactory.getLogger(GetLoggedInUser.class));
         _loggers.put(UpdateUserProfile.class, LoggerFactory.getLogger(UpdateUserProfile.class));
+        _loggers.put(GetAllUsersExceptLoggedInUser.class, LoggerFactory.getLogger(GetAllUsersExceptLoggedInUser.class));
+        _loggers.put(GetUsersByNameExceptLoggedInUser.class, LoggerFactory.getLogger(GetUsersByNameExceptLoggedInUser.class));
+        _loggers.put(
+                GetDirectMessagesByLoggedInUserAndOtherUser.class,
+                LoggerFactory.getLogger(GetDirectMessagesByLoggedInUserAndOtherUser.class)
+        );
+        _loggers.put(
+                CreateOrUpdateDirectMessageAndReloadMessagesList.class,
+                LoggerFactory.getLogger(CreateOrUpdateDirectMessageAndReloadMessagesList.class)
+        );
+        _loggers.put(
+                DeleteDirectMessageByIdAndReloadMessagesList.class,
+                LoggerFactory.getLogger(DeleteDirectMessageByIdAndReloadMessagesList.class)
+        );
 
         _loggers.put(LoginController.class, LoggerFactory.getLogger(LoginController.class));
         _loggers.put(RegisterController.class, LoggerFactory.getLogger(RegisterController.class));
@@ -61,12 +84,17 @@ public class ProviderService {
         String jdbcUrl = DotenvManager.get(Config.Database.JDBC_URL);
         _logger.info("JDBC URL: " + jdbcUrl);
 
+        // Database Manager
         if (_databaseManager == null) {
             _databaseManager = new DatabaseManager(provideLogger(DatabaseManager.class), jdbcUrl);
         }
+
+        // DAOs
         _daos.put(User.class, new UserDao(provideLogger(UserDao.class), _databaseManager));
+        _daos.put(DirectMessage.class, new DirectMessageDao(provideLogger(DirectMessageDao.class), _databaseManager));
         _logger.info("Infrastructure module initialized.");
 
+        // Mediator
         _logger.info("Initializing application module...");
         if (_mediator == null) {
             _mediator = new Pipelinr()
@@ -87,6 +115,21 @@ public class ProviderService {
                             ),
                             new UpdateUserProfile.Handler(
                                     provideLogger(UpdateUserProfile.class)
+                            ),
+                            new GetAllUsersExceptLoggedInUser.Handler(
+                                    provideLogger(GetAllUsersExceptLoggedInUser.class)
+                            ),
+                            new GetUsersByNameExceptLoggedInUser.Handler(
+                                    provideLogger(GetUsersByNameExceptLoggedInUser.class)
+                            ),
+                            new CreateOrUpdateDirectMessageAndReloadMessagesList.Handler(
+                                    provideLogger(CreateOrUpdateDirectMessageAndReloadMessagesList.class)
+                            ),
+                            new DeleteDirectMessageByIdAndReloadMessagesList.Handler(
+                                    provideLogger(DeleteDirectMessageByIdAndReloadMessagesList.class)
+                            ),
+                            new GetDirectMessagesByLoggedInUserAndOtherUser.Handler(
+                                    provideLogger(GetDirectMessagesByLoggedInUserAndOtherUser.class)
                             )
                     ));
         }

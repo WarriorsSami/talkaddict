@@ -1,3 +1,5 @@
+@import 'MFXColors.css';
+
 .parent{
     -fx-background-color: transparent;
 }
@@ -26,6 +28,9 @@
     -fx-font-size: 15;
     -fx-font-weight: bold;
 }
+.username-label{
+    -fx-wrap-text: true;
+}
 .btn-text{
     -fx-text-fill: whitesmoke;
     -fx-font-weight: bold;
@@ -42,7 +47,7 @@
     -fx-text-fill: whitesmoke;
 }
 .white-pane{
-    -fx-background-color: #ffffff;
+    -fx-background-color: whitesmoke;
 }
 .blue-panel{
     -fx-background-color: #151928;
@@ -61,6 +66,9 @@
     -fx-font-weight: bold;
     -fx-text-fill: #151928;
     -fx-border-style: solid;
+    -fx-border-radius: 5px;
+    -fx-border-color: #5f2cb9;
+    -fx-border-width: 1px;
 }
 .label{
    -fx-text-fill: #151928;
@@ -79,6 +87,69 @@
 .blue-pane{
     -fx-background-color: #42909a;
 }
+.user-cell{
+    -fx-background-color: #79a2be;
+    -fx-background-radius: 10px;
+    -fx-padding: 5px;
+}
+.loading-pane{
+    -fx-background-color: #79a2be;
+}
+.message-cell{
+    -fx-background-color: #79a2be;
+    -fx-background-radius: 10px;
+}
+.user-icon{
+    -fx-fill: #6ecb57;
+}
+.user-label{
+    -fx-text-fill: whitesmoke;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
 .icon-blue{
     -fx-fill: #2196f3;
+}
+.online-status{
+    -fx-fill: #32ee04;
+}
+.offline-status{
+    -fx-fill: #b0a9a9;
+}
+.busy-status{
+    -fx-fill: #ff0000;
+}
+.away-status{
+    -fx-fill: #ff9f00;
+}
+.notification {
+    -fx-background-color: whitesmoke;
+    -fx-background-radius: 5;
+    -fx-border-color: #ebebeb;
+    -fx-border-radius: 5;
+}
+
+.notification .label {
+    -fx-font-family: 'Visby Round CF Bold';
+    -fx-text-fill: -mfx-text-he;
+    -fx-font-size: 17;
+    -fx-font-weight: bold;
+}
+
+.notification .content {
+    -fx-padding: 10;
+    -fx-font-family: 'Visby Round CF Medium';
+    -fx-font-size: 14;
+}
+
+.notification .mfx-button {
+    -fx-min-height: 27;
+    -fx-border-color: -mfx-purple;
+    -fx-border-radius: 3;
+    -fx-text-fill: -mfx-purple;
+}
+
+.notification .mfx-button .mfx-ripple-generator {
+    -mfx-auto-clip: true;
+    -mfx-ripple-color: derive(#7a0ed9, 125%);
 }

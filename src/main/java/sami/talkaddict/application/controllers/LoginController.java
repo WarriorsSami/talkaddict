@@ -1,8 +1,11 @@
 package sami.talkaddict.application.controllers;
 
 import an.awesome.pipelinr.Pipeline;
+import an.awesome.pipelinr.Voidy;
 import com.j256.ormlite.logger.Logger;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import dev.kylesilver.result.Result;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,11 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import sami.talkaddict.application.requests.commands.auth.LoginUser;
 import sami.talkaddict.application.models.user.UserViewModel;
+import sami.talkaddict.application.requests.commands.auth.LoginUser;
+import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.exceptions.ApplicationException;
-import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.SceneFxManager;
 
 import java.net.URL;
@@ -54,13 +57,21 @@ public class LoginController implements Initializable {
 
     @FXML
     private void onLoginUser(ActionEvent actionEvent) {
-        try {
-            // if password text field is active, update password field
-            if (_passwordTextField.isVisible()) {
-                _passwordField.setText(_passwordTextField.getText());
-            }
+        // if password text field is active, update password field
+        if (_passwordTextField.isVisible()) {
+            _passwordField.setText(_passwordTextField.getText());
+        }
 
-            var response = _mediator.send(new LoginUser.Command(_userViewModel));
+        var loginUserTask = new Task<Result<Voidy, Exception>>() {
+            @Override
+            protected Result<Voidy, Exception> call() {
+                return _mediator.send(new LoginUser.Command(_userViewModel));
+            }
+        };
+
+        loginUserTask.setOnSucceeded(event -> {
+            try {
+                var response = loginUserTask.getValue();
                 if (response.isOk()) {
                     _logger.info("User logged in successfully");
                     SceneFxManager.redirectTo(Config.Views.HOME_VIEW, _loginButton);
@@ -68,21 +79,27 @@ public class LoginController implements Initializable {
                     _logger.error("User login failed");
                     throw response.err().orElseThrow();
                 }
-        } catch (ApplicationException ex) {
-            SceneFxManager.showAlertDialog(
-                    "Invalid credentials",
-                    "Invalid email or password!",
-                    Alert.AlertType.WARNING
-            );
-            _logger.error(ex, ex.getMessage(), ex.getStackTrace());
-        } catch (Exception ex) {
-            SceneFxManager.showAlertDialog(
-                    "Login Error",
-                    "Something went wrong!",
-                    Alert.AlertType.ERROR
-            );
-            _logger.error(ex.toString(), ex.getStackTrace());
-        }
+            } catch (ApplicationException ex) {
+                //TODO: replace alert dialogs with MFXNotification
+                SceneFxManager.showAlertDialog(
+                        "Invalid credentials",
+                        "Invalid email or password!",
+                        Alert.AlertType.WARNING
+                );
+                _logger.error(ex, ex.getMessage(), ex.getStackTrace());
+            } catch (Exception ex) {
+                SceneFxManager.showAlertDialog(
+                        "Login Error",
+                        "Something went wrong!",
+                        Alert.AlertType.ERROR
+                );
+                _logger.error(ex.toString(), ex.getStackTrace());
+            }
+        });
+
+        var loginUserThread = new Thread(loginUserTask);
+        loginUserThread.setDaemon(true);
+        loginUserThread.start();
     }
 
     @FXML

@@ -4,9 +4,15 @@ public class Config {
     public static class Database {
         public static final String JDBC_URL = "JDBC_URL";
         public static final String APPLY_DB_MIGRATIONS = "APPLY_DB_MIGRATIONS";
+        public static final String POPULATE_DB_DIRECTORY = "POPULATE_DB_DIRECTORY";
+
+        public static final String USER_DATA_FILENAME = "/user.csv";
 
         public static final String USERNAME_COLUMN_NAME = "name";
         public static final String EMAIL_COLUMN_NAME = "email";
+        public static final String RECEIVER_ID_COLUMN_NAME = "receiver_id";
+        public static final String SENDER_ID_COLUMN_NAME = "sender_id";
+        public static final String USER_ID_COLUMN_NAME = "id";
     }
 
     public static class Preferences {
@@ -25,6 +31,7 @@ public class Config {
     public static class AppSettings {
         public static final String APP_TITLE = "Talkaddict";
         public static final Boolean RESIZABLE = false;
+        public static final Double PROFILE_REFRESH_RATE = 30.0;
     }
 
     public static class ValidationTweaks {
@@ -52,7 +59,21 @@ public class Config {
 
         public static final Double AVATAR_CLIP_ARC_WIDTH = 360.0;
         public static final Double AVATAR_CLIP_ARC_HEIGHT = 360.0;
+        public static final Double AVATAR_FIT_WIDTH = 50.0;
+        public static final Double AVATAR_FIT_HEIGHT = 50.0;
 
         public static final Double MAIN_SLIDER_POSITION = 1200.0 - 580.0;
+        public static final Long SEARCH_DELAY = 2000L;
+
+        public static final String AVATAR_STATUS_ONLINE_STYLE_CLASS = "online-status";
+        public static final String AVATAR_STATUS_OFFLINE_STYLE_CLASS = "offline-status";
+        public static final String AVATAR_STATUS_BUSY_STYLE_CLASS = "busy-status";
+        public static final String AVATAR_STATUS_AWAY_STYLE_CLASS = "away-status";
+        public static final double MESSAGE_IMAGE_PREVIEW_WIDTH = 100.0;
+        public static final double MESSAGE_IMAGE_PREVIEW_HEIGHT = 50.0;
+        public static final double MESSAGE_IMAGE_WIDTH = 200.0;
+        public static final double MESSAGE_IMAGE_HEIGHT = 100.0;
+        public static final double USERS_LIST_CELL_SIZE = 60.0;
+        public static final double CHAT_LIST_CELL_SIZE = 200.0;
     }
 }
