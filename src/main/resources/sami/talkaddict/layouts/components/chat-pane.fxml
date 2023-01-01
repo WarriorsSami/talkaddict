@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import io.github.palexdev.materialfx.controls.MFXListView?>
-<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Ellipse?>
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ChatController">
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sami.talkaddict.application.controllers.ChatController">
     <GridPane hgap="5.0" prefHeight="700.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER" />
@@ -39,8 +34,8 @@
                 <FontAwesomeIconView fx:id="_searchIcon" glyphName="SEARCH" size="25.0" />
             </HBox>
             <StackPane>
-                <ListView fx:id="_usersListView" prefHeight="698.0" prefWidth="302.0" styleClass="blue-pane" />
-                <Pane fx:id="_loadingOverlay" styleClass="white-pane" visible="false">
+                <ListView fx:id="_usersListView" prefHeight="698.0" prefWidth="302.0" styleClass="blue-pane" visible="false" />
+                <Pane fx:id="_usersLoadingOverlay" styleClass="loading-pane">
                     <VBox alignment="CENTER" layoutX="84.0" layoutY="280.0" prefHeight="140.0" prefWidth="131.0" spacing="10.0">
                         <MFXProgressSpinner layoutX="540.0" layoutY="300.0" prefWidth="77.0" />
                         <Label layoutX="540.0" layoutY="330.0" text="Loading...">
@@ -57,31 +52,62 @@
         </VBox>
 
         <VBox alignment="CENTER" prefHeight="700.0" prefWidth="729.0" spacing="10.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="0">
-            <HBox alignment="CENTER" prefHeight="76.0" prefWidth="776.0" spacing="10.0">
-                <StackPane>
-                    <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
-                        <Image url="@../../assets/avatars/ta7.png" />
-                    </ImageView>
-                    <BorderPane>
-                        <bottom>
-                            <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                                <Circle fx:id="_statusClip" radius="5.0" />
-                            </HBox>
-                        </bottom>
-                    </BorderPane>
-                </StackPane>
+            <StackPane>
+                <HBox fx:id="_chatHeaderOverlay" alignment="CENTER" prefHeight="76.0" prefWidth="776.0" spacing="10.0" visible="false">
+                    <StackPane>
+                        <ImageView fx:id="_avatarImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+                            <Image url="@../../assets/avatars/ta7.png" />
+                        </ImageView>
+                        <BorderPane>
+                            <bottom>
+                                <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                    <Circle fx:id="_statusClip" radius="5.0" />
+                                </HBox>
+                            </bottom>
+                        </BorderPane>
+                    </StackPane>
 
-                <Label fx:id="_usernameLabel" text="Username">
-                    <font>
-                        <Font name="Ubuntu Mono Bold" size="18.0" />
-                    </font>
-                </Label>
-            </HBox>
+                    <Label fx:id="_usernameLabel" text="Username">
+                        <font>
+                            <Font name="Ubuntu Mono Bold" size="18.0" />
+                        </font>
+                    </Label>
+                </HBox>
 
-            <ListView fx:id="_directMessagesListView" prefHeight="604.0" prefWidth="776.0" />
+                <HBox fx:id="_welcomeOverlay" alignment="CENTER" prefHeight="76.0" prefWidth="776.0" spacing="10.0">
+                    <Label fx:id="_welcomeLabel" text="Welcome!">
+                        <font>
+                            <Font name="Ubuntu Mono Bold" size="18.0" />
+                        </font>
+                    </Label>
+                </HBox>
+            </StackPane>
+
+            <StackPane>
+                <ListView fx:id="_directMessagesListView" prefHeight="604.0" prefWidth="776.0" visible="false" />
+                <Pane fx:id="_chatLoadingOverlay" styleClass="loading-pane" visible="false">
+                    <VBox alignment="CENTER" layoutX="337.0" layoutY="213.0" prefHeight="140.0" prefWidth="131.0" spacing="10.0">
+                        <MFXProgressSpinner layoutX="540.0" layoutY="300.0" prefWidth="77.0" />
+                        <Label layoutX="540.0" layoutY="330.0" text="Loading...">
+                            <font>
+                                <Font name="Ubuntu Mono Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </VBox>
+                </Pane>
+                <Pane fx:id="_chatStatusOverlay" styleClass="loading-pane">
+                    <VBox alignment="CENTER" layoutX="275.0" layoutY="213.0" prefHeight="140.0" prefWidth="294.0" spacing="10.0">
+                        <Label fx:id="_chatStatusLabel" layoutX="540.0" layoutY="330.0" text="No chat selected">
+                            <font>
+                                <Font name="Ubuntu Mono Bold" size="20.0" />
+                            </font>
+                        </Label>
+                    </VBox>
+                </Pane>
+            </StackPane>
 
             <HBox fx:id="_messageBox" alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="776.0" spacing="5.0">
-                <StackPane fx:id="_uploadImageIcon" prefHeight="51.0" prefWidth="40.0" onMouseClicked="#onUploadMessageImage">
+                <StackPane fx:id="_uploadImageIcon" onMouseClicked="#onUploadMessageImage" prefHeight="51.0" prefWidth="40.0">
                     <Circle fill="blue" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
                     <FontAwesomeIconView glyphName="PLUS" size="18" />
 
@@ -90,7 +116,7 @@
                     </cursor>
                 </StackPane>
 
-                <StackPane fx:id="_discardImageIcon" disable="true" prefHeight="51.0" prefWidth="40.0" onMouseClicked="#onDiscardMessageImage">
+                <StackPane fx:id="_discardImageIcon" disable="true" onMouseClicked="#onDiscardMessageImage" prefHeight="51.0" prefWidth="40.0">
                     <Circle fx:id="_discardImageIconClip" fill="indianred" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
                     <FontAwesomeIconView glyphName="CLOSE" size="18" />
 
@@ -99,13 +125,13 @@
                     </cursor>
                 </StackPane>
 
-                <TextArea fx:id="_messageText" prefHeight="51.0" prefWidth="513.0" wrapText="true" styleClass="tf-input" promptText="Enter message text here">
+                <TextArea fx:id="_messageText" prefHeight="51.0" prefWidth="513.0" promptText="Enter message text here" styleClass="tf-input" wrapText="true">
                     <font>
                         <Font name="Ubuntu Mono Bold" size="14.0" />
                     </font>
                 </TextArea>
 
-                <StackPane fx:id="_sendMessageIcon" prefHeight="66.0" prefWidth="89.0" onMouseClicked="#onSendMessage">
+                <StackPane fx:id="_sendMessageIcon" disable="true" onMouseClicked="#onSendMessage" prefHeight="66.0" prefWidth="89.0">
                     <Ellipse fill="DODGERBLUE" radiusX="36.0" radiusY="22.0" stroke="BLACK" strokeType="INSIDE" />
                     <FontAwesomeIconView glyphName="SEND" size="25" />
 

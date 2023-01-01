@@ -80,7 +80,6 @@ public class LoginController implements Initializable {
                     throw response.err().orElseThrow();
                 }
             } catch (ApplicationException ex) {
-                //TODO: move javafx related operations to Main Thread somehow
                 //TODO: replace alert dialogs with MFXNotification
                 SceneFxManager.showAlertDialog(
                         "Invalid credentials",

@@ -37,14 +37,14 @@ public class DatabaseManager {
         closeConnectionSource();
     }
 
-    public ConnectionSource getConnectionSource() {
+    public synchronized ConnectionSource getConnectionSource() {
         if (_conn == null) {
             createConnectionSource();
         }
         return _conn;
     }
 
-    public void closeConnectionSource() {
+    public synchronized void closeConnectionSource() {
         if (_conn != null) {
             try {
                 _conn.close();

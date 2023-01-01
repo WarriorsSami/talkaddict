@@ -92,8 +92,11 @@
     -fx-background-radius: 10px;
     -fx-padding: 5px;
 }
+.loading-pane{
+    -fx-background-color: #79a2be;
+}
 .message-cell{
-    -fx-background-color: #435c9c;
+    -fx-background-color: #79a2be;
     -fx-background-radius: 10px;
 }
 .user-icon{

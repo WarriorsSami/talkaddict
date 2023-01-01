@@ -51,6 +51,18 @@ import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
     @FXML
+    private Label _chatStatusLabel;
+    @FXML
+    private Pane _chatStatusOverlay;
+    @FXML
+    private Pane _chatLoadingOverlay;
+    @FXML
+    private HBox _chatHeaderOverlay;
+    @FXML
+    private HBox _welcomeOverlay;
+    @FXML
+    private Label _welcomeLabel;
+    @FXML
     private ListView<DirectMessageFx> _directMessagesListView;
     @FXML
     private Circle _discardImageIconClip;
@@ -79,14 +91,14 @@ public class ChatController implements Initializable {
     @FXML
     private FontAwesomeIconView _searchIcon;
     @FXML
-    private Pane _loadingOverlay;
+    private Pane _usersLoadingOverlay;
     @FXML
     private ListView<UserFx> _usersListView;
 
     private Logger _logger;
     private Pipeline _mediator;
     private UserListViewModel _userListViewModel;
-    private DirectMessageListViewModel _directMessageListViewModel;
+    private DirectMessageListViewModel _directMessagesListViewModel;
     private UserViewModel _loggedInUserViewModel;
     private UserViewModel _selectedUserViewModel;
     private DirectMessageViewModel _dmToBeWrittenViewModel;
@@ -100,7 +112,7 @@ public class ChatController implements Initializable {
         _loggedInUserViewModel = new UserViewModel();
         _selectedUserViewModel = new UserViewModel();
 
-        _directMessageListViewModel = new DirectMessageListViewModel();
+        _directMessagesListViewModel = new DirectMessageListViewModel();
         _dmToBeWrittenViewModel = new DirectMessageViewModel();
 
         bindFieldsToViewModel();
@@ -116,6 +128,11 @@ public class ChatController implements Initializable {
                 if (selectedUser != null) {
                     _logger.info("Selected user: " + selectedUser.Username.get());
                     _selectedUserViewModel.initFromUser(UserConverter.convertUserFxToUser(selectedUser));
+                    if (_welcomeOverlay.isVisible()) {
+                        _welcomeOverlay.setVisible(false);
+                        _chatHeaderOverlay.setVisible(true);
+                        _sendMessageIcon.setDisable(false);
+                    }
                     initChatHeader(selectedUser);
 
                     // get direct messages
@@ -159,9 +176,12 @@ public class ChatController implements Initializable {
         // other fields
         MFXTooltip.of(_uploadImageIcon, "Upload image").install();
         MFXTooltip.of(_discardImageIcon, "Discard image").install();
+        MFXTooltip.of(_sendMessageIcon, "Send message").install();
 
-        // TODO 1. add loading overlays to chat panel, welcome overlay to chat header when no group is selected and no messages overlay when chat is empty
-        // TODO 2. implement the read message functionality
+        // TODO add loading overlays to chat panel,
+        //  welcome overlay to chat header when no group is selected and
+        //  no messages overlay when chat is empty
+        // TODO implement the read message functionality
 
         getLoggedInUser();
         getAllUsers();
@@ -169,7 +189,7 @@ public class ChatController implements Initializable {
 
     private void bindFieldsToViewModel() {
         _usersListView.itemsProperty().bind(_userListViewModel.usersProperty());
-        _directMessagesListView.itemsProperty().bind(_directMessageListViewModel.directMessagesProperty());
+        _directMessagesListView.itemsProperty().bind(_directMessagesListViewModel.directMessagesProperty());
     }
 
     private void bindViewModelToFields() {
@@ -204,6 +224,7 @@ public class ChatController implements Initializable {
                 if (result.isOk()) {
                     var user = result.ok().orElseThrow();
                     _loggedInUserViewModel.initFromUser(user);
+                    _welcomeLabel.setText("Welcome, " + user.getUsername() + "!");
                     _logger.info("Logged in user: " + _loggedInUserViewModel.usernameProperty().get());
                 } else {
                     _logger.error("Failed to get logged in user");
@@ -233,11 +254,13 @@ public class ChatController implements Initializable {
         };
 
         getAllUsersTask.setOnRunning(event -> {
-            _loadingOverlay.setVisible(true);
+            _usersListView.setVisible(false);
+            _usersLoadingOverlay.setVisible(true);
         });
 
         getAllUsersTask.setOnSucceeded(event -> {
-            _loadingOverlay.setVisible(false);
+            _usersListView.setVisible(true);
+            _usersLoadingOverlay.setVisible(false);
             try {
                 var response = getAllUsersTask.getValue();
                 if (response.isOk()) {
@@ -307,7 +330,7 @@ public class ChatController implements Initializable {
             @Override
             protected Result<Voidy, Exception> call() {
                 return _mediator.send(new DeleteDirectMessageByIdAndReloadMessagesList.Command(
-                        _directMessageListViewModel,
+                        _directMessagesListViewModel,
                         messageFx.Id.get(),
                         _loggedInUserViewModel.idProperty().get(),
                         _selectedUserViewModel.idProperty().get()
@@ -315,12 +338,27 @@ public class ChatController implements Initializable {
             }
         };
 
+        deleteDirectMessageTask.setOnRunning(event -> {
+            _directMessagesListView.setVisible(false);
+            _chatStatusOverlay.setVisible(false);
+            _chatLoadingOverlay.setVisible(true);
+        });
+
         deleteDirectMessageTask.setOnSucceeded(event -> {
-            _loadingOverlay.setVisible(false);
+            _chatLoadingOverlay.setVisible(false);
             try {
                 var response = deleteDirectMessageTask.getValue();
                 if (response.isOk()) {
                     var message = response.ok().orElseThrow();
+
+                    if (_directMessagesListViewModel.directMessagesProperty().get().isEmpty()) {
+                        _chatStatusOverlay.setVisible(true);
+                        _chatStatusLabel.setText("No messages yet");
+                    } else {
+                        _chatStatusOverlay.setVisible(false);
+                        _directMessagesListView.setVisible(true);
+                    }
+
                     _logger.info("Direct message deleted successfully");
                 } else {
                     _logger.error("Failed to delete direct message");
@@ -346,18 +384,34 @@ public class ChatController implements Initializable {
             @Override
             protected Result<ObservableList<DirectMessageFx>, Exception> call() {
                 return _mediator.send(new GetDirectMessagesByLoggedInUserAndOtherUser.Query(
-                    _directMessageListViewModel,
+                        _directMessagesListViewModel,
                     _loggedInUserViewModel.idProperty().get(),
                     _selectedUserViewModel.idProperty().get()
                 ));
             }
         };
 
+        getDirectMessagesTask.setOnRunning(event -> {
+            _directMessagesListView.setVisible(false);
+            _chatStatusOverlay.setVisible(false);
+            _chatLoadingOverlay.setVisible(true);
+        });
+
         getDirectMessagesTask.setOnSucceeded(event -> {
+            _chatLoadingOverlay.setVisible(false);
             try {
                 var response = getDirectMessagesTask.getValue();
                 if (response.isOk()) {
                     var directMessages = response.ok().orElseThrow();
+
+                    if (directMessages.isEmpty()) {
+                        _chatStatusOverlay.setVisible(true);
+                        _chatStatusLabel.setText("No messages yet");
+                    } else {
+                        _chatStatusOverlay.setVisible(false);
+                        _directMessagesListView.setVisible(true);
+                    }
+
                     _directMessagesListView.scrollTo(directMessages.size() - 1);
                     _logger.info("Direct messages fetched successfully");
                 } else {
@@ -408,7 +462,8 @@ public class ChatController implements Initializable {
 
     @FXML
     private void onSendMessage(MouseEvent mouseEvent) {
-        if (_dmToBeWrittenViewModel.messageTextProperty().get() == null && _dmToBeWrittenViewModel.messageImageProperty().get() == null) {
+        if ((_dmToBeWrittenViewModel.messageTextProperty().get() == null || _dmToBeWrittenViewModel.messageTextProperty().get().isEmpty())
+                && _dmToBeWrittenViewModel.messageImageProperty().get() == null) {
             return;
         }
 
@@ -418,7 +473,7 @@ public class ChatController implements Initializable {
                 return _mediator.send(
                         new CreateOrUpdateDirectMessageAndReloadMessagesList.Command(
                                 _dmToBeWrittenViewModel,
-                                _directMessageListViewModel,
+                                _directMessagesListViewModel,
                                 _loggedInUserViewModel.idProperty().get(),
                                 _selectedUserViewModel.idProperty().get()
                         )
@@ -426,11 +481,26 @@ public class ChatController implements Initializable {
             }
         };
 
+        sendMessageTask.setOnRunning(event -> {
+            _sendMessageIcon.setDisable(true);
+            _chatStatusOverlay.setVisible(false);
+            _directMessagesListView.setVisible(false);
+            _chatLoadingOverlay.setVisible(true);
+        });
+
         sendMessageTask.setOnSucceeded(event -> {
+            _sendMessageIcon.setDisable(false);
+            _chatLoadingOverlay.setVisible(false);
+            _directMessagesListView.setVisible(true);
             try {
                 var response = sendMessageTask.getValue();
                 if (response.isOk()) {
                     var voidy = response.ok().orElseThrow();
+
+                    if (_chatStatusOverlay.isVisible()) {
+                        _chatStatusOverlay.setVisible(false);
+                    }
+
                     _logger.info("Message sent successfully");
                 } else {
                     _logger.error("Failed to send message");
