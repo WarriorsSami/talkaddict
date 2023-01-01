@@ -14,9 +14,9 @@ import sami.talkaddict.application.requests.commands.chat.DeleteDirectMessageByI
 import sami.talkaddict.application.requests.commands.profile.UpdateUserProfile;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
 import sami.talkaddict.application.models.user.UserViewModel;
-import sami.talkaddict.application.requests.queries.chat.GetAllUsers;
+import sami.talkaddict.application.requests.queries.chat.GetAllUsersExceptLoggedInUser;
 import sami.talkaddict.application.requests.queries.chat.GetDirectMessagesByLoggedInUserAndOtherUser;
-import sami.talkaddict.application.requests.queries.chat.GetUsersByName;
+import sami.talkaddict.application.requests.queries.chat.GetUsersByNameExceptLoggedInUser;
 import sami.talkaddict.domain.entities.chat.DirectMessage;
 import sami.talkaddict.domain.interfaces.BaseEntity;
 import sami.talkaddict.domain.entities.user.User;
@@ -54,8 +54,8 @@ public class ProviderService {
         _loggers.put(LogoutUser.class, LoggerFactory.getLogger(LogoutUser.class));
         _loggers.put(GetLoggedInUser.class, LoggerFactory.getLogger(GetLoggedInUser.class));
         _loggers.put(UpdateUserProfile.class, LoggerFactory.getLogger(UpdateUserProfile.class));
-        _loggers.put(GetAllUsers.class, LoggerFactory.getLogger(GetAllUsers.class));
-        _loggers.put(GetUsersByName.class, LoggerFactory.getLogger(GetUsersByName.class));
+        _loggers.put(GetAllUsersExceptLoggedInUser.class, LoggerFactory.getLogger(GetAllUsersExceptLoggedInUser.class));
+        _loggers.put(GetUsersByNameExceptLoggedInUser.class, LoggerFactory.getLogger(GetUsersByNameExceptLoggedInUser.class));
         _loggers.put(
                 GetDirectMessagesByLoggedInUserAndOtherUser.class,
                 LoggerFactory.getLogger(GetDirectMessagesByLoggedInUserAndOtherUser.class)
@@ -116,13 +116,11 @@ public class ProviderService {
                             new UpdateUserProfile.Handler(
                                     provideLogger(UpdateUserProfile.class)
                             ),
-                            new GetAllUsers.Handler(
-                                    provideLogger(GetAllUsers.class),
-                                    provideMediator()
+                            new GetAllUsersExceptLoggedInUser.Handler(
+                                    provideLogger(GetAllUsersExceptLoggedInUser.class)
                             ),
-                            new GetUsersByName.Handler(
-                                    provideLogger(GetUsersByName.class),
-                                    provideMediator()
+                            new GetUsersByNameExceptLoggedInUser.Handler(
+                                    provideLogger(GetUsersByNameExceptLoggedInUser.class)
                             ),
                             new CreateOrUpdateDirectMessageAndReloadMessagesList.Handler(
                                     provideLogger(CreateOrUpdateDirectMessageAndReloadMessagesList.class)

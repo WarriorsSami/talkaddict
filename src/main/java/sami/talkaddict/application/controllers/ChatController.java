@@ -35,9 +35,9 @@ import sami.talkaddict.application.models.user.UserViewModel;
 import sami.talkaddict.application.requests.commands.chat.CreateOrUpdateDirectMessageAndReloadMessagesList;
 import sami.talkaddict.application.requests.commands.chat.DeleteDirectMessageByIdAndReloadMessagesList;
 import sami.talkaddict.application.requests.queries.auth.GetLoggedInUser;
-import sami.talkaddict.application.requests.queries.chat.GetAllUsers;
+import sami.talkaddict.application.requests.queries.chat.GetAllUsersExceptLoggedInUser;
 import sami.talkaddict.application.requests.queries.chat.GetDirectMessagesByLoggedInUserAndOtherUser;
-import sami.talkaddict.application.requests.queries.chat.GetUsersByName;
+import sami.talkaddict.application.requests.queries.chat.GetUsersByNameExceptLoggedInUser;
 import sami.talkaddict.di.Config;
 import sami.talkaddict.di.ProviderService;
 import sami.talkaddict.domain.entities.user.User;
@@ -178,9 +178,6 @@ public class ChatController implements Initializable {
         MFXTooltip.of(_discardImageIcon, "Discard image").install();
         MFXTooltip.of(_sendMessageIcon, "Send message").install();
 
-        // TODO add loading overlays to chat panel,
-        //  welcome overlay to chat header when no group is selected and
-        //  no messages overlay when chat is empty
         // TODO implement the read message functionality
 
         getLoggedInUser();
@@ -188,7 +185,6 @@ public class ChatController implements Initializable {
     }
 
     private void bindFieldsToViewModel() {
-        _usersListView.itemsProperty().bind(_userListViewModel.usersProperty());
         _directMessagesListView.itemsProperty().bind(_directMessagesListViewModel.directMessagesProperty());
     }
 
@@ -249,7 +245,10 @@ public class ChatController implements Initializable {
         var getAllUsersTask = new Task<Result<ObservableList<UserFx>, Exception>>() {
             @Override
             protected Result<ObservableList<UserFx>, Exception> call() {
-                return _mediator.send(new GetAllUsers.Query(_userListViewModel));
+                return _mediator.send(new GetAllUsersExceptLoggedInUser.Query(
+                        _userListViewModel,
+                        _loggedInUserViewModel.idProperty().get()
+                ));
             }
         };
 
@@ -265,6 +264,7 @@ public class ChatController implements Initializable {
                 var response = getAllUsersTask.getValue();
                 if (response.isOk()) {
                     var users = response.ok().orElseThrow();
+                    _usersListView.setItems(users);
                     _logger.info("Users fetched successfully");
                 } else {
                     _logger.error("Failed to fetch users");
@@ -291,7 +291,11 @@ public class ChatController implements Initializable {
         var filterUsersTask = new Task<Result<ObservableList<UserFx>, Exception>>() {
             @Override
             protected Result<ObservableList<UserFx>, Exception> call() {
-                return _mediator.send(new GetUsersByName.Query(_userListViewModel, value));
+                return _mediator.send(new GetUsersByNameExceptLoggedInUser.Query(
+                        _userListViewModel,
+                        value,
+                        _loggedInUserViewModel.idProperty().get()
+                ));
             }
         };
 
@@ -305,6 +309,7 @@ public class ChatController implements Initializable {
                 var response = filterUsersTask.getValue();
                 if (response.isOk()) {
                     var users = response.ok().orElseThrow();
+                    _usersListView.setItems(users);
                     _logger.info("Users filtered successfully");
                 } else {
                     _logger.error("Failed to filter users");
@@ -359,6 +364,9 @@ public class ChatController implements Initializable {
                         _directMessagesListView.setVisible(true);
                     }
 
+                    _directMessagesListView.scrollTo(
+                            _directMessagesListViewModel.directMessagesProperty().get().size() - 1
+                    );
                     _logger.info("Direct message deleted successfully");
                 } else {
                     _logger.error("Failed to delete direct message");
@@ -501,6 +509,9 @@ public class ChatController implements Initializable {
                         _chatStatusOverlay.setVisible(false);
                     }
 
+                    _directMessagesListView.scrollTo(
+                            _directMessagesListViewModel.directMessagesProperty().get().size() - 1
+                    );
                     _logger.info("Message sent successfully");
                 } else {
                     _logger.error("Failed to send message");

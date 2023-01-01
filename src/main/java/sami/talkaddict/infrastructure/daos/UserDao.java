@@ -4,13 +4,14 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.QueryBuilder;
+import sami.talkaddict.di.Config;
+import sami.talkaddict.domain.entities.user.User;
 import sami.talkaddict.domain.exceptions.ApplicationException;
 import sami.talkaddict.domain.interfaces.GenericDao;
-import sami.talkaddict.domain.entities.user.User;
-import sami.talkaddict.di.Config;
 import sami.talkaddict.infrastructure.utils.managers.DatabaseManager;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserDao implements GenericDao<User> {
     private final Logger _logger;
@@ -131,6 +132,40 @@ public class UserDao implements GenericDao<User> {
             _logger.info("Finding users by name like: " + name);
             QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
             queryBuilder.where().like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%");
+            return _dao.query(queryBuilder.prepare());
+        } catch (SQLException ex) {
+            _logger.error(ex, "Error finding users by name like: " + ex.getMessage(), ex.getStackTrace());
+            throw new ApplicationException("Error finding users by name like: " + ex.getMessage());
+        } finally {
+            _databaseManager.closeConnectionSource();
+        }
+    }
+
+    public synchronized Iterable<User> findAllExceptGivenUserIds(List<Integer> userIds) throws ApplicationException {
+        try {
+            _logger.info("Finding all users except given user ids: " + userIds);
+            QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
+            queryBuilder.where().notIn(Config.Database.USER_ID_COLUMN_NAME, userIds);
+
+            return _dao.query(queryBuilder.prepare());
+        } catch (SQLException ex) {
+            _logger.error(ex, "Error finding all users except given user ids: " + ex.getMessage(), ex.getStackTrace());
+            throw new ApplicationException("Error finding all users except given user ids: " + ex.getMessage());
+        } finally {
+            _databaseManager.closeConnectionSource();
+        }
+    }
+
+    public synchronized Iterable<User> findByNameLikeExceptGivenUserIds(String name, List<Integer> ids) throws ApplicationException {
+        try {
+            _logger.info("Finding users by name like: " + name + " except given ids: " + ids);
+            QueryBuilder<User, Integer> queryBuilder = _dao.queryBuilder();
+            queryBuilder
+                    .where()
+                    .like(Config.Database.USERNAME_COLUMN_NAME, "%" + name + "%")
+                    .and()
+                    .notIn(Config.Database.USER_ID_COLUMN_NAME, ids);
+
             return _dao.query(queryBuilder.prepare());
         } catch (SQLException ex) {
             _logger.error(ex, "Error finding users by name like: " + ex.getMessage(), ex.getStackTrace());

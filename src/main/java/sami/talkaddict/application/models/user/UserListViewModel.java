@@ -36,8 +36,29 @@ public class UserListViewModel {
         });
     }
 
+    public synchronized void initAllUsersExceptLoggedInUser(int loggedInUserId) throws ApplicationException {
+        var users = (List<User>) ((UserDao) _userDao).findAllExceptGivenUserIds(List.of(new Integer[]{loggedInUserId}));
+        Platform.runLater(() -> {
+            _userFxList.get().clear();
+            users.forEach(user -> {
+                var userFx = UserConverter.convertUserToUserFx(user);
+                _userFxList.get().add(userFx);
+            });
+        });
+    }
+
     public synchronized void initUsersByName(String name) throws ApplicationException {
         var users = (List<User>) ((UserDao) _userDao).findByNameLike(name);
+        Platform.runLater(() -> {
+            _userFxList.get().clear();
+            users.forEach(user -> {
+                _userFxList.get().add(UserConverter.convertUserToUserFx(user));
+            });
+        });
+    }
+
+    public synchronized void initUsersByNameExceptLoggedInUser(String name, int loggedInUserId) throws ApplicationException {
+        var users = (List<User>) ((UserDao) _userDao).findByNameLikeExceptGivenUserIds(name, List.of(new Integer[]{loggedInUserId}));
         Platform.runLater(() -> {
             _userFxList.get().clear();
             users.forEach(user -> {
